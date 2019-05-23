@@ -384,7 +384,7 @@
 - (void)stop {
     [self.notification removeNotification];
     [self.orientationObserver removeDeviceOrientationObserver];
-    if (self.isFullScreen) {
+    if (self.isFullScreen && self.exitFullScreenWhenStop) {
         [self.orientationObserver exitFullScreenWithAnimated:NO];
     }
     [self.currentPlayerManager stop];
@@ -761,6 +761,13 @@
     return self.orientationObserver.isFullScreen;
 }
 
+- (BOOL)exitFullScreenWhenStop {
+    NSNumber *number = objc_getAssociatedObject(self, _cmd);
+    if (number) return number.boolValue;
+    self.exitFullScreenWhenStop = YES;
+    return YES;
+}
+
 - (UIInterfaceOrientation)currentOrientation {
     return self.orientationObserver.currentOrientation;
 }
@@ -819,6 +826,10 @@
 - (void)setForceDeviceOrientation:(BOOL)forceDeviceOrientation {
     objc_setAssociatedObject(self, @selector(forceDeviceOrientation), @(forceDeviceOrientation), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     self.orientationObserver.forceDeviceOrientation = forceDeviceOrientation;
+}
+
+- (void)setExitFullScreenWhenStop:(BOOL)exitFullScreenWhenStop {
+    objc_setAssociatedObject(self, @selector(exitFullScreenWhenStop), @(exitFullScreenWhenStop), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end

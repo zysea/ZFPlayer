@@ -114,6 +114,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
 @synthesize isPlaying                      = _isPlaying;
 @synthesize rate                           = _rate;
 @synthesize isPreparedToPlay               = _isPreparedToPlay;
+@synthesize shouldAutoPlay                 = _shouldAutoPlay;
 @synthesize scalingMode                    = _scalingMode;
 @synthesize playerPlayFailed               = _playerPlayFailed;
 @synthesize presentationSizeChanged        = _presentationSizeChanged;
@@ -122,6 +123,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
     self = [super init];
     if (self) {
         _scalingMode = ZFPlayerScalingModeAspectFit;
+        _shouldAutoPlay = YES;
     }
     return self;
 }
@@ -130,7 +132,9 @@ static NSString *const kPresentationSize         = @"presentationSize";
     if (!_assetURL) return;
     _isPreparedToPlay = YES;
     [self initializePlayer];
-    [self play];
+    if (self.shouldAutoPlay) {
+        [self play];
+    }
     self.loadState = ZFPlayerLoadStatePrepare;
     if (self.playerPrepareToPlay) self.playerPrepareToPlay(self, self.assetURL);
 }

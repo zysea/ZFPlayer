@@ -290,6 +290,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// When ZFFullScreenMode is ZFFullScreenModePortrait, while the player fullSceen this value is YES.
 @property (nonatomic, readonly) BOOL isFullScreen;
 
+/// when call the `stop` method, exit the fullScreen model, default is YES.
+@property (nonatomic, assign) BOOL exitFullScreenWhenStop;
+
 /// Lock the screen orientation.
 @property (nonatomic, getter=isLockedScreen) BOOL lockedScreen;
 
@@ -302,6 +305,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// The current orientation of the player.
 /// Default is UIInterfaceOrientationPortrait.
 @property (nonatomic, readonly) UIInterfaceOrientation currentOrientation;
+
+
+//@property (nonatomic, assign) BOOL <#instace#>
 
 /// The block invoked When player will rotate.
 @property (nonatomic, copy, nullable) void(^orientationWillChange)(ZFPlayerController *player, BOOL isFullScreen);
