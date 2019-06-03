@@ -205,6 +205,15 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
             [self.player.currentPlayerManager play];
             self.player.viewControllerDisappear = NO;
         };
+        
+        _adControlView.fullScreenCallback = ^{
+            @strongify(self)
+            if (self.player.isFullScreen) {
+                [self.player enterFullScreen:NO animated:YES];
+            } else {
+                [self.player enterFullScreen:YES animated:YES];
+            }
+        };
     }
     return _adControlView;
 }

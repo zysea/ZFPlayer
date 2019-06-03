@@ -50,11 +50,13 @@
     self.skipBtn.layer.cornerRadius = min_h/2;
     self.skipBtn.layer.masksToBounds = YES;
     
-    min_w = 28;
+    min_w = 30;
     min_h = min_w;
     min_x = min_view_w - min_w - 20;
     min_y = min_view_h - min_h - 20;
     self.fullScreenBtn.frame = CGRectMake(min_x, min_y, min_w, min_h);
+    self.fullScreenBtn.layer.cornerRadius = min_h/2;
+    self.fullScreenBtn.layer.masksToBounds = YES;
 }
 
 
@@ -63,11 +65,7 @@
 }
 
 - (void)fullScreenBtnClick {
-    if (self.player.isFullScreen) {
-        [self.player enterFullScreen:NO animated:YES];
-    } else {
-        [self.player enterFullScreen:YES animated:YES];
-    }
+    if (self.fullScreenCallback) self.fullScreenCallback();
 }
 
 /// 加载状态改变
@@ -124,6 +122,7 @@
         [_fullScreenBtn setImage:ZFPlayer_Image(@"ZFPlayer_fullscreen") forState:UIControlStateNormal];
         [_fullScreenBtn setImage:ZFPlayer_Image(@"ZFPlayer_shrinkscreen") forState:UIControlStateSelected];
         [_fullScreenBtn addTarget:self action:@selector(fullScreenBtnClick) forControlEvents:UIControlEventTouchUpInside];
+        _fullScreenBtn.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.7];
     }
     return _fullScreenBtn;
 }

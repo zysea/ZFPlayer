@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) void(^skipCallback)(void);
 
+@property (nonatomic, copy) void(^fullScreenCallback)(void);
+
 @end
 
 NS_ASSUME_NONNULL_END
