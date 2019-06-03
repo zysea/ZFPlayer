@@ -57,6 +57,7 @@
 @synthesize isPlaying                      = _isPlaying;
 @synthesize rate                           = _rate;
 @synthesize isPreparedToPlay               = _isPreparedToPlay;
+@synthesize shouldAutoPlay                 = _shouldAutoPlay;
 @synthesize scalingMode                    = _scalingMode;
 @synthesize playerPlayFailed               = _playerPlayFailed;
 @synthesize presentationSizeChanged        = _presentationSizeChanged;
@@ -75,6 +76,7 @@
     self = [super init];
     if (self) {
         _scalingMode = ZFPlayerScalingModeAspectFit;
+        _shouldAutoPlay = YES;
     }
     return self;
 }
@@ -82,10 +84,12 @@
 - (void)prepareToPlay {
     if (!_assetURL) return;
     _isPreparedToPlay = YES;
-    self.loadState = ZFPlayerLoadStatePrepare;
     [self initializePlayer];
+    if (self.shouldAutoPlay) {
+        [self play];
+    }
+    self.loadState = ZFPlayerLoadStatePrepare;
     if (self.playerPrepareToPlay) self.playerPrepareToPlay(self, self.assetURL);
-    [self play];
 }
 
 - (void)play {
@@ -148,7 +152,7 @@
 - (void)initializePlayer {
     if (self.player) [self.player stop];
     self.player = [[KSYMoviePlayerController alloc] initWithContentURL:_assetURL];
-    self.player.shouldAutoplay = YES;
+    self.player.shouldAutoplay = self.shouldAutoPlay;
     [self.player prepareToPlay];
     [self addPlayerNotification];
     

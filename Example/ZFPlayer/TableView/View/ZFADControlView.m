@@ -81,7 +81,7 @@
 
 /// 播放进度改变回调
 - (void)videoPlayer:(ZFPlayerController *)videoPlayer currentTime:(NSTimeInterval)currentTime totalTime:(NSTimeInterval)totalTime {
-    NSString *title = [NSString stringWithFormat:@"%zd秒",(NSInteger)(totalTime-currentTime)];
+    NSString *title = [NSString stringWithFormat:@"跳过 %zd秒",(NSInteger)(totalTime-currentTime)];
     [self.skipBtn setTitle:title forState:UIControlStateNormal];
 }
 
@@ -112,7 +112,7 @@
         _skipBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         _skipBtn.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.7];
         [_skipBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        _skipBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+        _skipBtn.titleLabel.font = [UIFont systemFontOfSize:13];
         [_skipBtn addTarget:self action:@selector(skipBtnClick) forControlEvents:UIControlEventTouchUpInside];
     }
     return _skipBtn;

@@ -57,6 +57,7 @@
 @synthesize isPlaying                      = _isPlaying;
 @synthesize rate                           = _rate;
 @synthesize isPreparedToPlay               = _isPreparedToPlay;
+@synthesize shouldAutoPlay                 = _shouldAutoPlay;
 @synthesize scalingMode                    = _scalingMode;
 @synthesize playerPlayFailed               = _playerPlayFailed;
 @synthesize presentationSizeChanged        = _presentationSizeChanged;
@@ -69,6 +70,7 @@
     self = [super init];
     if (self) {
         _scalingMode = ZFPlayerScalingModeAspectFit;
+        _shouldAutoPlay = YES;
     }
     return self;
 }
@@ -77,7 +79,9 @@
     if (!_assetURL) return;
     _isPreparedToPlay = YES;
     [self initializePlayer];
-    [self play];
+    if (self.shouldAutoPlay) {
+        [self play];
+    }
     self.loadState = ZFPlayerLoadStatePrepare;
     if (self.playerPrepareToPlay) self.playerPrepareToPlay(self, self.assetURL);
 }
@@ -145,7 +149,7 @@
 
 - (void)initializePlayer {
     self.player = [[IJKFFMoviePlayerController alloc] initWithContentURL:self.assetURL withOptions:self.options];
-    self.player.shouldAutoplay = YES;
+    self.player.shouldAutoplay = self.shouldAutoPlay;
     [self.player prepareToPlay];
     
     [self.view insertSubview:self.player.view atIndex:1];

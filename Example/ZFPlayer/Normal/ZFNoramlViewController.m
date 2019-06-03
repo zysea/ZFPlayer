@@ -72,16 +72,12 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
         }
     };
     
-    self.player.customAudioSession = YES;
-    self.player.playerReadyToPlay = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, NSURL * _Nonnull assetURL) {
-        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionAllowBluetooth error:nil];
-        [[AVAudioSession sharedInstance] setActive:YES error:nil];
-    };
     self.player.assetURLs = self.assetURLs;
     [self.player playTheIndex:0];
     
     /// 广告
-    self.adPlayer = [ZFPlayerController playerWithPlayerManager:[[ZFAVPlayerManager alloc] init] containerView:self.player.currentPlayerManager.view];
+    ZFAVPlayerManager *adPlayerManager = [[ZFAVPlayerManager alloc] init];
+    self.adPlayer = [ZFPlayerController playerWithPlayerManager:adPlayerManager containerView:self.controlView];
     self.adPlayer.controlView = self.adControlView;
     self.adPlayer.assetURL = [NSURL URLWithString:@"https://fcvideo.cdn.bcebos.com/smart/f103c4fc97d2b2e63b15d2d5999d6477.mp4"];
     self.adPlayer.exitFullScreenWhenStop = NO;
@@ -92,6 +88,7 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     self.adPlayer.playerDidToEnd = ^(id  _Nonnull asset) {
         @strongify(self)
         [self.adPlayer stopCurrentPlayingView];
+        self.player.currentPlayerManager.shouldAutoPlay = YES;
         [self.player.currentPlayerManager play];
     };
 }
@@ -204,6 +201,7 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
         _adControlView.skipCallback = ^{
             @strongify(self)
             [self.adPlayer stopCurrentPlayingView];
+            self.player.currentPlayerManager.shouldAutoPlay = YES;
             [self.player.currentPlayerManager play];
             self.player.viewControllerDisappear = NO;
         };
