@@ -157,11 +157,11 @@
     self.bottomPgrogress.frame = CGRectMake(min_x, min_y, min_w, min_h);
     
     min_x = 0;
-    min_y = 0;
-    min_w = 160;
-    min_h = 40;
+    min_y = iPhoneX ? 90 : 50;
+    min_w = 170;
+    min_h = 35;
     self.volumeBrightnessView.frame = CGRectMake(min_x, min_y, min_w, min_h);
-    self.volumeBrightnessView.center = self.center;
+    self.volumeBrightnessView.zf_centerX = self.zf_centerX;
 }
 
 - (void)dealloc {
@@ -702,7 +702,7 @@
 - (UIView *)fastView {
     if (!_fastView) {
         _fastView = [[UIView alloc] init];
-        _fastView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.7];
+        _fastView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.8];
         _fastView.layer.cornerRadius = 4;
         _fastView.layer.masksToBounds = YES;
         _fastView.hidden = YES;
