@@ -1,5 +1,5 @@
 //
-//  ZFUtilities.m
+//  ZFResoureLoader.m
 //  ZFPlayer
 //
 // Copyright (c) 2016年 任子丰 ( http://github.com/renzifeng )
@@ -22,25 +22,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
 #import "ZFResoureLoader.h"
 
-/// iPhoneX  iPhoneXS  iPhoneXS Max  iPhoneXR 机型判断
-#define iPhoneX ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? ((NSInteger)(([[UIScreen mainScreen] currentMode].size.height/[[UIScreen mainScreen] currentMode].size.width)*100) == 216) : NO)
+@implementation ZFResoureLoader
 
-#define ZFPlayer_Image(file)                 [ZFResoureLoader imageNamed:file]
++ (NSBundle *)bundle {
+    static NSBundle *bundle = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        bundle = [NSBundle bundleWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"ZFPlayer" ofType:@"bundle"]];
+    });
+    return bundle;
+}
 
-// 屏幕的宽
-#define ZFPlayer_ScreenWidth                 [[UIScreen mainScreen] bounds].size.width
-// 屏幕的高
-#define ZFPlayer_ScreenHeight                [[UIScreen mainScreen] bounds].size.height
-
-@interface ZFUtilities : NSObject
-
-+ (NSString *)convertTimeSecond:(NSInteger)timeSecond;
-
-+ (UIImage *)imageWithColor:(UIColor *)color size:(CGSize)size;
++ (nullable UIImage *)imageNamed:(NSString *)name {
+    if (name.length == 0) return nil;
+    int scale = (int)UIScreen.mainScreen.scale;
+    if (scale < 2) scale = 2;
+    else if (scale > 3) scale = 3;
+    NSString *n = [NSString stringWithFormat:@"%@@%dx.png", name, scale];
+    return [UIImage imageWithContentsOfFile:[self.bundle pathForResource:n ofType:nil]];
+}
 
 @end
-
