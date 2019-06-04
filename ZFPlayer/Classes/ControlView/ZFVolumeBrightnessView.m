@@ -41,7 +41,6 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.8];
         [self addSubview:self.iconImageView];
         [self addSubview:self.progressView];
         [self hideTipView];
@@ -125,7 +124,7 @@
     self.hidden = NO;
     self.alpha = 1;
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideTipView) object:nil];
-    [self performSelector:@selector(hideTipView) withObject:nil afterDelay:2.0];
+    [self performSelector:@selector(hideTipView) withObject:nil afterDelay:1.5];
 }
 
 - (void)setVolumeBrightnessType:(ZFVolumeBrightnessType)volumeBrightnessType {

@@ -263,6 +263,7 @@
     self.bottomPgrogress.bufferValue = 0;
     self.floatControlView.hidden = YES;
     self.failBtn.hidden = YES;
+    self.volumeBrightnessView.hidden = YES;
     self.portraitControlView.hidden = self.player.isFullScreen;
     self.landScapeControlView.hidden = !self.player.isFullScreen;
     if (self.controlViewAppeared) {
@@ -702,7 +703,7 @@
 - (UIView *)fastView {
     if (!_fastView) {
         _fastView = [[UIView alloc] init];
-        _fastView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.8];
+        _fastView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.7];
         _fastView.layer.cornerRadius = 4;
         _fastView.layer.masksToBounds = YES;
         _fastView.hidden = YES;
@@ -793,6 +794,7 @@
 - (ZFVolumeBrightnessView *)volumeBrightnessView {
     if (!_volumeBrightnessView) {
         _volumeBrightnessView = [[ZFVolumeBrightnessView alloc] init];
+        _volumeBrightnessView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.7];
     }
     return _volumeBrightnessView;
 }
