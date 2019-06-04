@@ -8,13 +8,14 @@
 
 #import "ZFViewController.h"
 #import "ZFDouYinViewController.h"
+#import "ZFTableSectionModel.h"
 
 static NSString *kIdentifier = @"kIdentifier";
 
 @interface ZFViewController () <UITableViewDelegate,UITableViewDataSource>
+
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) NSArray *titles;
-@property (nonatomic, strong) NSArray *viewControllers;
+@property (nonatomic, strong) NSMutableArray <ZFTableSectionModel *>*datas;
 
 @end
 
@@ -24,33 +25,39 @@ static NSString *kIdentifier = @"kIdentifier";
     [super viewDidLoad];
     self.navigationItem.title = @"ZFPlayer";
     [self.view addSubview:self.tableView];
-    self.titles = @[@"键盘支持横屏",
-                    @"普通样式",
-                    @"列表HeaderView",
-                    @"列表点击播放",
-                    @"列表自动播放",
-                    @"列表小窗播放",
-                    @"列表明暗播放",
-                    @"混合cell样式",
-                    @"抖音样式",
-                    @"抖音个人主页",
-                    @"竖向滚动CollectionView",
-                    @"横向滚动CollectionView",
-                    @"全屏播放"];
-    
-    self.viewControllers = @[@"ZFKeyboardViewController",
-                             @"ZFNoramlViewController",
-                             @"ZFTableHeaderViewController",
-                             @"ZFNotAutoPlayViewController",
-                             @"ZFAutoPlayerViewController",
-                             @"ZFSmallPlayViewController",
-                             @"ZFLightTableViewController",
-                             @"ZFMixViewController",
-                             @"ZFDouYinViewController",
-                             @"ZFCollectionViewListController",
-                             @"ZFCollectionViewController",
-                             @"ZFHorizontalCollectionViewController",
-                             @"ZFFullScreenViewController"];
+    self.datas = @[].mutableCopy;
+    [self.datas addObject:[ZFTableSectionModel sectionModeWithTitle:@"播放器样式（Player style）" items:[self createItemsByPlayerType]]];
+    [self.datas addObject:[ZFTableSectionModel sectionModeWithTitle:@"UITableView样式（TableView style）" items:[self createItemsByTableView]]];
+    [self.datas addObject:[ZFTableSectionModel sectionModeWithTitle:@"UICollectionView样式（CollectionView style）" items:[self createItemsByCollectionView]]];
+    [self.datas addObject:[ZFTableSectionModel sectionModeWithTitle:@"旋转类型（Rotation type）" items:[self createItemsByRotationType]]];
+}
+
+- (NSArray <ZFTableItem *>*)createItemsByPlayerType {
+    return @[[ZFTableItem itemWithTitle:@"普通样式" subTitle:@"Normal style" viewControllerName:@"ZFNoramlViewController"],
+             [ZFTableItem itemWithTitle:@"UITableView样式" subTitle:@"UITableView style" viewControllerName:@"ZFAutoPlayerViewController"],
+             [ZFTableItem itemWithTitle:@"UICollectionView样式" subTitle:@"UICollectionView style" viewControllerName:@"ZFCollectionViewController"]];
+}
+
+- (NSArray <ZFTableItem *>*)createItemsByTableView {
+    return @[[ZFTableItem itemWithTitle:@"点击播放" subTitle:@"Click to play" viewControllerName:@"ZFNotAutoPlayViewController"],
+             [ZFTableItem itemWithTitle:@"自动播放" subTitle:@"Auto play" viewControllerName:@"ZFAutoPlayerViewController"],
+             [ZFTableItem itemWithTitle:@"列表明暗播放" subTitle:@"Light and dark style" viewControllerName:@"ZFLightTableViewController"],
+             [ZFTableItem itemWithTitle:@"混合cell样式" subTitle:@"Mix cell style" viewControllerName:@"ZFMixViewController"],
+             [ZFTableItem itemWithTitle:@"小窗播放" subTitle:@"Small view style" viewControllerName:@"ZFSmallPlayViewController"],
+             [ZFTableItem itemWithTitle:@"抖音样式" subTitle:@"Douyin style" viewControllerName:@"ZFDouYinViewController"],
+             [ZFTableItem itemWithTitle:@"HeaderView样式" subTitle:@"Table header style" viewControllerName:@"ZFTableHeaderViewController"]];
+}
+
+- (NSArray <ZFTableItem *>*)createItemsByCollectionView {
+    return @[[ZFTableItem itemWithTitle:@"抖音个人主页" subTitle:@"Douyin homePage" viewControllerName:@"ZFCollectionViewListController"],
+             [ZFTableItem itemWithTitle:@"横向滚动抖音" subTitle:@"Horizontal Douyin style" viewControllerName:@"ZFDouyinCollectionViewController"],
+             [ZFTableItem itemWithTitle:@"横向滚动CollectionView" subTitle:@"Horizontal CollectionView" viewControllerName:@"ZFHorizontalCollectionViewController"]];
+}
+
+- (NSArray <ZFTableItem *>*)createItemsByRotationType {
+    return @[[ZFTableItem itemWithTitle:@"旋转类型" subTitle:@"Rotation type" viewControllerName:@"ZFRotationViewController"],
+             [ZFTableItem itemWithTitle:@"旋转键盘" subTitle:@"Rotation keyboard" viewControllerName:@"ZFKeyboardViewController"],
+             [ZFTableItem itemWithTitle:@"全屏播放" subTitle:@"Fullscreen play" viewControllerName:@"ZFFullScreenViewController"]];
 }
 
 - (void)viewWillLayoutSubviews {
@@ -68,24 +75,35 @@ static NSString *kIdentifier = @"kIdentifier";
 
 #pragma mark - UITableViewDataSource
 
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return self.datas.count;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.titles.count;
+    return self.datas[section].items.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kIdentifier];
-    cell.textLabel.text = self.titles[indexPath.row];
+    cell.textLabel.font = [UIFont systemFontOfSize:15];
+    ZFTableItem *itme = self.datas[indexPath.section].items[indexPath.row];
+    cell.textLabel.text = [NSString stringWithFormat:@"%@（%@）",itme.title,itme.subTitle];
     return cell;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    return self.datas[section].title;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    NSString *vcString = self.viewControllers[indexPath.row];
+    ZFTableItem *itme = self.datas[indexPath.section].items[indexPath.row];
+    NSString *vcString = itme.viewControllerName;
     UIViewController *viewController = [[NSClassFromString(vcString) alloc] init];
     if ([vcString isEqualToString:@"ZFDouYinViewController"]) {
         [(ZFDouYinViewController *)viewController playTheIndex:0];
     }
-    viewController.navigationItem.title = self.titles[indexPath.row];
+    viewController.navigationItem.title = itme.title;
     if ([vcString isEqualToString:@"ZFFullScreenViewController"]) {
         [self.navigationController pushViewController:viewController animated:NO];
     } else {
@@ -95,7 +113,7 @@ static NSString *kIdentifier = @"kIdentifier";
 
 - (UITableView *)tableView {
     if (!_tableView) {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
         [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:kIdentifier];
         _tableView.delegate = self;
         _tableView.dataSource = self;

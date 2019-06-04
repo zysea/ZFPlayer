@@ -20,13 +20,13 @@
 #import <MJRefresh/MJRefresh.h>
 
 static NSString *kIdentifier = @"kIdentifier";
+
 @interface ZFDouYinViewController ()  <UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) ZFPlayerController *player;
 @property (nonatomic, strong) ZFDouYinControlView *controlView;
 @property (nonatomic, strong) NSMutableArray *dataSource;
 @property (nonatomic, strong) NSMutableArray *urls;
-
 @property (nonatomic, strong) UIButton *backBtn;
 
 @end
