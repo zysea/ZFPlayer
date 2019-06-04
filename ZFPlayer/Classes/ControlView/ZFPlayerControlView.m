@@ -287,6 +287,11 @@
     [self.landScapeControlView showTitle:title fullScreenMode:fullScreenMode];
     [self.coverImageView setImageWithURLString:coverUrl placeholder:placeholder];
     [self.bgImgView setImageWithURLString:coverUrl placeholder:placeholder];
+    if (self.prepareShowControlView) {
+        [self showControlViewWithAnimated:NO];
+    } else {
+        [self hideControlViewWithAnimated:NO];
+    }
 }
 
 /// 设置标题、UIImage封面、全屏模式
@@ -298,6 +303,11 @@
     [self.landScapeControlView showTitle:title fullScreenMode:fullScreenMode];
     self.coverImageView.image = image;
     self.bgImgView.image = image;
+    if (self.prepareShowControlView) {
+        [self showControlViewWithAnimated:NO];
+    } else {
+        [self hideControlViewWithAnimated:NO];
+    }
 }
 
 #pragma mark - ZFPlayerControlViewDelegate
