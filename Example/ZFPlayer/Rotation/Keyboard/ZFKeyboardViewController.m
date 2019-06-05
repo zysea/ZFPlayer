@@ -19,7 +19,6 @@
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) ZFPlayerControlView *controlView;
 @property (nonatomic, strong) UITextField *textField;
-@property (nonatomic, strong) UIButton *playBtn;
 
 @end
 
@@ -29,7 +28,6 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.containerView];
-    [self.containerView addSubview:self.playBtn];
     [self.controlView addSubview:self.textField];
     
     ZFAVPlayerManager *playerManager = [[ZFAVPlayerManager alloc] init];
@@ -73,12 +71,6 @@
     x = (self.containerView.zf_width - w)/2;
     y = (self.containerView.zf_height - h)/2;
     self.textField.frame = CGRectMake(x, y, w, h);
-
-    w = 44;
-    h = w;
-    x = (CGRectGetWidth(self.containerView.frame)-w)/2;
-    y = (CGRectGetHeight(self.containerView.frame)-h)/2;
-    self.playBtn.frame = CGRectMake(x, y, w, h);
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
@@ -135,14 +127,6 @@
         _containerView = [UIView new];
     }
     return _containerView;
-}
-
-- (UIButton *)playBtn {
-    if (!_playBtn) {
-        _playBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_playBtn setImage:[UIImage imageNamed:@"new_allPlay_44x44_"] forState:UIControlStateNormal];
-    }
-    return _playBtn;
 }
 
 @end

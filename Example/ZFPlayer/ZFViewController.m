@@ -9,6 +9,7 @@
 #import "ZFViewController.h"
 #import "ZFDouYinViewController.h"
 #import "ZFTableSectionModel.h"
+#import "ZFDouyinCollectionViewController.h"
 
 static NSString *kIdentifier = @"kIdentifier";
 
@@ -35,7 +36,8 @@ static NSString *kIdentifier = @"kIdentifier";
 - (NSArray <ZFTableItem *>*)createItemsByPlayerType {
     return @[[ZFTableItem itemWithTitle:@"普通样式" subTitle:@"Normal style" viewControllerName:@"ZFNoramlViewController"],
              [ZFTableItem itemWithTitle:@"UITableView样式" subTitle:@"UITableView style" viewControllerName:@"ZFAutoPlayerViewController"],
-             [ZFTableItem itemWithTitle:@"UICollectionView样式" subTitle:@"UICollectionView style" viewControllerName:@"ZFCollectionViewController"]];
+             [ZFTableItem itemWithTitle:@"UICollectionView样式" subTitle:@"UICollectionView style" viewControllerName:@"ZFCollectionViewController"],
+             [ZFTableItem itemWithTitle:@"UIScrollView样式" subTitle:@"UIScrollView style" viewControllerName:@"ZFScrollViewViewController"]];
 }
 
 - (NSArray <ZFTableItem *>*)createItemsByTableView {
@@ -49,8 +51,9 @@ static NSString *kIdentifier = @"kIdentifier";
 }
 
 - (NSArray <ZFTableItem *>*)createItemsByCollectionView {
-    return @[[ZFTableItem itemWithTitle:@"抖音个人主页" subTitle:@"Douyin homePage" viewControllerName:@"ZFCollectionViewListController"],
+    return @[[ZFTableItem itemWithTitle:@"抖音个人主页" subTitle:@"Douyin homepage" viewControllerName:@"ZFCollectionViewListController"],
              [ZFTableItem itemWithTitle:@"横向滚动抖音" subTitle:@"Horizontal Douyin style" viewControllerName:@"ZFDouyinCollectionViewController"],
+             [ZFTableItem itemWithTitle:@"竖向滚动抖音" subTitle:@"Vertical Douyin style" viewControllerName:@"ZFDouyinCollectionViewController"],
              [ZFTableItem itemWithTitle:@"横向滚动CollectionView" subTitle:@"Horizontal CollectionView" viewControllerName:@"ZFHorizontalCollectionViewController"]];
 }
 
@@ -104,6 +107,11 @@ static NSString *kIdentifier = @"kIdentifier";
         [(ZFDouYinViewController *)viewController playTheIndex:0];
     }
     viewController.navigationItem.title = itme.title;
+    
+    if ([vcString isEqualToString:@"ZFDouyinCollectionViewController"] && [itme.title isEqualToString:@"横向滚动抖音"]) {
+        ZFDouyinCollectionViewController *douyinVC = (ZFDouyinCollectionViewController *)viewController;
+        douyinVC.scrollViewDirection = ZFPlayerScrollViewDirectionHorizontal;
+    }
     if ([vcString isEqualToString:@"ZFFullScreenViewController"]) {
         [self.navigationController pushViewController:viewController animated:NO];
     } else {

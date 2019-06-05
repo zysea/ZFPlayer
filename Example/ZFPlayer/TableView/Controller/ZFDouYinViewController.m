@@ -236,6 +236,7 @@ static NSString *kIdentifier = @"kIdentifier";
         _tableView.estimatedSectionHeaderHeight = 0;
         _tableView.frame = self.view.bounds;
         _tableView.rowHeight = _tableView.frame.size.height;
+        _tableView.scrollsToTop = NO;
         
         /// 停止的时候找出最合适的播放
         @weakify(self)

@@ -36,6 +36,7 @@
 		D209360A20B659190002C956 /* ZFNoramlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D209360920B659190002C956 /* ZFNoramlViewController.m */; };
 		D227504D21491289002DE221 /* ZFPlayerDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D227504C21491289002DE221 /* ZFPlayerDetailViewController.m */; };
 		D23F3D9722A67DAD00BC4E19 /* ZFRotationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D23F3D9522A67DAD00BC4E19 /* ZFRotationViewController.xib */; };
+		D23F3DA322A7589A00BC4E19 /* ZFScrollViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D23F3DA222A7589A00BC4E19 /* ZFScrollViewViewController.m */; };
 		D243FCA020C53F950014F533 /* ZFDouYinViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D243FC9F20C53F950014F533 /* ZFDouYinViewController.m */; };
 		D243FCA320C543D30014F533 /* ZFDouYinCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D243FCA220C543D30014F533 /* ZFDouYinCell.m */; };
 		D260A00E228BE402009FC79C /* ZFADControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = D260A00D228BE402009FC79C /* ZFADControlView.m */; };
@@ -118,6 +119,8 @@
 		D227504B21491289002DE221 /* ZFPlayerDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZFPlayerDetailViewController.h; sourceTree = "<group>"; };
 		D227504C21491289002DE221 /* ZFPlayerDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZFPlayerDetailViewController.m; sourceTree = "<group>"; };
 		D23F3D9522A67DAD00BC4E19 /* ZFRotationViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ZFRotationViewController.xib; sourceTree = "<group>"; };
+		D23F3DA122A7589A00BC4E19 /* ZFScrollViewViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZFScrollViewViewController.h; sourceTree = "<group>"; };
+		D23F3DA222A7589A00BC4E19 /* ZFScrollViewViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZFScrollViewViewController.m; sourceTree = "<group>"; };
 		D243FC9E20C53F950014F533 /* ZFDouYinViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZFDouYinViewController.h; sourceTree = "<group>"; };
 		D243FC9F20C53F950014F533 /* ZFDouYinViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZFDouYinViewController.m; sourceTree = "<group>"; };
 		D243FCA120C543D30014F533 /* ZFDouYinCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZFDouYinCell.h; sourceTree = "<group>"; };
@@ -226,6 +229,7 @@
 		6003F593195388D20070C39A /* Example for ZFPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				D23F3DA022A7587B00BC4E19 /* ScrollView */,
 				D209360720B659070002C956 /* Normal */,
 				D2F268BE22A67B86008C1F6D /* Rotation */,
 				D2B9826E2136403E00B4A0B9 /* FullScreenViewController */,
@@ -376,6 +380,15 @@
 				D209360920B659190002C956 /* ZFNoramlViewController.m */,
 			);
 			path = Normal;
+			sourceTree = "<group>";
+		};
+		D23F3DA022A7587B00BC4E19 /* ScrollView */ = {
+			isa = PBXGroup;
+			children = (
+				D23F3DA122A7589A00BC4E19 /* ZFScrollViewViewController.h */,
+				D23F3DA222A7589A00BC4E19 /* ZFScrollViewViewController.m */,
+			);
+			path = ScrollView;
 			sourceTree = "<group>";
 		};
 		D2B9826E2136403E00B4A0B9 /* FullScreenViewController */ = {
@@ -604,6 +617,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D23F3DA322A7589A00BC4E19 /* ZFScrollViewViewController.m in Sources */,
 				D2F268B922A674BC008C1F6D /* ZFDouyinCollectionViewCell.m in Sources */,
 				D2B1EC562188315500FD94C3 /* ZFTableHeaderViewController.m in Sources */,
 				D20935FE20B658AE0002C956 /* ZFTableViewCell.m in Sources */,

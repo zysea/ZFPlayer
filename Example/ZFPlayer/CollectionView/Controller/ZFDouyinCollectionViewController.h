@@ -7,10 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <ZFPlayer/ZFPlayer.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface ZFDouyinCollectionViewController : UIViewController
+
+@property (nonatomic, assign) ZFPlayerScrollViewDirection scrollViewDirection;
 
 - (void)playTheIndex:(NSInteger)index;
 

@@ -204,15 +204,22 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
         layout.sectionInset = UIEdgeInsetsZero;
         layout.minimumLineSpacing = 0;
         layout.minimumInteritemSpacing = 0;
-        layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+        if (self.scrollViewDirection == ZFPlayerScrollViewDirectionVertical) {
+            layout.scrollDirection = UICollectionViewScrollDirectionVertical;
+        } else if (self.scrollViewDirection == ZFPlayerScrollViewDirectionHorizontal) {
+            layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+        }
         _collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
         _collectionView.delegate = self;
         _collectionView.dataSource = self;
         _collectionView.backgroundColor = [UIColor whiteColor];
         /// 横向滚动 这行代码必须写
-        _collectionView.zf_scrollViewDirection = ZFPlayerScrollViewDirectionHorizontal;
+        _collectionView.zf_scrollViewDirection = self.scrollViewDirection;
         [_collectionView registerClass:[ZFDouyinCollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
         _collectionView.pagingEnabled = YES;
+        _collectionView.showsVerticalScrollIndicator = NO;
+        _collectionView.showsHorizontalScrollIndicator = NO;
+        _collectionView.scrollsToTop = NO;
         if (@available(iOS 11.0, *)) {
             _collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         } else {
