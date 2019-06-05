@@ -15,16 +15,13 @@
 #import "ZFSmallPlayViewController.h"
 #import "UIImageView+ZFCache.h"
 #import "ZFUtilities.h"
-#import "ZFADControlView.h"
 
 static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/635942-14593722fe3f0695.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240";
 
 @interface ZFNoramlViewController ()
 @property (nonatomic, strong) ZFPlayerController *player;
-@property (nonatomic, strong) ZFPlayerController *adPlayer;
 @property (nonatomic, strong) UIImageView *containerView;
 @property (nonatomic, strong) ZFPlayerControlView *controlView;
-@property (nonatomic, strong) ZFADControlView *adControlView;
 @property (nonatomic, strong) UIButton *playBtn;
 @property (nonatomic, strong) UIButton *changeBtn;
 @property (nonatomic, strong) UIButton *nextBtn;
@@ -46,7 +43,6 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     [self.view addSubview:self.nextBtn];
 
     ZFAVPlayerManager *playerManager = [[ZFAVPlayerManager alloc] init];
-    playerManager.shouldAutoPlay = NO;
     /// 播放器相关
     self.player = [ZFPlayerController playerWithPlayerManager:playerManager containerView:self.containerView];
     self.player.controlView = self.controlView;
@@ -73,24 +69,6 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     };
     
     self.player.assetURLs = self.assetURLs;
-    [self.player playTheIndex:0];
-    
-    /// 广告
-    ZFAVPlayerManager *adPlayerManager = [[ZFAVPlayerManager alloc] init];
-    self.adPlayer = [ZFPlayerController playerWithPlayerManager:adPlayerManager containerView:self.controlView];
-    self.adPlayer.controlView = self.adControlView;
-    self.adPlayer.assetURL = [NSURL URLWithString:@"https://fcvideo.cdn.bcebos.com/smart/f103c4fc97d2b2e63b15d2d5999d6477.mp4"];
-    self.adPlayer.exitFullScreenWhenStop = NO;
-    self.adPlayer.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
-        @strongify(self)
-        [self setNeedsStatusBarAppearanceUpdate];
-    };
-    self.adPlayer.playerDidToEnd = ^(id  _Nonnull asset) {
-        @strongify(self)
-        [self.adPlayer stopCurrentPlayingView];
-        self.player.currentPlayerManager.shouldAutoPlay = YES;
-        [self.player.currentPlayerManager play];
-    };
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -190,32 +168,9 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
         _controlView.autoHiddenTimeInterval = 5;
         _controlView.autoFadeTimeInterval = 0.5;
         _controlView.prepareShowLoading = YES;
+        _controlView.prepareShowControlView = YES;
     }
     return _controlView;
-}
-
-- (ZFADControlView *)adControlView {
-    if (!_adControlView) {
-        _adControlView = [[ZFADControlView alloc] init];
-        @weakify(self)
-        _adControlView.skipCallback = ^{
-            @strongify(self)
-            [self.adPlayer stopCurrentPlayingView];
-            self.player.currentPlayerManager.shouldAutoPlay = YES;
-            [self.player.currentPlayerManager play];
-            self.player.viewControllerDisappear = NO;
-        };
-        
-        _adControlView.fullScreenCallback = ^{
-            @strongify(self)
-            if (self.player.isFullScreen) {
-                [self.player enterFullScreen:NO animated:YES];
-            } else {
-                [self.player enterFullScreen:YES animated:YES];
-            }
-        };
-    }
-    return _adControlView;
 }
 
 - (UIImageView *)containerView {

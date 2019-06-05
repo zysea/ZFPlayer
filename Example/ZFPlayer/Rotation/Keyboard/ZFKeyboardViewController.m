@@ -109,6 +109,8 @@
 - (ZFPlayerControlView *)controlView {
     if (!_controlView) {
         _controlView = [ZFPlayerControlView new];
+        _controlView.prepareShowControlView = YES;
+        _controlView.prepareShowLoading = YES;
     }
     return _controlView;
 }

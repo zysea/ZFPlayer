@@ -31,6 +31,8 @@ static NSString *kIdentifier = @"kIdentifier";
     [self.datas addObject:[ZFTableSectionModel sectionModeWithTitle:@"UITableView样式（TableView style）" items:[self createItemsByTableView]]];
     [self.datas addObject:[ZFTableSectionModel sectionModeWithTitle:@"UICollectionView样式（CollectionView style）" items:[self createItemsByCollectionView]]];
     [self.datas addObject:[ZFTableSectionModel sectionModeWithTitle:@"旋转类型（Rotation type）" items:[self createItemsByRotationType]]];
+    [self.datas addObject:[ZFTableSectionModel sectionModeWithTitle:@"自定义（Custom）" items:[self createItemsByCustom]]];
+    [self.datas addObject:[ZFTableSectionModel sectionModeWithTitle:@"其他（Other）" items:[self createItemsByOther]]];
 }
 
 - (NSArray <ZFTableItem *>*)createItemsByPlayerType {
@@ -61,6 +63,14 @@ static NSString *kIdentifier = @"kIdentifier";
     return @[[ZFTableItem itemWithTitle:@"旋转类型" subTitle:@"Rotation type" viewControllerName:@"ZFRotationViewController"],
              [ZFTableItem itemWithTitle:@"旋转键盘" subTitle:@"Rotation keyboard" viewControllerName:@"ZFKeyboardViewController"],
              [ZFTableItem itemWithTitle:@"全屏播放" subTitle:@"Fullscreen play" viewControllerName:@"ZFFullScreenViewController"]];
+}
+
+- (NSArray <ZFTableItem *>*)createItemsByCustom {
+    return @[[ZFTableItem itemWithTitle:@"自定义控制层" subTitle:@"Custom ControlView" viewControllerName:@"ZFCustomControlViewViewController"]];
+}
+
+- (NSArray <ZFTableItem *>*)createItemsByOther {
+    return @[[ZFTableItem itemWithTitle:@"广告" subTitle:@"Advertising" viewControllerName:@"ZFADViewController"]];
 }
 
 - (void)viewWillLayoutSubviews {
