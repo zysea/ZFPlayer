@@ -206,6 +206,7 @@ static const CGFloat kAnimate = 0.3;
 
 - (void)setValue:(float)value {
     if (isnan(value)) return;
+    value = MIN(1.0, value);
     _value = value;
     if (self.sliderBtn.hidden) {
         self.sliderProgressView.zf_width = self.bgProgressView.zf_width * value;
@@ -217,6 +218,7 @@ static const CGFloat kAnimate = 0.3;
 
 - (void)setBufferValue:(float)bufferValue {
     if (isnan(bufferValue)) return;
+    bufferValue = MIN(1.0, bufferValue);
     _bufferValue = bufferValue;
     self.bufferProgressView.zf_width = self.bgProgressView.zf_width * bufferValue;
 }
