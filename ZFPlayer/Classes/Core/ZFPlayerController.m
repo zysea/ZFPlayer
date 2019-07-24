@@ -1045,7 +1045,11 @@
 - (void)setPlayingIndexPath:(NSIndexPath *)playingIndexPath {
     objc_setAssociatedObject(self, @selector(playingIndexPath), playingIndexPath, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     if (playingIndexPath) {
-        [self stopCurrentPlayingCell];
+        // Stop the current playing cell video.
+        [self stop];
+        self.isSmallFloatViewShow = NO;
+        if (self.smallFloatView) self.smallFloatView.hidden = YES;
+        
         UIView *cell = [self.scrollView zf_getCellForIndexPath:playingIndexPath];
         self.containerView = [cell viewWithTag:self.containerViewTag];
         [self.orientationObserver cellModelRotateView:self.currentPlayerManager.view rotateViewAtCell:cell playerViewTag:self.containerViewTag];
