@@ -27,6 +27,7 @@
 #import "ZFLandScapeControlView.h"
 #import <ZFPlayer/ZFPlayerMediaControl.h>
 #import "ZFSpeedLoadingView.h"
+#import "ZFSmallFloatControlView.h"
 
 @interface ZFPlayerControlView : UIView <ZFPlayerMediaControl>
 
@@ -65,6 +66,9 @@
 
 /// 高斯模糊视图
 @property (nonatomic, strong, readonly) UIView *effectView;
+
+/// 小窗口控制层
+@property (nonatomic, strong, readonly) ZFSmallFloatControlView *floatControlView;
 
 /// 快进视图是否显示动画，默认NO.
 @property (nonatomic, assign) BOOL fastViewAnimated;

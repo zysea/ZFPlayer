@@ -334,6 +334,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
             self.isReadyToPlay = YES;
             self.loadState = ZFPlayerLoadStatePlaythroughOK;
         }
+        self.player.rate = self.rate;
         if (loadedRanges.count > 0) {
             if (self.playerPlayTimeChanged) self.playerPlayTimeChanged(self, self.currentTime, self.totalTime);
         }

@@ -31,7 +31,6 @@
 #import "UIImageView+ZFCache.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import "ZFVolumeBrightnessView.h"
-#import "ZFSmallFloatControlView.h"
 #import <ZFPlayer/ZFPlayer.h>
 
 @interface ZFPlayerControlView () <ZFSliderViewDelegate>
@@ -107,8 +106,6 @@
     CGFloat min_view_w = self.zf_width;
     CGFloat min_view_h = self.zf_height;
     
-    min_w = min_view_w;
-    min_h = min_view_h;
     self.portraitControlView.frame = self.bounds;
     self.landScapeControlView.frame = self.bounds;
     self.floatControlView.frame = self.bounds;

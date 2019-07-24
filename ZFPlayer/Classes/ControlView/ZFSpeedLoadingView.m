@@ -60,9 +60,6 @@
     CGFloat min_view_w = self.zf_width;
     CGFloat min_view_h = self.zf_height;
     
-    min_w = min_view_w;
-    min_h = min_view_h;
-    
     min_w = 44;
     min_h = min_w;
     min_x = (min_view_w - min_w) / 2;
