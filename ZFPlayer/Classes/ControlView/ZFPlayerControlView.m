@@ -481,6 +481,11 @@
     [self.portraitControlView videoPlayer:videoPlayer currentTime:currentTime totalTime:totalTime];
     [self.landScapeControlView videoPlayer:videoPlayer currentTime:currentTime totalTime:totalTime];
     self.bottomPgrogress.value = videoPlayer.progress;
+//    @weakify(self)
+//    [videoPlayer.currentPlayerManager thumbnailImageAtCurrentTimeCompletionHandler:^(UIImage * _Nullable image) {
+//        @strongify(self)
+//        self.bgImgView.image = image;
+//    }];
 }
 
 /// 缓冲改变回调

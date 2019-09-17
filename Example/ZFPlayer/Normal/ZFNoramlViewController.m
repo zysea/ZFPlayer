@@ -12,6 +12,7 @@
 #import <ZFPlayer/ZFIJKPlayerManager.h>
 #import <ZFPlayer/KSMediaPlayerManager.h>
 #import <ZFPlayer/ZFPlayerControlView.h>
+#import <ZFPlayer/PLPlayerManager.h>
 #import "ZFSmallPlayViewController.h"
 #import "UIImageView+ZFCache.h"
 #import "ZFUtilities.h"
@@ -43,6 +44,7 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     [self.view addSubview:self.nextBtn];
 
     ZFAVPlayerManager *playerManager = [[ZFAVPlayerManager alloc] init];
+//    PLPlayerManager *playerManager = [[PLPlayerManager alloc] init];
     /// 播放器相关
     self.player = [ZFPlayerController playerWithPlayerManager:playerManager containerView:self.containerView];
     self.player.controlView = self.controlView;
