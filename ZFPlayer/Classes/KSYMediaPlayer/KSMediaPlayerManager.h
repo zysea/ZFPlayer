@@ -24,7 +24,11 @@
 
 
 #import <Foundation/Foundation.h>
+#if __has_include(<ZFPlayer/ZFPlayerMediaPlayback.h>)
 #import <ZFPlayer/ZFPlayerMediaPlayback.h>
+#else
+#import "ZFPlayerMediaPlayback.h"
+#endif
 #if __has_include(<KSYMediaPlayer/KSYMediaPlayer.h>)
 #import <KSYMediaPlayer/KSYMediaPlayer.h>
 
