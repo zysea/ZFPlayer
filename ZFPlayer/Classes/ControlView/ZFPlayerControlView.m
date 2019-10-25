@@ -244,12 +244,16 @@
 }
 
 /// 音量改变的通知
-- (void)volumeChanged:(NSNotification *)notification {
-    float volume = [[[notification userInfo] objectForKey:@"AVSystemController_AudioVolumeNotificationParameter"] floatValue];
-    if (self.player.isFullScreen) {
-        [self.volumeBrightnessView updateProgress:volume withVolumeBrightnessType:ZFVolumeBrightnessTypeVolume];
-    } else {
-        [self.volumeBrightnessView addSystemVolumeView];
+- (void)volumeChanged:(NSNotification *)notification {    
+    NSDictionary *userInfo = notification.userInfo;
+    NSString *reasonstr = userInfo[@"AVSystemController_AudioVolumeChangeReasonNotificationParameter"];
+    if ([reasonstr isEqualToString:@"ExplicitVolumeChange"]) {
+        float volume = [ userInfo[@"AVSystemController_AudioVolumeNotificationParameter"] floatValue];
+        if (self.player.isFullScreen) {
+            [self.volumeBrightnessView updateProgress:volume withVolumeBrightnessType:ZFVolumeBrightnessTypeVolume];
+        } else {
+            [self.volumeBrightnessView addSystemVolumeView];
+        }
     }
 }
 
