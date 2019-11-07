@@ -45,6 +45,7 @@ Pod::Spec.new do |s|
         ijkplayer.dependency 'ZFPlayer/Core'
         ijkplayer.dependency 'IJKMediaFramework'
         ijkplayer.ios.deployment_target = '8.0'
+        ijkplayer.static_framework = true
     end
     
     s.subspec 'KSYMediaPlayer' do |ksyMediaPlayer|
@@ -52,6 +53,7 @@ Pod::Spec.new do |s|
         ksyMediaPlayer.public_header_files = 'ZFPlayer/Classes/KSYMediaPlayer/*.h'
         ksyMediaPlayer.dependency 'ZFPlayer/Core'
         ksyMediaPlayer.dependency 'KSYMediaPlayer'
+        ksyMediaPlayer.static_framework = true
         ksyMediaPlayer.pod_target_xcconfig = {
             'ARCHS[sdk=iphonesimulator*]' => '$(ARCHS_STANDARD_64_BIT)'
         }
