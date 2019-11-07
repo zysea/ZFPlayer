@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
     s.social_media_url = 'http://weibo.com/zifeng1300'
     s.ios.deployment_target = '7.0'
     s.requires_arc = true
-    
+    s.static_framework = true
     s.default_subspec = 'Core'
     
     s.subspec 'Core' do |core|
@@ -45,7 +45,6 @@ Pod::Spec.new do |s|
         ijkplayer.dependency 'ZFPlayer/Core'
         ijkplayer.dependency 'IJKMediaFramework'
         ijkplayer.ios.deployment_target = '8.0'
-        ijkplayer.static_framework = true
     end
     
     s.subspec 'KSYMediaPlayer' do |ksyMediaPlayer|
@@ -53,7 +52,6 @@ Pod::Spec.new do |s|
         ksyMediaPlayer.public_header_files = 'ZFPlayer/Classes/KSYMediaPlayer/*.h'
         ksyMediaPlayer.dependency 'ZFPlayer/Core'
         ksyMediaPlayer.dependency 'KSYMediaPlayer'
-        ksyMediaPlayer.static_framework = true
         ksyMediaPlayer.pod_target_xcconfig = {
             'ARCHS[sdk=iphonesimulator*]' => '$(ARCHS_STANDARD_64_BIT)'
         }
