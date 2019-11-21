@@ -96,7 +96,7 @@ player.controlView = controlView;
 ```
 
 
-### Picture demonstration
+## Picture demonstration
 
 ![Picture effect](https://upload-images.jianshu.io/upload_images/635942-1b0e23b7f5eabd9e.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
@@ -109,7 +109,7 @@ player.controlView = controlView;
 
 ![](https://upload-images.jianshu.io/upload_images/635942-c20708c913c591a0.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-##Contributors
+## Contributors
 
 林界：https://github.com/GeekLee609
 
