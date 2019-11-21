@@ -110,6 +110,7 @@ player.controlView = controlView;
 ![](https://upload-images.jianshu.io/upload_images/635942-c20708c913c591a0.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ##Contributors
+
 林界：https://github.com/GeekLee609
 
 
