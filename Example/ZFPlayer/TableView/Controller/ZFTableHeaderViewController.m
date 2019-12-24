@@ -95,7 +95,6 @@ static NSString *kIdentifier = @"kIdentifier";
 }
 
 - (BOOL)shouldAutorotate {
-    /// 如果只是支持iOS9+ 那直接return NO即可，这里为了适配iOS8
     return self.player.shouldAutorotate;
 }
 

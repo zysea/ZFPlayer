@@ -182,7 +182,7 @@
     min_h = (iPhoneX && self.player.isFullScreen) ? 80 : 40;
     self.topToolView.frame = CGRectMake(min_x, min_y, min_w, min_h);
     
-    min_x = (iPhoneX && self.player.isFullScreen) ? 44: 15;
+    min_x = self.player.isFullScreen ? 40: 15;
     min_y = 0;
     min_w = min_view_w - min_x - 15;
     min_h = 30;
@@ -395,34 +395,6 @@
 /// 双击手势事件
 - (void)gestureDoubleTapped:(ZFPlayerGestureControl *)gestureControl {
     [self playOrPause];
-}
-
-/// 开始滑动手势事件
-- (void)gestureBeganPan:(ZFPlayerGestureControl *)gestureControl panDirection:(ZFPanDirection)direction panLocation:(ZFPanLocation)location {
-    if (direction == ZFPanDirectionH) {
-        self.sumTime = self.player.currentTime;
-    }
-}
-
-/// 滑动中手势事件
-- (void)gestureChangedPan:(ZFPlayerGestureControl *)gestureControl panDirection:(ZFPanDirection)direction panLocation:(ZFPanLocation)location withVelocity:(CGPoint)velocity {
-
-}
-
-/// 滑动结束手势事件
-- (void)gestureEndedPan:(ZFPlayerGestureControl *)gestureControl panDirection:(ZFPanDirection)direction panLocation:(ZFPanLocation)location {
-    @weakify(self)
-    if (direction == ZFPanDirectionH && self.sumTime >= 0 && self.player.totalTime > 0) {
-        [self.player seekToTime:self.sumTime completionHandler:^(BOOL finished) {
-            @strongify(self)
-            /// 左右滑动调节播放进度
-            [self sliderChangeEnded];
-            if (self.controlViewAppeared) {
-                [self autoFadeOutControlView];
-            }
-        }];
-        self.sumTime = 0;
-    }
 }
 
 /// 捏合手势事件，这里改变了视频的填充模式

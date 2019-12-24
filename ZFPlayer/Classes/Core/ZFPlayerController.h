@@ -306,9 +306,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// Default is UIInterfaceOrientationPortrait.
 @property (nonatomic, readonly) UIInterfaceOrientation currentOrientation;
 
-
-//@property (nonatomic, assign) BOOL <#instace#>
-
 /// The block invoked When player will rotate.
 @property (nonatomic, copy, nullable) void(^orientationWillChange)(ZFPlayerController *player, BOOL isFullScreen);
 

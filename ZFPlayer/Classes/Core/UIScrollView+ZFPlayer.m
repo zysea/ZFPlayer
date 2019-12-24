@@ -285,6 +285,7 @@
             UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
             UIView *playerView = [cell viewWithTag:self.zf_containerViewTag];
             if (playerView) {
+                if (self.zf_scrollViewDidScrollCallback) self.zf_scrollViewDidScrollCallback(indexPath);
                 if (handler) handler(indexPath);
                 self.zf_shouldPlayIndexPath = indexPath;
                 return;
@@ -297,6 +298,7 @@
             UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
             UIView *playerView = [cell viewWithTag:self.zf_containerViewTag];
             if (playerView) {
+                if (self.zf_scrollViewDidScrollCallback) self.zf_scrollViewDidScrollCallback(indexPath);
                 if (handler) handler(indexPath);
                 self.zf_shouldPlayIndexPath = indexPath;
                 return;
@@ -321,6 +323,7 @@
             UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
             UIView *playerView = [cell viewWithTag:self.zf_containerViewTag];
             if (playerView) {
+                if (self.zf_scrollViewDidScrollCallback) self.zf_scrollViewDidScrollCallback(indexPath);
                 if (handler) handler(indexPath);
                 self.zf_shouldPlayIndexPath = indexPath;
                 return;
@@ -333,6 +336,7 @@
             UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
             UIView *playerView = [cell viewWithTag:self.zf_containerViewTag];
             if (playerView) {
+                if (self.zf_scrollViewDidScrollCallback) self.zf_scrollViewDidScrollCallback(indexPath);
                 if (handler) handler(indexPath);
                 self.zf_shouldPlayIndexPath = indexPath;
                 return;
@@ -384,6 +388,7 @@
     }];
     /// if find the playing indexPath.
     if (finalIndexPath) {
+        if (self.zf_scrollViewDidScrollCallback) self.zf_scrollViewDidScrollCallback(indexPath);
         if (handler) handler(finalIndexPath);
         self.zf_shouldPlayIndexPath = finalIndexPath;
     }
@@ -407,6 +412,7 @@
             UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
             UIView *playerView = [cell viewWithTag:self.zf_containerViewTag];
             if (playerView) {
+                if (self.zf_scrollViewDidScrollCallback) self.zf_scrollViewDidScrollCallback(indexPath);
                 if (handler) handler(indexPath);
                 self.zf_shouldPlayIndexPath = indexPath;
                 return;
@@ -419,6 +425,7 @@
             UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
             UIView *playerView = [cell viewWithTag:self.zf_containerViewTag];
             if (playerView) {
+                if (self.zf_scrollViewDidScrollCallback) self.zf_scrollViewDidScrollCallback(indexPath);
                 if (handler) handler(indexPath);
                 self.zf_shouldPlayIndexPath = indexPath;
                 return;
@@ -443,6 +450,7 @@
             UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
             UIView *playerView = [cell viewWithTag:self.zf_containerViewTag];
             if (playerView) {
+                if (self.zf_scrollViewDidScrollCallback) self.zf_scrollViewDidScrollCallback(indexPath);
                 if (handler) handler(indexPath);
                 self.zf_shouldPlayIndexPath = indexPath;
                 return;
@@ -455,6 +463,7 @@
             UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
             UIView *playerView = [cell viewWithTag:self.zf_containerViewTag];
             if (playerView) {
+                if (self.zf_scrollViewDidScrollCallback) self.zf_scrollViewDidScrollCallback(indexPath);
                 if (handler) handler(indexPath);
                 self.zf_shouldPlayIndexPath = indexPath;
                 return;
@@ -506,6 +515,7 @@
     }];
     /// if find the playing indexPath.
     if (finalIndexPath) {
+        if (self.zf_scrollViewDidScrollCallback) self.zf_scrollViewDidScrollCallback(indexPath);
         if (handler) handler(finalIndexPath);
         self.zf_shouldPlayIndexPath = finalIndexPath;
     }
@@ -688,6 +698,10 @@
     return objc_getAssociatedObject(self, _cmd);
 }
 
+- (void (^)(NSIndexPath * _Nonnull))zf_scrollViewDidScrollCallback {
+    return objc_getAssociatedObject(self, _cmd);
+}
+
 - (void (^)(NSIndexPath * _Nonnull))zf_shouldPlayIndexPathCallback {
     return objc_getAssociatedObject(self, _cmd);
 }
@@ -750,6 +764,10 @@
 
 - (void)setZf_scrollViewDidStopScrollCallback:(void (^)(NSIndexPath * _Nonnull))zf_scrollViewDidStopScrollCallback {
     objc_setAssociatedObject(self, @selector(zf_scrollViewDidStopScrollCallback), zf_scrollViewDidStopScrollCallback, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
+- (void)setZf_scrollViewDidScrollCallback:(void (^)(NSIndexPath * _Nonnull))zf_scrollViewDidScrollCallback {
+    objc_setAssociatedObject(self, @selector(zf_scrollViewDidScrollCallback), zf_scrollViewDidScrollCallback, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
 - (void)setZf_shouldPlayIndexPathCallback:(void (^)(NSIndexPath * _Nonnull))zf_shouldPlayIndexPathCallback {

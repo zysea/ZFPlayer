@@ -99,6 +99,9 @@ typedef NS_ENUM(NSInteger, ZFPlayerContainerType) {
 /// The block invoked When the player did stop scroll.
 @property (nonatomic, copy, nullable) void(^zf_scrollViewDidStopScrollCallback)(NSIndexPath *indexPath);
 
+/// The block invoked When the player did  scroll.
+@property (nonatomic, copy, nullable) void(^zf_scrollViewDidScrollCallback)(NSIndexPath *indexPath);
+
 /// The block invoked When the player should play.
 @property (nonatomic, copy, nullable) void(^zf_shouldPlayIndexPathCallback)(NSIndexPath *indexPath);
 

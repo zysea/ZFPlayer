@@ -166,7 +166,7 @@
     
     UIInterfaceOrientation currentOrientation = [UIApplication sharedApplication].statusBarOrientation;
     // Determine that if the current direction is the same as the direction you want to rotate, do nothing
-    if (_currentOrientation == currentOrientation) return;
+    if (_currentOrientation == currentOrientation && !self.forceDeviceOrientation) return;
     
     switch (_currentOrientation) {
         case UIInterfaceOrientationPortrait: {
@@ -199,13 +199,13 @@
     if (self.forceDeviceOrientation) {
         if (UIInterfaceOrientationIsLandscape(orientation)) {
             if (self.fullScreen) return;
-            superview = self.fullScreenContainerView;
             self.fullScreen = YES;
+            superview = self.fullScreenContainerView;
         } else {
             if (!self.fullScreen) return;
+            self.fullScreen = NO;
             if (self.roateType == ZFRotateTypeCell) superview = [self.cell viewWithTag:self.playerViewTag];
             else superview = self.containerView;
-            self.fullScreen = NO;
             if (self.blackView.superview != nil) [self.blackView removeFromSuperview];
         }
         if (self.orientationWillChange) self.orientationWillChange(self, self.isFullScreen);
@@ -416,6 +416,7 @@
 - (void)setFullScreen:(BOOL)fullScreen {
     _fullScreen = fullScreen;
     [[UIWindow zf_currentViewController] setNeedsStatusBarAppearanceUpdate];
+    [UIViewController attemptRotationToDeviceOrientation];
 }
 
 - (void)setStatusBarHidden:(BOOL)statusBarHidden {
