@@ -34,7 +34,6 @@
 		D209360220B658AE0002C956 /* NSString+Size.m in Sources */ = {isa = PBXBuildFile; fileRef = D20935FB20B658AE0002C956 /* NSString+Size.m */; };
 		D209360320B658AE0002C956 /* ZFLightTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D20935FC20B658AE0002C956 /* ZFLightTableViewController.m */; };
 		D209360A20B659190002C956 /* ZFNoramlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D209360920B659190002C956 /* ZFNoramlViewController.m */; };
-		D214BE0F23B1D53D008F3C2F /* UINavigationController+ZFNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = D214BE0E23B1D53C008F3C2F /* UINavigationController+ZFNavigationBar.m */; };
 		D227504D21491289002DE221 /* ZFPlayerDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D227504C21491289002DE221 /* ZFPlayerDetailViewController.m */; };
 		D23F3D9722A67DAD00BC4E19 /* ZFRotationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D23F3D9522A67DAD00BC4E19 /* ZFRotationViewController.xib */; };
 		D23F3DA322A7589A00BC4E19 /* ZFScrollViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D23F3DA222A7589A00BC4E19 /* ZFScrollViewViewController.m */; };
@@ -120,8 +119,6 @@
 		D20935FC20B658AE0002C956 /* ZFLightTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZFLightTableViewController.m; sourceTree = "<group>"; };
 		D209360820B659190002C956 /* ZFNoramlViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZFNoramlViewController.h; sourceTree = "<group>"; };
 		D209360920B659190002C956 /* ZFNoramlViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZFNoramlViewController.m; sourceTree = "<group>"; };
-		D214BE0D23B1D53C008F3C2F /* UINavigationController+ZFNavigationBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+ZFNavigationBar.h"; sourceTree = "<group>"; };
-		D214BE0E23B1D53C008F3C2F /* UINavigationController+ZFNavigationBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+ZFNavigationBar.m"; sourceTree = "<group>"; };
 		D227504B21491289002DE221 /* ZFPlayerDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZFPlayerDetailViewController.h; sourceTree = "<group>"; };
 		D227504C21491289002DE221 /* ZFPlayerDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZFPlayerDetailViewController.m; sourceTree = "<group>"; };
 		D23F3D9522A67DAD00BC4E19 /* ZFRotationViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ZFRotationViewController.xib; sourceTree = "<group>"; };
@@ -252,8 +249,6 @@
 				D23F3DA422A760FD00BC4E19 /* CustomControlView */,
 				6003F59C195388D20070C39A /* ZFAppDelegate.h */,
 				6003F59D195388D20070C39A /* ZFAppDelegate.m */,
-				D214BE0D23B1D53C008F3C2F /* UINavigationController+ZFNavigationBar.h */,
-				D214BE0E23B1D53C008F3C2F /* UINavigationController+ZFNavigationBar.m */,
 				873B8AEA1B1F5CCA007FD442 /* Main.storyboard */,
 				71719F9D1E33DC2100824A3D /* LaunchScreen.storyboard */,
 				6003F5A8195388D20070C39A /* Images.xcassets */,
@@ -706,7 +701,6 @@
 				D243FCA320C543D30014F533 /* ZFDouYinCell.m in Sources */,
 				CC112E9A20DBD45E0051EE60 /* ZFMixViewController.m in Sources */,
 				D23F3DA722A7618100BC4E19 /* ZFCustomControlViewViewController.m in Sources */,
-				D214BE0F23B1D53D008F3C2F /* UINavigationController+ZFNavigationBar.m in Sources */,
 				D243FCA020C53F950014F533 /* ZFDouYinViewController.m in Sources */,
 				D209360220B658AE0002C956 /* NSString+Size.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
