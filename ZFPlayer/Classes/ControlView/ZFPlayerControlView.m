@@ -802,6 +802,7 @@
     if (!_volumeBrightnessView) {
         _volumeBrightnessView = [[ZFVolumeBrightnessView alloc] init];
         _volumeBrightnessView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.7];
+        _volumeBrightnessView.hidden = YES;
     }
     return _volumeBrightnessView;
 }

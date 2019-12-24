@@ -35,7 +35,7 @@
     /// 播放器相关
     self.player = [[ZFPlayerController alloc] initWithPlayerManager:playerManager containerView:self.containerView];
     /// 适配横屏键盘，这里强制横屏处理
-    self.player.forceDeviceOrientation = YES;
+//    self.player.forceDeviceOrientation = YES;
     self.player.controlView = self.controlView;
     @weakify(self)
     self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
@@ -100,9 +100,9 @@
 
 /// 键盘支持横屏，这里必须设置支持多个方向
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    if (self.player.isFullScreen) {
-        return UIInterfaceOrientationMaskLandscape;
-    }
+//    if (self.player.isFullScreen) {
+//        return UIInterfaceOrientationMaskLandscape;
+//    }
     return UIInterfaceOrientationMaskPortrait;
 }
 
