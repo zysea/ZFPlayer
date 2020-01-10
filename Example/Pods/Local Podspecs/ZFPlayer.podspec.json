@@ -1,6 +1,6 @@
 {
   "name": "ZFPlayer",
-  "version": "3.2.12",
+  "version": "3.2.16",
   "summary": "A good player made by renzifeng",
   "homepage": "https://github.com/renzifeng/ZFPlayer",
   "license": {
@@ -12,13 +12,14 @@
   },
   "source": {
     "git": "https://github.com/renzifeng/ZFPlayer.git",
-    "tag": "3.2.12"
+    "tag": "3.2.16"
   },
   "social_media_url": "http://weibo.com/zifeng1300",
   "platforms": {
     "ios": "7.0"
   },
   "requires_arc": true,
+  "static_framework": true,
   "subspecs": [
     {
       "name": "Core",
