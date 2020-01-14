@@ -332,7 +332,7 @@
         return [self.landScapeControlView shouldResponseGestureWithPoint:point withGestureType:gestureType touch:touch];
     } else {
         if (!self.customDisablePanMovingDirection) {
-            if (self.player.scrollView) {  /// 列表时候禁止左右滑动
+            if (self.player.scrollView) {  /// 列表时候禁止上下滑动（防止和列表滑动冲突）
                 self.player.disablePanMovingDirection = ZFPlayerDisablePanMovingDirectionVertical;
             } else { /// 不禁用滑动方向
                 self.player.disablePanMovingDirection = ZFPlayerDisablePanMovingDirectionNone;
