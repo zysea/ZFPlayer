@@ -105,9 +105,9 @@ player.controlView = controlView;
 
 - Weibo: [@任子丰](https://weibo.com/zifeng1300)
 - Email: zifeng1300@gmail.com
-- QQ群: (付费群)
+- QQ群: 123449304
 
-![](https://upload-images.jianshu.io/upload_images/635942-c20708c913c591a0.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](https://upload-images.jianshu.io/upload_images/635942-a9fbbb2710de8eff.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ## Contributors
 
