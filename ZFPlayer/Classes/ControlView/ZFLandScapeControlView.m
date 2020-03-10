@@ -79,7 +79,7 @@
         [self resetControlView];
         
         /// statusBarFrame changed
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layOutControllerViews) name:UIApplicationDidChangeStatusBarFrameNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layoutControllerViews) name:UIApplicationDidChangeStatusBarFrameNotification object:nil];
     }
     return self;
 }
@@ -178,9 +178,42 @@
     [self.lockBtn addTarget:self action:@selector(lockButtonClickAction:) forControlEvents:UIControlEventTouchUpInside];
 }
 
-- (void)layOutControllerViews {
+#pragma mark - action
+
+- (void)layoutControllerViews {
     [self layoutIfNeeded];
     [self setNeedsLayout];
+}
+
+- (void)backBtnClickAction:(UIButton *)sender {
+    self.lockBtn.selected = NO;
+    self.player.lockedScreen = NO;
+    self.lockBtn.selected = NO;
+    if (self.player.orientationObserver.supportInterfaceOrientation & ZFInterfaceOrientationMaskPortrait) {
+        [self.player enterFullScreen:NO animated:YES];
+    }
+    if (self.backBtnClickCallback) {
+        self.backBtnClickCallback();
+    }
+}
+
+- (void)playPauseButtonClickAction:(UIButton *)sender {
+    [self playOrPause];
+}
+
+/// 根据当前播放状态取反
+- (void)playOrPause {
+    self.playOrPauseBtn.selected = !self.playOrPauseBtn.isSelected;
+    self.playOrPauseBtn.isSelected? [self.player.currentPlayerManager play]: [self.player.currentPlayerManager pause];
+}
+
+- (void)playBtnSelectedState:(BOOL)selected {
+    self.playOrPauseBtn.selected = selected;
+}
+
+- (void)lockButtonClickAction:(UIButton *)sender {
+    sender.selected = !sender.selected;
+    self.player.lockedScreen = sender.selected;
 }
 
 #pragma mark - ZFSliderViewDelegate
@@ -191,20 +224,23 @@
 
 - (void)sliderTouchEnded:(float)value {
     if (self.player.totalTime > 0) {
+        self.slider.isdragging = YES;
+        if (self.sliderValueChanging) self.sliderValueChanging(value, self.slider.isForward);
         @weakify(self)
         [self.player seekToTime:self.player.totalTime*value completionHandler:^(BOOL finished) {
             @strongify(self)
             if (finished) {
                 self.slider.isdragging = NO;
+                if (self.sliderValueChanged) self.sliderValueChanged(value);
+                if (self.seekToPlay) {
+                    [self.player.currentPlayerManager play];
+                }
             }
         }];
-        if (self.seekToPlay) {
-            [self.player.currentPlayerManager play];
-        }
     } else {
         self.slider.isdragging = NO;
+        self.slider.value = 0;
     }
-    if (self.sliderValueChanged) self.sliderValueChanged(value);
 }
 
 - (void)sliderValueChanged:(float)value {
@@ -219,23 +255,12 @@
 }
 
 - (void)sliderTapped:(float)value {
-    if (self.player.totalTime > 0) {
-        self.slider.isdragging = YES;
-        @weakify(self)
-        [self.player seekToTime:self.player.totalTime*value completionHandler:^(BOOL finished) {
-            @strongify(self)
-            if (finished) {
-                self.slider.isdragging = NO;
-                [self.player.currentPlayerManager play];
-            }
-        }];
-    } else {
-        self.slider.isdragging = NO;
-        self.slider.value = 0;
-    }
+    [self sliderTouchEnded:value];
+    NSString *currentTimeString = [ZFUtilities convertTimeSecond:self.player.totalTime*value];
+    self.currentTimeLabel.text = currentTimeString;
 }
 
-#pragma mark -
+#pragma mark - public method
 
 /// 重置ControlView
 - (void)resetControlView {
@@ -305,6 +330,7 @@
         NSString *totalTimeString = [ZFUtilities convertTimeSecond:totalTime];
         self.totalTimeLabel.text = totalTimeString;
         self.slider.value = videoPlayer.progress;
+        NSLog(@"=======%f",self.slider.value);
     }
 }
 
@@ -334,39 +360,6 @@
     [UIView animateWithDuration:0.3 animations:^{
         self.slider.sliderBtn.transform = CGAffineTransformIdentity;
     }];
-}
-
-#pragma mark - action
-
-- (void)backBtnClickAction:(UIButton *)sender {
-    self.lockBtn.selected = NO;
-    self.player.lockedScreen = NO;
-    self.lockBtn.selected = NO;
-    if (self.player.orientationObserver.supportInterfaceOrientation & ZFInterfaceOrientationMaskPortrait) {
-        [self.player enterFullScreen:NO animated:YES];
-    }
-    if (self.backBtnClickCallback) {
-        self.backBtnClickCallback();
-    }
-}
-
-- (void)playPauseButtonClickAction:(UIButton *)sender {
-    [self playOrPause];
-}
-
-/// 根据当前播放状态取反
-- (void)playOrPause {
-    self.playOrPauseBtn.selected = !self.playOrPauseBtn.isSelected;
-    self.playOrPauseBtn.isSelected? [self.player.currentPlayerManager play]: [self.player.currentPlayerManager pause];
-}
-
-- (void)playBtnSelectedState:(BOOL)selected {
-    self.playOrPauseBtn.selected = selected;
-}
-
-- (void)lockButtonClickAction:(UIButton *)sender {
-    sender.selected = !sender.selected;
-    self.player.lockedScreen = sender.selected;
 }
 
 #pragma mark - getter

@@ -334,11 +334,6 @@ static NSString *const kPresentationSize         = @"presentationSize";
         @strongify(self)
         if (!self) return;
         NSArray *loadedRanges = self.playerItem.seekableTimeRanges;
-        /// 大于0才把状态改为可以播放，解决黑屏问题
-        if (CMTimeGetSeconds(time) > 0 && !self.isReadyToPlay) {
-            self.isReadyToPlay = YES;
-            self.loadState = ZFPlayerLoadStatePlaythroughOK;
-        }
         if (self.isPlaying && self.loadState == ZFPlayerLoadStateStalled) self.player.rate = self.rate;
         if (loadedRanges.count > 0) {
             if (self.playerPlayTimeChanged) self.playerPlayTimeChanged(self, self.currentTime, self.totalTime);
@@ -357,8 +352,9 @@ static NSString *const kPresentationSize         = @"presentationSize";
     dispatch_async(dispatch_get_main_queue(), ^{
         if ([keyPath isEqualToString:kStatus]) {
             if (self.player.currentItem.status == AVPlayerItemStatusReadyToPlay) {
-                /// 第一次初始化
-                if (self.loadState == ZFPlayerLoadStatePrepare) {
+                if (!self.isReadyToPlay) {
+                    self.isReadyToPlay = YES;
+                    self.loadState = ZFPlayerLoadStatePlaythroughOK;
                     if (self.playerReadyToPlay) self.playerReadyToPlay(self, self.assetURL);
                 }
                 if (self.seekTime) {
