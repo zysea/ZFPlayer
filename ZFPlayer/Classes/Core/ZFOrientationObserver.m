@@ -406,7 +406,22 @@
 
 - (UIWindow *)customWindow {
     if (!_customWindow) {
-        _customWindow = [[UIWindow alloc] initWithFrame:CGRectZero];
+        if (@available(iOS 13.0, *)) {
+            UIWindowScene *windowScene = nil;
+            for (UIScene *scene in [UIApplication sharedApplication].connectedScenes) {
+                if (scene.activationState == UISceneActivationStateForegroundActive) {
+                    windowScene = (UIWindowScene *)scene;
+                }
+                if (!windowScene && [UIApplication sharedApplication].connectedScenes.count == 1) {
+                    windowScene = (UIWindowScene *)scene;
+                }
+            }
+            if (windowScene) {
+                _customWindow = [[UIWindow alloc] initWithWindowScene:windowScene];
+            }
+        } else {
+            _customWindow = [[UIWindow alloc] initWithFrame:CGRectZero];
+        }
     }
     return _customWindow;
 }
