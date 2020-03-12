@@ -64,6 +64,26 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
             });
         }
     };
+    
+    /// 停止的时候找出最合适的播放
+    self.player.zf_scrollViewDidEndScrollingCallback = ^(NSIndexPath * _Nonnull indexPath) {
+        @strongify(self)
+        [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
+    };
+    
+    /*
+     
+    /// 滑动中找到适合的就自动播放
+    /// 如果是停止后再寻找播放可以忽略这个回调
+    /// 如果在滑动中就要寻找到播放的indexPath，并且开始播放，那就要这样写
+    self.player.zf_playerShouldPlayInScrollView = ^(NSIndexPath * _Nonnull indexPath) {
+        @strongify(self)
+        if ([indexPath compare:self.player.playingIndexPath] != NSOrderedSame) {
+            [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
+        }
+    };
+     
+    */
 }
 
 - (void)viewWillLayoutSubviews {
@@ -188,12 +208,6 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
         _collectionView.dataSource = self;
         _collectionView.backgroundColor = [UIColor whiteColor];
         [_collectionView registerClass:[ZFCollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
-        /// 停止的时候找出最合适的播放
-        @weakify(self)
-        _collectionView.zf_scrollViewDidStopScrollCallback = ^(NSIndexPath * _Nonnull indexPath) {
-            @strongify(self)
-            [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
-        };
     }
     return _collectionView;
 }

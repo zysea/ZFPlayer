@@ -68,6 +68,14 @@ static NSString *kIdentifier = @"kIdentifier";
         [self.controlView resetControlView];
         [self.player stopCurrentPlayingCell];
     };
+    
+    /// 停止的时候找出最合适的播放
+    self.player.zf_scrollViewDidEndScrollingCallback = ^(NSIndexPath * _Nonnull indexPath) {
+        @strongify(self)
+        if (!self.player.playingIndexPath) {
+            [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
+        }
+    };
   
     /// 以下设置滑出屏幕后不停止播放
     self.player.stopWhileNotVisible = NO;
@@ -273,14 +281,6 @@ static NSString *kIdentifier = @"kIdentifier";
         _tableView.estimatedRowHeight = 0;
         _tableView.estimatedSectionFooterHeight = 0;
         _tableView.estimatedSectionHeaderHeight = 0;
-        /// 停止的时候找出最合适的播放
-        @weakify(self)
-        _tableView.zf_scrollViewDidStopScrollCallback = ^(NSIndexPath * _Nonnull indexPath) {
-            @strongify(self)
-            if (!self.player.playingIndexPath) {
-                [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
-            }
-        };
     }
     return _tableView;
 }

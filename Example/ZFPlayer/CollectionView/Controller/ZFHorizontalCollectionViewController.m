@@ -65,6 +65,12 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
         @strongify(self)
         [self.player.currentPlayerManager replay];
     };
+    
+    /// 停止的时候找出最合适的播放
+    self.player.zf_scrollViewDidEndScrollingCallback = ^(NSIndexPath * _Nonnull indexPath) {
+        @strongify(self)
+        [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
+    };
 }
 
 - (void)viewWillLayoutSubviews {
@@ -204,13 +210,6 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
         } else {
             self.automaticallyAdjustsScrollViewInsets = NO;
         }
-        /// 停止的时候找出最合适的播放
-        @weakify(self)
-        _collectionView.zf_scrollViewDidStopScrollCallback = ^(NSIndexPath * _Nonnull indexPath) {
-            @strongify(self)
-            [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
-        };
-        
     }
     return _collectionView;
 }

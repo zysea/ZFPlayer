@@ -46,8 +46,10 @@ static NSString *kIdentifier = @"kIdentifier";
     self.player = [ZFPlayerController playerWithScrollView:self.tableView playerManager:playerManager containerViewTag:100];
     self.player.controlView = self.controlView;
     self.player.assetURLs = self.urls;
-    /// 0.8是消失80%时候
-    self.player.playerDisapperaPercent = 0.8;
+    /// 消失比例停止播放
+    self.player.playerDisapperaPercent = 0.2;
+    self.player.playerApperaPercent = 0.8;
+    
     /// 移动网络依然自动播放
     self.player.WWANAutoPlay = YES;
     
@@ -68,6 +70,41 @@ static NSString *kIdentifier = @"kIdentifier";
             [self.player stopCurrentPlayingCell];
         }
     };
+    
+    self.player.zf_playerShouldPlayInScrollView = ^(NSIndexPath * _Nonnull indexPath) {
+        @strongify(self)
+        if (indexPath == nil) { /// 没有找到可以播放视频
+            /// 显示黑色蒙版
+            ZFTableViewCell *cell1 = [self.tableView cellForRowAtIndexPath:self.player.shouldPlayIndexPath];
+            [cell1 showMaskView];
+        }
+        
+        /// 用来控制cell明暗的
+        if ([indexPath compare:self.player.shouldPlayIndexPath] != NSOrderedSame) {
+            /// 显示黑色蒙版
+            ZFTableViewCell *cell1 = [self.tableView cellForRowAtIndexPath:self.player.shouldPlayIndexPath];
+            [cell1 showMaskView];
+            /// 隐藏黑色蒙版
+            ZFTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+            [cell hideMaskView];
+                
+        }
+        /// 如果当前播放的和找到的是同一个indexPath,则忽略
+        if ([indexPath compare:self.player.playingIndexPath] != NSOrderedSame) {
+            /// 滑动中找到适合的就自动播放，如果是停止后在寻找播放可以忽略这句
+            /// 如果在滑动中就要寻找到播放indexPath，并且开始播放，那就要这样写
+            [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
+        }
+    };
+    
+    /// 停止的时候找出最合适的播放
+    self.player.zf_scrollViewDidEndScrollingCallback = ^(NSIndexPath * _Nonnull indexPath) {
+        @strongify(self)
+        if (!self.player.playingIndexPath) {
+            [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
+        }
+    };
+    
 }
 
 - (void)viewWillLayoutSubviews {
@@ -77,14 +114,14 @@ static NSString *kIdentifier = @"kIdentifier";
     self.tableView.frame = CGRectMake(0, y, self.view.frame.size.width, h-y);
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    @weakify(self)
-    [self.tableView zf_filterShouldPlayCellWhileScrolled:^(NSIndexPath *indexPath) {
-        @strongify(self)
-        [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
-    }];
-}
+//- (void)viewDidAppear:(BOOL)animated {
+//    [super viewDidAppear:animated];
+//    @weakify(self)
+//    [self.tableView zf_filterShouldPlayCellWhileScrolled:^(NSIndexPath *indexPath) {
+//        @strongify(self)
+//        [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
+//    }];
+//}
 
 - (void)requestData {
     self.urls = @[].mutableCopy;
@@ -147,18 +184,6 @@ static NSString *kIdentifier = @"kIdentifier";
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     [scrollView zf_scrollViewDidScroll];
-    @weakify(self)
-    [scrollView zf_filterShouldPlayCellWhileScrolling:^(NSIndexPath *indexPath) {
-        if ([indexPath compare:self.tableView.zf_shouldPlayIndexPath] != NSOrderedSame) {
-            @strongify(self)
-            /// 显示黑色蒙版
-            ZFTableViewCell *cell1 = [self.tableView cellForRowAtIndexPath:self.tableView.zf_shouldPlayIndexPath];
-            [cell1 showMaskView];
-            /// 隐藏黑色蒙版
-            ZFTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-            [cell hideMaskView];
-        }
-    }];
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
@@ -258,27 +283,6 @@ static NSString *kIdentifier = @"kIdentifier";
         _tableView.estimatedRowHeight = 0;
         _tableView.estimatedSectionFooterHeight = 0;
         _tableView.estimatedSectionHeaderHeight = 0;
-        /// 停止的时候找出最合适的播放
-        @weakify(self)
-        _tableView.zf_scrollViewDidStopScrollCallback = ^(NSIndexPath * _Nonnull indexPath) {
-            @strongify(self)
-            if (!self.player.playingIndexPath) {
-                [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
-            }
-        };
-        
-        /// 明暗回调
-        _tableView.zf_shouldPlayIndexPathCallback = ^(NSIndexPath * _Nonnull indexPath) {
-            @strongify(self)
-            if ([indexPath compare:self.tableView.zf_shouldPlayIndexPath] != NSOrderedSame) {
-                /// 显示黑色蒙版
-                ZFTableViewCell *cell1 = [self.tableView cellForRowAtIndexPath:self.tableView.zf_shouldPlayIndexPath];
-                [cell1 showMaskView];
-                /// 隐藏黑色蒙版
-                ZFTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-                [cell hideMaskView];
-            }
-        };
     }
     return _tableView;
 }

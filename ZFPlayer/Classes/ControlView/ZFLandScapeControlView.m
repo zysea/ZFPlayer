@@ -330,7 +330,6 @@
         NSString *totalTimeString = [ZFUtilities convertTimeSecond:totalTime];
         self.totalTimeLabel.text = totalTimeString;
         self.slider.value = videoPlayer.progress;
-        NSLog(@"=======%f",self.slider.value);
     }
 }
 

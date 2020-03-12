@@ -1019,6 +1019,16 @@
         /// add to window
         if (!self.stopWhileNotVisible && playerDisapperaPercent >= self.playerDisapperaPercent) [self addPlayerViewToKeyWindow];
     };
+    
+    scrollView.zf_playerShouldPlayInScrollView = ^(NSIndexPath * _Nonnull indexPath) {
+        @strongify(self)
+        if (self.zf_playerShouldPlayInScrollView) self.zf_playerShouldPlayInScrollView(indexPath);
+    };
+    
+    scrollView.zf_scrollViewDidEndScrollingCallback = ^(NSIndexPath * _Nonnull indexPath) {
+        @strongify(self)
+        if (self.zf_scrollViewDidEndScrollingCallback) self.zf_scrollViewDidEndScrollingCallback(indexPath);
+    };
 }
 
 - (void)setWWANAutoPlay:(BOOL)WWANAutoPlay {
@@ -1100,6 +1110,14 @@
     objc_setAssociatedObject(self, @selector(zf_playerDidDisappearInScrollView), zf_playerDidDisappearInScrollView, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
+- (void)setZf_playerShouldPlayInScrollView:(void (^)(NSIndexPath * _Nonnull))zf_playerShouldPlayInScrollView {
+    objc_setAssociatedObject(self, @selector(zf_playerShouldPlayInScrollView), zf_playerShouldPlayInScrollView, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
+- (void)setZf_scrollViewDidEndScrollingCallback:(void (^)(NSIndexPath * _Nonnull))zf_scrollViewDidEndScrollingCallback {
+    objc_setAssociatedObject(self, @selector(zf_scrollViewDidEndScrollingCallback), zf_scrollViewDidEndScrollingCallback, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
 #pragma mark - getter
 
 - (UIScrollView *)scrollView {
@@ -1124,6 +1142,10 @@
 
 - (NSIndexPath *)playingIndexPath {
     return objc_getAssociatedObject(self, _cmd);
+}
+
+- (NSIndexPath *)shouldPlayIndexPath {
+    return self.scrollView.zf_shouldPlayIndexPath;
 }
 
 - (NSArray<NSArray<NSURL *> *> *)sectionAssetURLs {
@@ -1172,7 +1194,23 @@
     return objc_getAssociatedObject(self, _cmd);
 }
 
+- (void (^)(NSIndexPath * _Nonnull))zf_playerShouldPlayInScrollView {
+    return objc_getAssociatedObject(self, _cmd);
+}
+
+- (void (^)(NSIndexPath * _Nonnull))zf_scrollViewDidEndScrollingCallback {
+    return objc_getAssociatedObject(self, _cmd);
+}
+
 #pragma mark - Public method
+
+- (void)zf_filterShouldPlayCellWhileScrolled:(void (^ __nullable)(NSIndexPath *indexPath))handler {
+    [self.scrollView zf_filterShouldPlayCellWhileScrolled:handler];
+}
+
+- (void)zf_filterShouldPlayCellWhileScrolling:(void (^ __nullable)(NSIndexPath *indexPath))handler {
+    [self.scrollView zf_filterShouldPlayCellWhileScrolling:handler];
+}
 
 - (void)playTheIndexPath:(NSIndexPath *)indexPath {
     self.playingIndexPath = indexPath;

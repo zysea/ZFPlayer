@@ -73,6 +73,19 @@ static NSString *kIdentifier = @"kIdentifier";
             self.player.currentPlayerManager.scalingMode = ZFPlayerScalingModeAspectFill;
         }
     };
+    
+    /// 停止的时候找出最合适的播放
+    self.player.zf_scrollViewDidEndScrollingCallback = ^(NSIndexPath * _Nonnull indexPath) {
+        @strongify(self)
+        if (self.player.playingIndexPath) return;
+        if (indexPath.row == self.dataSource.count-1) {
+            /// 加载下一页数据
+            [self requestData];
+            self.player.assetURLs = self.urls;
+            [self.tableView reloadData];
+        }
+        [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
+    };
 }
 
 - (void)viewWillLayoutSubviews {
@@ -237,20 +250,6 @@ static NSString *kIdentifier = @"kIdentifier";
         _tableView.frame = self.view.bounds;
         _tableView.rowHeight = _tableView.frame.size.height;
         _tableView.scrollsToTop = NO;
-        
-        /// 停止的时候找出最合适的播放
-        @weakify(self)
-        _tableView.zf_scrollViewDidStopScrollCallback = ^(NSIndexPath * _Nonnull indexPath) {
-            @strongify(self)
-            if (self.player.playingIndexPath) return;
-            if (indexPath.row == self.dataSource.count-1) {
-                /// 加载下一页数据
-                [self requestData];
-                self.player.assetURLs = self.urls;
-                [self.tableView reloadData];
-            }
-            [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
-        };
     }
     return _tableView;
 }
