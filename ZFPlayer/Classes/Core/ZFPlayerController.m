@@ -244,7 +244,7 @@
             if (self.pauseWhenAppResignActive && self.currentPlayerManager.isPlaying) {
                 self.pauseByEvent = YES;
             }
-            if (self.isFullScreen && !self.isLockedScreen) self.orientationObserver.lockedScreen = YES;
+            self.orientationObserver.lockedScreen = YES;
             [[UIApplication sharedApplication].keyWindow endEditing:YES];
             if (!self.pauseWhenAppResignActive) {
                 [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
@@ -255,7 +255,7 @@
             @strongify(self)
             if (self.isViewControllerDisappear) return;
             if (self.isPauseByEvent) self.pauseByEvent = NO;
-            if (self.isFullScreen && !self.isLockedScreen) self.orientationObserver.lockedScreen = NO;
+            self.orientationObserver.lockedScreen = NO;
         };
         _notification.oldDeviceUnavailable = ^(ZFPlayerNotification * _Nonnull registrar) {
             @strongify(self)
