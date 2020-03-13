@@ -41,6 +41,8 @@
     self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
         @strongify(self)
         self.view.backgroundColor = isFullScreen ? [UIColor blackColor] : [UIColor whiteColor];
+        /// 解决导航栏上移问题
+        self.navigationController.navigationBar.zf_height = KNavBarHeight;
         [self.textField resignFirstResponder];
         [self setNeedsStatusBarAppearanceUpdate];
     };

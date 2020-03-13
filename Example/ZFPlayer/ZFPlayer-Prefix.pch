@@ -13,4 +13,11 @@
 #ifdef __OBJC__
     @import UIKit;
     @import Foundation;
+
+// iphoneX iphoneXs iphoneXS MAX 宏定义
+#define ISIPHONE_X ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? ((NSInteger)(([[UIScreen mainScreen] currentMode].size.height/[[UIScreen mainScreen] currentMode].size.width)*100) == 216) : NO)
+
+/// 导航栏高度
+#define KNavBarHeight ISIPHONE_X ? 88 : 64
+
 #endif

@@ -13,7 +13,8 @@
 #import <ZFPlayer/KSMediaPlayerManager.h>
 #import <ZFPlayer/ZFPlayerControlView.h>
 #import "ZFNotAutoPlayViewController.h"
-#import "UIImageView+ZFCache.h"
+#import <ZFPlayer/UIView+ZFFrame.h>
+#import <ZFPlayer/UIImageView+ZFCache.h>
 #import "ZFUtilities.h"
 
 static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/635942-14593722fe3f0695.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240";
@@ -52,6 +53,8 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     @weakify(self)
     self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
         @strongify(self)
+        /// 解决导航栏上移问题
+        self.navigationController.navigationBar.zf_height = KNavBarHeight;
         [self setNeedsStatusBarAppearanceUpdate];
     };
     
@@ -154,6 +157,9 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
 }
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+    if (self.player.isFullScreen && self.player.orientationObserver.fullScreenMode == ZFFullScreenModeLandscape) {
+        return UIInterfaceOrientationMaskLandscape;
+    }
     return UIInterfaceOrientationMaskPortrait;
 }
 

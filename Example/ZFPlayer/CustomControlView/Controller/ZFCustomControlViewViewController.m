@@ -13,6 +13,7 @@
 #import <ZFPlayer/ZFIJKPlayerManager.h>
 #import <ZFPlayer/KSMediaPlayerManager.h>
 #import <ZFPlayer/ZFPlayerControlView.h>
+#import <ZFPlayer/UIView+ZFFrame.h>
 #import "UIImageView+ZFCache.h"
 #import "ZFUtilities.h"
 
@@ -32,7 +33,7 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.containerView];
-    
+   
     ZFAVPlayerManager *playerManager = [[ZFAVPlayerManager alloc] init];
     /// 播放器相关
     self.player = [ZFPlayerController playerWithPlayerManager:playerManager containerView:self.containerView];
@@ -43,6 +44,8 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     @weakify(self)
     self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
         @strongify(self)
+        /// 解决导航栏上移问题
+        self.navigationController.navigationBar.zf_height = KNavBarHeight;
         [self setNeedsStatusBarAppearanceUpdate];
     };
     

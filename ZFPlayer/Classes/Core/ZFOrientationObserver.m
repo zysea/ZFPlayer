@@ -157,16 +157,15 @@
 
 - (void)handleDeviceOrientationChange {
     if (self.fullScreenMode == ZFFullScreenModePortrait || !self.allowOrentitaionRotation) return;
+
     if (UIDeviceOrientationIsValidInterfaceOrientation([UIDevice currentDevice].orientation)) {
-        _currentOrientation = (UIInterfaceOrientation)[UIDevice currentDevice].orientation;
+        UIInterfaceOrientation currentOrientation = (UIInterfaceOrientation)[UIDevice currentDevice].orientation;
+        if (_currentOrientation == currentOrientation) return;
+        _currentOrientation = currentOrientation;
     } else {
         _currentOrientation = UIInterfaceOrientationUnknown;
         return;
     }
-    
-    UIInterfaceOrientation currentOrientation = [UIApplication sharedApplication].statusBarOrientation;
-    // Determine that if the current direction is the same as the direction you want to rotate, do nothing
-    if (_currentOrientation == currentOrientation && !self.forceDeviceOrientation) return;
     
     switch (_currentOrientation) {
         case UIInterfaceOrientationPortrait: {
@@ -418,6 +417,8 @@
             }
             if (windowScene) {
                 _customWindow = [[UIWindow alloc] initWithWindowScene:windowScene];
+            } else {
+                _customWindow = [[UIWindow alloc] initWithFrame:CGRectZero];
             }
         } else {
             _customWindow = [[UIWindow alloc] initWithFrame:CGRectZero];
