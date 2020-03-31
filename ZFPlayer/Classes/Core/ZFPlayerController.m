@@ -711,8 +711,7 @@
 }
 
 - (BOOL)shouldForceDeviceOrientation {
-    if (self.forceDeviceOrientation) return YES;
-    return NO;
+    return self.forceDeviceOrientation;
 }
 
 #pragma mark - getter

@@ -12,6 +12,7 @@
 #import <ZFPlayer/ZFIJKPlayerManager.h>
 #import <ZFPlayer/KSMediaPlayerManager.h>
 #import <ZFPlayer/ZFPlayerControlView.h>
+#import <ZFPlayer/UIView+ZFFrame.h>
 #import "UIImageView+ZFCache.h"
 #import "ZFUtilities.h"
 #import "ZFADControlView.h"
@@ -46,7 +47,12 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     @weakify(self)
     self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
         @strongify(self)
+        kAPPDelegate.allowOrentitaionRotation = isFullScreen;
         [self setNeedsStatusBarAppearanceUpdate];
+        if (!isFullScreen) {
+            /// 解决导航栏上移问题
+            self.navigationController.navigationBar.zf_height = KNavBarHeight;
+        }
     };
     
     /// 播放完成

@@ -5,6 +5,7 @@
 //
 
 #import <Availability.h>
+#import "ZFAppDelegate.h"
 
 #ifndef __IPHONE_5_0
 #warning "This project uses features only available in iOS SDK 5.0 and later."
@@ -19,5 +20,8 @@
 
 /// 导航栏高度
 #define KNavBarHeight ISIPHONE_X ? 88 : 64
+
+#define kAPPDelegate ((ZFAppDelegate*)[[UIApplication sharedApplication] delegate])
+
 
 #endif

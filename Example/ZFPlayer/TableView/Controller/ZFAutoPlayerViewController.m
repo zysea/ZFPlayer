@@ -65,10 +65,13 @@ static NSString *kIdentifier = @"kIdentifier";
     
     self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
         @strongify(self)
-        /// 解决导航栏上移问题
-        self.navigationController.navigationBar.zf_height = KNavBarHeight;
         [self setNeedsStatusBarAppearanceUpdate];
         self.tableView.scrollsToTop = !isFullScreen;
+        kAPPDelegate.allowOrentitaionRotation = isFullScreen;
+        if (!isFullScreen) {
+            /// 解决导航栏上移问题
+            self.navigationController.navigationBar.zf_height = KNavBarHeight;
+        }
     };
     
     /// 停止的时候找出最合适的播放
@@ -134,9 +137,9 @@ static NSString *kIdentifier = @"kIdentifier";
 }
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    if (self.player.isFullScreen && self.player.orientationObserver.fullScreenMode == ZFFullScreenModeLandscape) {
-        return UIInterfaceOrientationMaskLandscape;
-    }
+//    if (self.player.isFullScreen && self.player.orientationObserver.fullScreenMode == ZFFullScreenModeLandscape) {
+//        return UIInterfaceOrientationMaskLandscape;
+//    }
     return UIInterfaceOrientationMaskPortrait;
 }
 

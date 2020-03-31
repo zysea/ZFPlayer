@@ -47,6 +47,7 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
     self.player.controlView = self.controlView;
     self.player.assetURLs = self.urls;
     self.player.shouldAutoPlay = YES;
+    self.player.allowOrentitaionRotation = NO;
     self.player.disablePanMovingDirection = ZFPlayerDisablePanMovingDirectionAll;
     /// 1.0是消失100%时候
     self.player.playerDisapperaPercent = 1.0;
@@ -54,7 +55,12 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
     @weakify(self)
     self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
         @strongify(self)
+        kAPPDelegate.allowOrentitaionRotation = isFullScreen;
         [self setNeedsStatusBarAppearanceUpdate];
+        if (!isFullScreen) {
+            /// 解决导航栏上移问题
+            self.navigationController.navigationBar.zf_height = KNavBarHeight;
+        }
         self.collectionView.scrollsToTop = !isFullScreen;
         if (isFullScreen) {
             self.player.disablePanMovingDirection = ZFPlayerDisablePanMovingDirectionNone;

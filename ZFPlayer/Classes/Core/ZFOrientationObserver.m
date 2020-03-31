@@ -113,6 +113,7 @@
         _supportInterfaceOrientation = ZFInterfaceOrientationMaskAllButUpsideDown;
         _allowOrentitaionRotation = YES;
         _roateType = ZFRotateTypeNormal;
+        _currentOrientation = UIInterfaceOrientationPortrait;
     }
     return self;
 }
@@ -158,16 +159,17 @@
 - (void)handleDeviceOrientationChange {
     if (self.fullScreenMode == ZFFullScreenModePortrait || !self.allowOrentitaionRotation) return;
 
+    UIInterfaceOrientation currentOrientation = UIInterfaceOrientationUnknown;
     if (UIDeviceOrientationIsValidInterfaceOrientation([UIDevice currentDevice].orientation)) {
-        UIInterfaceOrientation currentOrientation = (UIInterfaceOrientation)[UIDevice currentDevice].orientation;
-        if (_currentOrientation == currentOrientation) return;
-        _currentOrientation = currentOrientation;
+        currentOrientation = (UIInterfaceOrientation)[UIDevice currentDevice].orientation;
     } else {
-        _currentOrientation = UIInterfaceOrientationUnknown;
         return;
     }
+
+    // Determine that if the current direction is the same as the direction you want to rotate, do nothing
+    if (currentOrientation == _currentOrientation && !self.forceDeviceOrientation) return;
     
-    switch (_currentOrientation) {
+    switch (currentOrientation) {
         case UIInterfaceOrientationPortrait: {
             if ([self isSupportedPortrait]) {
                 [self enterLandscapeFullScreen:UIInterfaceOrientationPortrait animated:YES];

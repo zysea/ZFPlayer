@@ -53,10 +53,13 @@ static NSString *kIdentifier = @"kIdentifier";
     @weakify(self)
     self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
         @strongify(self)
-        /// 解决导航栏上移问题
-        self.navigationController.navigationBar.zf_height = KNavBarHeight;
+        kAPPDelegate.allowOrentitaionRotation = isFullScreen;
         [self setNeedsStatusBarAppearanceUpdate];
         self.tableView.scrollsToTop = !isFullScreen;
+        if (!isFullScreen) {
+            /// 解决导航栏上移问题
+            self.navigationController.navigationBar.zf_height = KNavBarHeight;
+        }
     };
     
     self.player.playerDidToEnd = ^(id  _Nonnull asset) {
