@@ -209,7 +209,8 @@
         if (self.blackView.superview != nil) [self.blackView removeFromSuperview];
     }
     if (self.orientationWillChange) self.orientationWillChange(self, self.isFullScreen);
-  
+    [UIViewController attemptRotationToDeviceOrientation];
+
     [superview addSubview:self.view];
     if (animated) {
         [UIView animateWithDuration:self.duration animations:^{
