@@ -84,7 +84,7 @@ static NSString *kIdentifier = @"kIdentifier";
             self.player.assetURLs = self.urls;
             [self.tableView reloadData];
         }
-        [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
+        [self playTheVideoAtIndexPath:indexPath];
     };
 }
 
@@ -105,7 +105,7 @@ static NSString *kIdentifier = @"kIdentifier";
         /// 找到可以播放的视频并播放
         [self.tableView zf_filterShouldPlayCellWhileScrolled:^(NSIndexPath *indexPath) {
             @strongify(self)
-            [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
+            [self playTheVideoAtIndexPath:indexPath];
         }];
     });
 }
@@ -134,7 +134,7 @@ static NSString *kIdentifier = @"kIdentifier";
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionNone animated:NO];
     [self.tableView zf_filterShouldPlayCellWhileScrolled:^(NSIndexPath *indexPath) {
         @strongify(self)
-        [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
+        [self playTheVideoAtIndexPath:indexPath];
     }];
     /// 如果是最后一行，去请求新数据
     if (index == self.dataSource.count-1) {
@@ -197,13 +197,13 @@ static NSString *kIdentifier = @"kIdentifier";
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
+    [self playTheVideoAtIndexPath:indexPath];
 }
 
 #pragma mark - ZFTableViewCellDelegate
 
 - (void)zf_playTheVideoAtIndexPath:(NSIndexPath *)indexPath {
-    [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
+    [self playTheVideoAtIndexPath:indexPath];
 }
 
 #pragma mark - private method
@@ -213,8 +213,8 @@ static NSString *kIdentifier = @"kIdentifier";
 }
 
 /// play the video
-- (void)playTheVideoAtIndexPath:(NSIndexPath *)indexPath scrollToTop:(BOOL)scrollToTop {
-    [self.player playTheIndexPath:indexPath scrollToTop:scrollToTop];
+- (void)playTheVideoAtIndexPath:(NSIndexPath *)indexPath {
+    [self.player playTheIndexPath:indexPath];
     [self.controlView resetControlView];
     ZFTableData *data = self.dataSource[indexPath.row];
     UIViewContentMode imageMode;

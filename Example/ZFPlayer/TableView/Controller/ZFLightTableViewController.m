@@ -250,10 +250,7 @@ static NSString *kIdentifier = @"kIdentifier";
 /// play the video
 - (void)playTheVideoAtIndexPath:(NSIndexPath *)indexPath scrollToTop:(BOOL)scrollToTop {
     if (scrollToTop) {
-        /// 自定义滑动动画时间
-        [self.tableView zf_scrollToRowAtIndexPath:indexPath animateWithDuration:0.8 completionHandler:^{
-            [self.player playTheIndexPath:indexPath];
-        }];
+        [self.player playTheIndexPath:indexPath scrollPosition:ZFPlayerScrollViewScrollPositionTop animated:YES];
     } else {
         [self.player playTheIndexPath:indexPath];
     }

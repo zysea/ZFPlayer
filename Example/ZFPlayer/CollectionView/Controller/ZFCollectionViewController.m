@@ -149,7 +149,11 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
 
 /// play the video
 - (void)playTheVideoAtIndexPath:(NSIndexPath *)indexPath scrollToTop:(BOOL)scrollToTop {
-    [self.player playTheIndexPath:indexPath scrollToTop:scrollToTop];
+    if (scrollToTop) {
+        [self.player playTheIndexPath:indexPath scrollPosition:ZFPlayerScrollViewScrollPositionCenteredVertically animated:YES];
+    } else {
+        [self.player playTheIndexPath:indexPath];
+    }
     ZFTableData *data = self.dataSource[indexPath.row];
     [self.controlView showTitle:data.title
                  coverURLString:data.thumbnail_url
