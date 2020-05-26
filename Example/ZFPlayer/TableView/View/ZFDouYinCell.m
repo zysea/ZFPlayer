@@ -148,7 +148,7 @@
     if (!_coverImageView) {
         _coverImageView = [[UIImageView alloc] init];
         _coverImageView.userInteractionEnabled = YES;
-        _coverImageView.tag = 100;
+        _coverImageView.tag = kPlayerViewTag;
 //        _coverImageView.contentMode = UIViewContentModeScaleAspectFit;
     }
     return _coverImageView;

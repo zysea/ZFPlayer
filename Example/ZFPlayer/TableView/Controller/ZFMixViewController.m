@@ -43,7 +43,7 @@ static NSString *kDouYinIdentifier = @"douYinIdentifier";
 //    ZFIJKPlayerManager *playerManager = [[ZFIJKPlayerManager alloc] init];
     
     /// player,tag值必须在cell里设置
-    self.player = [ZFPlayerController playerWithScrollView:self.tableView playerManager:playerManager containerViewTag:100];
+    self.player = [ZFPlayerController playerWithScrollView:self.tableView playerManager:playerManager containerViewTag:kPlayerViewTag];
     self.player.controlView = self.controlView;
     /// 1.0是消失100%时候
     self.player.playerDisapperaPercent = 0.8;
@@ -71,7 +71,7 @@ static NSString *kDouYinIdentifier = @"douYinIdentifier";
     self.player.zf_scrollViewDidEndScrollingCallback = ^(NSIndexPath * _Nonnull indexPath) {
         @strongify(self)
         if (!self.player.playingIndexPath) {
-            [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
+            [self playTheVideoAtIndexPath:indexPath scrollAnimated:NO];
         }
     };
 
@@ -82,7 +82,7 @@ static NSString *kDouYinIdentifier = @"douYinIdentifier";
     self.player.zf_playerShouldPlayInScrollView = ^(NSIndexPath * _Nonnull indexPath) {
         @strongify(self)
         if ([indexPath compare:self.player.playingIndexPath] != NSOrderedSame) {
-            [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
+            [self playTheVideoAtIndexPath:indexPath scrollAnimated:NO];
         }
     };
      
@@ -100,7 +100,7 @@ static NSString *kDouYinIdentifier = @"douYinIdentifier";
     @weakify(self)
     [self.tableView zf_filterShouldPlayCellWhileScrolled:^(NSIndexPath *indexPath) {
         @strongify(self)
-        [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
+        [self playTheVideoAtIndexPath:indexPath scrollAnimated:NO];
     }];
 }
 
@@ -194,7 +194,7 @@ static NSString *kDouYinIdentifier = @"douYinIdentifier";
     }
     /// 如果没有播放，则点击进详情页会自动播放
     if (!self.player.currentPlayerManager.isPlaying) {
-        [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
+        [self playTheVideoAtIndexPath:indexPath scrollAnimated:NO];
     }
     /// 到详情页
     ZFPlayerDetailViewController *detailVC = [ZFPlayerDetailViewController new];
@@ -225,16 +225,16 @@ static NSString *kDouYinIdentifier = @"douYinIdentifier";
 #pragma mark - ZFTableViewCellDelegate
 
 - (void)zf_playTheVideoAtIndexPath:(NSIndexPath *)indexPath {
-    [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
+    [self playTheVideoAtIndexPath:indexPath scrollAnimated:NO];
 }
 
 #pragma mark - private method
 
 /// play the video
-- (void)playTheVideoAtIndexPath:(NSIndexPath *)indexPath scrollToTop:(BOOL)scrollToTop {
+- (void)playTheVideoAtIndexPath:(NSIndexPath *)indexPath scrollAnimated:(BOOL)animated {
     NSInteger index = (indexPath.row-1)/3;
     ZFTableViewCellLayout *layout = self.dataSource[index];
-    if (scrollToTop) {
+    if (animated) {
         [self.player playTheIndexPath:indexPath assetURL:[NSURL URLWithString:layout.data.video_url] scrollPosition:ZFPlayerScrollViewScrollPositionTop animated:YES];
     } else {
         [self.player playTheIndexPath:indexPath assetURL:[NSURL URLWithString:layout.data.video_url]];

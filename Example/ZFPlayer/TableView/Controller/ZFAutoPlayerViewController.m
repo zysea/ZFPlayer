@@ -44,11 +44,13 @@ static NSString *kIdentifier = @"kIdentifier";
 //    ZFIJKPlayerManager *playerManager = [[ZFIJKPlayerManager alloc] init];
     
     /// player的tag值必须在cell里设置
-    self.player = [ZFPlayerController playerWithScrollView:self.tableView playerManager:playerManager containerViewTag:100];
+    self.player = [ZFPlayerController playerWithScrollView:self.tableView playerManager:playerManager containerViewTag:kPlayerViewTag];
     self.player.controlView = self.controlView;
     self.player.assetURLs = self.urls;
-    /// 0.8是消失80%时候，默认0.5
-    self.player.playerDisapperaPercent = 0.8;
+    /// 0.4是消失40%时候
+    self.player.playerDisapperaPercent = 0.4;
+    /// 0.6是出现60%时候
+    self.player.playerApperaPercent = 0.6;
     /// 移动网络依然自动播放
     self.player.WWANAutoPlay = YES;
     
@@ -57,7 +59,7 @@ static NSString *kIdentifier = @"kIdentifier";
         @strongify(self)
         if (self.player.playingIndexPath.row < self.urls.count - 1) {
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.player.playingIndexPath.row+1 inSection:0];
-            [self playTheVideoAtIndexPath:indexPath scrollToTop:YES];
+            [self playTheVideoAtIndexPath:indexPath scrollAnimated:YES];
         } else {
             [self.player stopCurrentPlayingCell];
         }
@@ -78,23 +80,19 @@ static NSString *kIdentifier = @"kIdentifier";
     self.player.zf_scrollViewDidEndScrollingCallback = ^(NSIndexPath * _Nonnull indexPath) {
         @strongify(self)
         if (!self.player.playingIndexPath) {
-            [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
+            [self playTheVideoAtIndexPath:indexPath scrollAnimated:NO];
         }
     };
     
-    /*
-     
     /// 滑动中找到适合的就自动播放
     /// 如果是停止后再寻找播放可以忽略这个回调
     /// 如果在滑动中就要寻找到播放的indexPath，并且开始播放，那就要这样写
     self.player.zf_playerShouldPlayInScrollView = ^(NSIndexPath * _Nonnull indexPath) {
         @strongify(self)
         if ([indexPath compare:self.player.playingIndexPath] != NSOrderedSame) {
-            [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
+            [self playTheVideoAtIndexPath:indexPath scrollAnimated:NO];
         }
     };
-     
-    */
 }
 
 - (void)viewWillLayoutSubviews {
@@ -109,7 +107,7 @@ static NSString *kIdentifier = @"kIdentifier";
     @weakify(self)
     [self.tableView zf_filterShouldPlayCellWhileScrolled:^(NSIndexPath *indexPath) {
         @strongify(self)
-        [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
+        [self playTheVideoAtIndexPath:indexPath scrollAnimated:NO];
     }];
 }
 
@@ -201,7 +199,7 @@ static NSString *kIdentifier = @"kIdentifier";
     }
     /// 如果没有播放，则点击进详情页会自动播放
     if (!self.player.currentPlayerManager.isPlaying) {
-        [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
+        [self playTheVideoAtIndexPath:indexPath scrollAnimated:NO];
     }
     /// 到详情页
     ZFPlayerDetailViewController *detailVC = [ZFPlayerDetailViewController new];
@@ -228,14 +226,14 @@ static NSString *kIdentifier = @"kIdentifier";
 #pragma mark - ZFTableViewCellDelegate
 
 - (void)zf_playTheVideoAtIndexPath:(NSIndexPath *)indexPath {
-    [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
+    [self playTheVideoAtIndexPath:indexPath scrollAnimated:NO];
 }
 
 #pragma mark - private method
 
 /// play the video
-- (void)playTheVideoAtIndexPath:(NSIndexPath *)indexPath scrollToTop:(BOOL)scrollToTop {
-    if (scrollToTop) {
+- (void)playTheVideoAtIndexPath:(NSIndexPath *)indexPath scrollAnimated:(BOOL)animated {
+    if (animated) {
         [self.player playTheIndexPath:indexPath scrollPosition:ZFPlayerScrollViewScrollPositionCenteredVertically animated:YES];
     } else {
         [self.player playTheIndexPath:indexPath];

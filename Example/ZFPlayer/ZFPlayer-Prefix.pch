@@ -23,5 +23,8 @@
 
 #define kAPPDelegate ((ZFAppDelegate*)[[UIApplication sharedApplication] delegate])
 
+/// 播放器view的tag，列表中UI控件唯一tag值
+#define kPlayerViewTag 100
+
 
 #endif
