@@ -27,6 +27,7 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor blackColor];
+    kAPPDelegate.allowOrentitaionRotation = YES;
     @weakify(self)
     self.controlView.backBtnClickCallback = ^{
         @strongify(self)
@@ -42,10 +43,6 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     self.player.orientationObserver.supportInterfaceOrientation = ZFInterfaceOrientationMaskLandscape;
     [self.player enterFullScreen:YES animated:NO];
     playerManager.assetURL = [NSURL URLWithString:@"https://www.apple.com/105/media/us/iphone-x/2017/01df5b43-28e4-4848-bf20-490c34a926a7/films/feature/iphone-x-feature-tpl-cc-us-20170912_1280x720h.mp4"];
-    
-    self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
-        kAPPDelegate.allowOrentitaionRotation = isFullScreen;
-    };
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -56,6 +53,7 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     self.player.viewControllerDisappear = YES;
+    kAPPDelegate.allowOrentitaionRotation = NO;
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
