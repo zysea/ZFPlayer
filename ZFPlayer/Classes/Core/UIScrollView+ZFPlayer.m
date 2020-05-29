@@ -316,7 +316,7 @@
         if (self.contentOffset.y <= 0 && (!self.zf_playingIndexPath || [indexPath compare:self.zf_playingIndexPath] == NSOrderedSame)) {
             UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
             UIView *playerView = [cell viewWithTag:self.zf_containerViewTag];
-            if (playerView) {
+            if (playerView && !playerView.hidden && playerView.alpha > 0.01) {
                 if (self.zf_scrollViewDidScrollCallback) self.zf_scrollViewDidScrollCallback(indexPath);
                 if (handler) handler(indexPath);
                 self.zf_shouldPlayIndexPath = indexPath;
@@ -329,7 +329,7 @@
         if (self.contentOffset.y + self.frame.size.height >= self.contentSize.height && (!self.zf_playingIndexPath || [indexPath compare:self.zf_playingIndexPath] == NSOrderedSame)) {
             UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
             UIView *playerView = [cell viewWithTag:self.zf_containerViewTag];
-            if (playerView) {
+            if (playerView && !playerView.hidden && playerView.alpha > 0.01) {
                 if (self.zf_scrollViewDidScrollCallback) self.zf_scrollViewDidScrollCallback(indexPath);
                 if (handler) handler(indexPath);
                 self.zf_shouldPlayIndexPath = indexPath;
@@ -354,7 +354,7 @@
         if (self.contentOffset.y <= 0 && (!self.zf_playingIndexPath || [indexPath compare:self.zf_playingIndexPath] == NSOrderedSame)) {
             UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
             UIView *playerView = [cell viewWithTag:self.zf_containerViewTag];
-            if (playerView) {
+            if (playerView && !playerView.hidden && playerView.alpha > 0.01) {
                 if (self.zf_scrollViewDidScrollCallback) self.zf_scrollViewDidScrollCallback(indexPath);
                 if (handler) handler(indexPath);
                 self.zf_shouldPlayIndexPath = indexPath;
@@ -367,7 +367,7 @@
         if (self.contentOffset.y + self.frame.size.height >= self.contentSize.height && (!self.zf_playingIndexPath || [indexPath compare:self.zf_playingIndexPath] == NSOrderedSame)) {
             UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
             UIView *playerView = [cell viewWithTag:self.zf_containerViewTag];
-            if (playerView) {
+            if (playerView && !playerView.hidden && playerView.alpha > 0.01) {
                 if (self.zf_scrollViewDidScrollCallback) self.zf_scrollViewDidScrollCallback(indexPath);
                 if (handler) handler(indexPath);
                 self.zf_shouldPlayIndexPath = indexPath;
@@ -393,7 +393,7 @@
     [cells enumerateObjectsUsingBlock:^(UIView *cell, NSUInteger idx, BOOL * _Nonnull stop) {
         @strongify(self)
         UIView *playerView = [cell viewWithTag:self.zf_containerViewTag];
-        if (!playerView) return;
+        if (!playerView || playerView.hidden || playerView.alpha <= 0.01) return;
         CGRect rect1 = [playerView convertRect:playerView.frame toView:self];
         CGRect rect = [self convertRect:rect1 toView:self.superview];
         /// playerView top to scrollView top space.
@@ -443,7 +443,7 @@
         if (self.contentOffset.x <= 0 && (!self.zf_playingIndexPath || [indexPath compare:self.zf_playingIndexPath] == NSOrderedSame)) {
             UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
             UIView *playerView = [cell viewWithTag:self.zf_containerViewTag];
-            if (playerView) {
+            if (playerView && !playerView.hidden && playerView.alpha > 0.01) {
                 if (self.zf_scrollViewDidScrollCallback) self.zf_scrollViewDidScrollCallback(indexPath);
                 if (handler) handler(indexPath);
                 self.zf_shouldPlayIndexPath = indexPath;
@@ -456,7 +456,7 @@
         if (self.contentOffset.x + self.frame.size.width >= self.contentSize.width && (!self.zf_playingIndexPath || [indexPath compare:self.zf_playingIndexPath] == NSOrderedSame)) {
             UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
             UIView *playerView = [cell viewWithTag:self.zf_containerViewTag];
-            if (playerView) {
+            if (playerView && !playerView.hidden && playerView.alpha > 0.01) {
                 if (self.zf_scrollViewDidScrollCallback) self.zf_scrollViewDidScrollCallback(indexPath);
                 if (handler) handler(indexPath);
                 self.zf_shouldPlayIndexPath = indexPath;
@@ -481,7 +481,7 @@
         if (self.contentOffset.x <= 0 && (!self.zf_playingIndexPath || [indexPath compare:self.zf_playingIndexPath] == NSOrderedSame)) {
             UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
             UIView *playerView = [cell viewWithTag:self.zf_containerViewTag];
-            if (playerView) {
+            if (playerView && !playerView.hidden && playerView.alpha > 0.01) {
                 if (self.zf_scrollViewDidScrollCallback) self.zf_scrollViewDidScrollCallback(indexPath);
                 if (handler) handler(indexPath);
                 self.zf_shouldPlayIndexPath = indexPath;
@@ -494,7 +494,7 @@
         if (self.contentOffset.x + self.frame.size.width >= self.contentSize.width && (!self.zf_playingIndexPath || [indexPath compare:self.zf_playingIndexPath] == NSOrderedSame)) {
             UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
             UIView *playerView = [cell viewWithTag:self.zf_containerViewTag];
-            if (playerView) {
+            if (playerView && !playerView.hidden && playerView.alpha > 0.01) {
                 if (self.zf_scrollViewDidScrollCallback) self.zf_scrollViewDidScrollCallback(indexPath);
                 if (handler) handler(indexPath);
                 self.zf_shouldPlayIndexPath = indexPath;
@@ -520,7 +520,7 @@
     [cells enumerateObjectsUsingBlock:^(UIView *cell, NSUInteger idx, BOOL * _Nonnull stop) {
         @strongify(self)
         UIView *playerView = [cell viewWithTag:self.zf_containerViewTag];
-        if (!playerView) return;
+        if (!playerView || playerView.hidden || playerView.alpha <= 0.01) return;
         CGRect rect1 = [playerView convertRect:playerView.frame toView:self];
         CGRect rect = [self convertRect:rect1 toView:self.superview];
         /// playerView left to scrollView top space.

@@ -53,6 +53,7 @@ static NSString *kIdentifier = @"kIdentifier";
     self.player.playerApperaPercent = 0.6;
     /// 移动网络依然自动播放
     self.player.WWANAutoPlay = YES;
+    self.player.resumePlayRecord = YES;
     
     @weakify(self)
     self.player.playerDidToEnd = ^(id  _Nonnull asset) {

@@ -144,6 +144,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface ZFPlayerController (ZFPlayerPlaybackControl)
 
+/// Resume playback record.default is NO.
+/// Memory storage playback records.
+@property (nonatomic, assign) BOOL resumePlayRecord;
+
 /// 0...1.0
 /// Only affects audio volume for the device instance and not for the player.
 /// You can change device volume or player volume as needed,change the player volume you can conform the `ZFPlayerMediaPlayback` protocol.

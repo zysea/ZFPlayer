@@ -30,6 +30,8 @@
 #import "ZFReachabilityManager.h"
 #import "ZFPlayer.h"
 
+static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
+
 @interface ZFPlayerController ()
 
 @property (nonatomic, strong) ZFPlayerNotification *notification;
@@ -60,6 +62,10 @@
             }
         }];
         [self configureVolume];
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            _zfPlayRecords = @{}.mutableCopy;
+        });
     }
     return self;
 }
@@ -155,6 +161,7 @@
         if ([self.controlView respondsToSelector:@selector(videoPlayer:currentTime:totalTime:)]) {
             [self.controlView videoPlayer:self currentTime:currentTime totalTime:duration];
         }
+        [_zfPlayRecords setValue:@(currentTime) forKey:self.assetURL.absoluteString];
     };
     
     self.currentPlayerManager.playerBufferTimeChanged = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, NSTimeInterval bufferTime) {
@@ -187,6 +194,7 @@
         if ([self.controlView respondsToSelector:@selector(videoPlayerPlayEnd:)]) {
             [self.controlView videoPlayerPlayEnd:self];
         }
+        [_zfPlayRecords setValue:@(0) forKey:self.assetURL.absoluteString];
     };
     
     self.currentPlayerManager.playerPlayFailed = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, id  _Nonnull error) {
@@ -461,6 +469,10 @@
 
 #pragma mark - getter
 
+- (BOOL)resumePlayRecord {
+    return [objc_getAssociatedObject(self, _cmd) boolValue];
+}
+
 - (NSURL *)assetURL {
     return objc_getAssociatedObject(self, _cmd);
 }
@@ -572,8 +584,16 @@
 
 #pragma mark - setter
 
+- (void)setResumePlayRecord:(BOOL)resumePlayRecord {
+    objc_setAssociatedObject(self, @selector(resumePlayRecord), @(resumePlayRecord), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 - (void)setAssetURL:(NSURL *)assetURL {
     objc_setAssociatedObject(self, @selector(assetURL), assetURL, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (self.resumePlayRecord && [_zfPlayRecords valueForKey:assetURL.absoluteString]) {
+        NSTimeInterval seekTime = [_zfPlayRecords valueForKey:assetURL.absoluteString].doubleValue;
+        self.currentPlayerManager.seekTime = seekTime;
+    }
     self.currentPlayerManager.assetURL = assetURL;
 }
 
