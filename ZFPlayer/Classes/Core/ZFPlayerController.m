@@ -196,12 +196,12 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
     
     self.currentPlayerManager.playerDidToEnd = ^(id  _Nonnull asset) {
         @strongify(self)
+        if (self.currentPlayerManager.assetURL.absoluteString) {
+            [_zfPlayRecords setValue:@(0) forKey:self.currentPlayerManager.assetURL.absoluteString];
+        }
         if (self.playerDidToEnd) self.playerDidToEnd(asset);
         if ([self.controlView respondsToSelector:@selector(videoPlayerPlayEnd:)]) {
             [self.controlView videoPlayerPlayEnd:self];
-        }
-        if (self.currentPlayerManager.assetURL.absoluteString) {
-            [_zfPlayRecords setValue:@(0) forKey:self.currentPlayerManager.assetURL.absoluteString];
         }
     };
     
