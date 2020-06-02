@@ -43,7 +43,6 @@ Use AVPlayer simply add the following line to your Podfile:
 ```objc
 pod 'ZFPlayer/AVPlayer', '~> 3.0'
 ```
-如果使用AVPlayer边下边播可以参考使用[KTVHTTPCache](https://github.com/ChangbaDevs/KTVHTTPCache)
 
 Use ijkplayer simply add the following line to your Podfile:
 
@@ -58,6 +57,9 @@ Use KSYMediaPlayer simply add the following line to your Podfile:
 pod 'ZFPlayer/KSYMediaPlayer', '~> 3.0'
 ```
 [KSYMediaPlayer SDK](https://github.com/ksvc/KSYMediaPlayer_iOS) support cocoapods
+
+
+边下边播可以参考使用[KTVHTTPCache](https://github.com/ChangbaDevs/KTVHTTPCache)
 
 ## Usage introduce
 
@@ -116,10 +118,8 @@ player.controlView = controlView;
 
 ## 寻求志同道合的小伙伴
 
-- 因本人工作忙，没有太多时间去维护ZFPlayer，在此向广大框架使用者说声：非常抱歉！😞
 - 现寻求志同道合的小伙伴一起维护此框架，有兴趣的小伙伴可以[发邮件](zifeng1300@gmail.com)给我，非常感谢😊
 - 如果一切OK，我将开放框架维护权限（github、pod等）
-- 目前已经找到1位小伙伴 
 
 ## 打赏作者
 

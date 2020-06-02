@@ -131,6 +131,10 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
     @weakify(self)
     self.currentPlayerManager.playerPrepareToPlay = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, NSURL * _Nonnull assetURL) {
         @strongify(self)
+        if (self.resumePlayRecord && [_zfPlayRecords valueForKey:assetURL.absoluteString]) {
+            NSTimeInterval seekTime = [_zfPlayRecords valueForKey:assetURL.absoluteString].doubleValue;
+            self.currentPlayerManager.seekTime = seekTime;
+        }
         self.currentPlayerManager.view.hidden = NO;
         [self.notification addNotification];
         [self addDeviceOrientationObserver];
@@ -161,7 +165,9 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
         if ([self.controlView respondsToSelector:@selector(videoPlayer:currentTime:totalTime:)]) {
             [self.controlView videoPlayer:self currentTime:currentTime totalTime:duration];
         }
-        [_zfPlayRecords setValue:@(currentTime) forKey:self.assetURL.absoluteString];
+        if (self.currentPlayerManager.assetURL.absoluteString) {
+            [_zfPlayRecords setValue:@(currentTime) forKey:self.currentPlayerManager.assetURL.absoluteString];
+        }
     };
     
     self.currentPlayerManager.playerBufferTimeChanged = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, NSTimeInterval bufferTime) {
@@ -194,7 +200,9 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
         if ([self.controlView respondsToSelector:@selector(videoPlayerPlayEnd:)]) {
             [self.controlView videoPlayerPlayEnd:self];
         }
-        [_zfPlayRecords setValue:@(0) forKey:self.assetURL.absoluteString];
+        if (self.currentPlayerManager.assetURL.absoluteString) {
+            [_zfPlayRecords setValue:@(0) forKey:self.currentPlayerManager.assetURL.absoluteString];
+        }
     };
     
     self.currentPlayerManager.playerPlayFailed = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, id  _Nonnull error) {
@@ -590,10 +598,6 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
 
 - (void)setAssetURL:(NSURL *)assetURL {
     objc_setAssociatedObject(self, @selector(assetURL), assetURL, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (self.resumePlayRecord && [_zfPlayRecords valueForKey:assetURL.absoluteString]) {
-        NSTimeInterval seekTime = [_zfPlayRecords valueForKey:assetURL.absoluteString].doubleValue;
-        self.currentPlayerManager.seekTime = seekTime;
-    }
     self.currentPlayerManager.assetURL = assetURL;
 }
 
@@ -1003,6 +1007,16 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
         if ([self.controlView respondsToSelector:@selector(playerDidDisappearInScrollView:)]) {
             [self.controlView playerDidDisappearInScrollView:self];
         }
+       
+        if (self.stopWhileNotVisible) { /// stop playing
+            if (self.containerType == ZFPlayerContainerTypeView) {
+                [self stopCurrentPlayingView];
+            } else if (self.containerType == ZFPlayerContainerTypeCell) {
+                [self stopCurrentPlayingCell];
+            }
+        } else { /// add to window
+            [self addPlayerViewToKeyWindow];
+        }
     };
     
     scrollView.zf_playerAppearingInScrollView = ^(NSIndexPath * _Nonnull indexPath, CGFloat playerApperaPercent) {
@@ -1028,16 +1042,17 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
         if ([self.controlView respondsToSelector:@selector(playerDisappearingInScrollView:playerDisapperaPercent:)]) {
             [self.controlView playerDisappearingInScrollView:self playerDisapperaPercent:playerDisapperaPercent];
         }
-        /// stop playing
-        if (self.stopWhileNotVisible && playerDisapperaPercent >= self.playerDisapperaPercent) {
-            if (self.containerType == ZFPlayerContainerTypeView) {
-                [self stopCurrentPlayingView];
-            } else if (self.containerType == ZFPlayerContainerTypeCell) {
-                [self stopCurrentPlayingCell];
+        if (playerDisapperaPercent >= self.playerDisapperaPercent) {
+            if (self.stopWhileNotVisible) { /// stop playing
+                if (self.containerType == ZFPlayerContainerTypeView) {
+                    [self stopCurrentPlayingView];
+                } else if (self.containerType == ZFPlayerContainerTypeCell) {
+                    [self stopCurrentPlayingCell];
+                }
+            } else {  /// add to window
+                [self addPlayerViewToKeyWindow];
             }
         }
-        /// add to window
-        if (!self.stopWhileNotVisible && playerDisapperaPercent >= self.playerDisapperaPercent) [self addPlayerViewToKeyWindow];
     };
     
     scrollView.zf_playerShouldPlayInScrollView = ^(NSIndexPath * _Nonnull indexPath) {

@@ -53,6 +53,7 @@ static NSString *kIdentifier = @"kIdentifier";
     self.player.playerApperaPercent = 0.6;
     /// 移动网络依然自动播放
     self.player.WWANAutoPlay = YES;
+    /// 续播
     self.player.resumePlayRecord = YES;
     
     @weakify(self)
@@ -106,7 +107,7 @@ static NSString *kIdentifier = @"kIdentifier";
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     @weakify(self)
-    [self.tableView zf_filterShouldPlayCellWhileScrolled:^(NSIndexPath *indexPath) {
+    [self.player zf_filterShouldPlayCellWhileScrolled:^(NSIndexPath *indexPath) {
         @strongify(self)
         [self playTheVideoAtIndexPath:indexPath scrollAnimated:NO];
     }];

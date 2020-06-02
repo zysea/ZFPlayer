@@ -119,14 +119,14 @@ static NSString *kIdentifier = @"kIdentifier";
     self.tableView.frame = CGRectMake(0, y, self.view.frame.size.width, h-y);
 }
 
-//- (void)viewDidAppear:(BOOL)animated {
-//    [super viewDidAppear:animated];
-//    @weakify(self)
-//    [self.tableView zf_filterShouldPlayCellWhileScrolled:^(NSIndexPath *indexPath) {
-//        @strongify(self)
-//        [self playTheVideoAtIndexPath:indexPath scrollAnimated:NO];
-//    }];
-//}
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    @weakify(self)
+    [self.player zf_filterShouldPlayCellWhileScrolled:^(NSIndexPath *indexPath) {
+        @strongify(self)
+        [self playTheVideoAtIndexPath:indexPath scrollAnimated:NO];
+    }];
+}
 
 - (void)requestData {
     self.urls = @[].mutableCopy;

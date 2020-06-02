@@ -40,35 +40,140 @@
 
 @implementation UIScrollView (ZFPlayer)
 
-+ (void)initialize {
-    [super initialize];
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        SEL selectors[] = {
-            @selector(setContentOffset:)
-        };
-        
-        for (NSInteger index = 0; index < sizeof(selectors) / sizeof(SEL); ++index) {
-            SEL originalSelector = selectors[index];
-            SEL swizzledSelector = NSSelectorFromString([@"zf_" stringByAppendingString:NSStringFromSelector(originalSelector)]);
-            Method originalMethod = class_getInstanceMethod(self, originalSelector);
-            Method swizzledMethod = class_getInstanceMethod(self, swizzledSelector);
-            if (class_addMethod(self, originalSelector, method_getImplementation(swizzledMethod), method_getTypeEncoding(swizzledMethod))) {
-                class_replaceMethod(self, swizzledSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod));
-            } else {
-                method_exchangeImplementations(originalMethod, swizzledMethod);
-            }
+#pragma mark - public method
+
+- (UIView *)zf_getCellForIndexPath:(NSIndexPath *)indexPath {
+    if ([self _isTableView]) {
+        UITableView *tableView = (UITableView *)self;
+        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        return cell;
+    } else if ([self _isCollectionView]) {
+        UICollectionView *collectionView = (UICollectionView *)self;
+        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+        return cell;
+    }
+    return nil;
+}
+
+- (NSIndexPath *)zf_getIndexPathForCell:(UIView *)cell {
+    if ([self _isTableView]) {
+        UITableView *tableView = (UITableView *)self;
+        NSIndexPath *indexPath = [tableView indexPathForCell:(UITableViewCell *)cell];
+        return indexPath;
+    } else if ([self _isCollectionView]) {
+        UICollectionView *collectionView = (UICollectionView *)self;
+        NSIndexPath *indexPath = [collectionView indexPathForCell:(UICollectionViewCell *)cell];
+        return indexPath;
+    }
+    return nil;
+}
+
+/**
+Scroll to indexPath with position.
+ 
+@param indexPath scroll the  indexPath.
+@param scrollPosition  scrollView scroll position.
+@param animated animate.
+@param completionHandler  Scroll completion callback.
+*/
+- (void)zf_scrollToRowAtIndexPath:(NSIndexPath *)indexPath
+                 atScrollPosition:(ZFPlayerScrollViewScrollPosition)scrollPosition
+                         animated:(BOOL)animated
+                completionHandler:(void (^ __nullable)(void))completionHandler {
+    [self zf_scrollToRowAtIndexPath:indexPath atScrollPosition:scrollPosition animateDuration:animated ? 0.4 : 0.0 completionHandler:completionHandler];
+}
+
+- (void)zf_scrollToRowAtIndexPath:(NSIndexPath *)indexPath
+                 atScrollPosition:(ZFPlayerScrollViewScrollPosition)scrollPosition
+                  animateDuration:(NSTimeInterval)duration
+                completionHandler:(void (^ __nullable)(void))completionHandler {
+    BOOL animated = duration > 0.0;
+    if ([self _isTableView]) {
+        UITableView *tableView = (UITableView *)self;
+        UITableViewScrollPosition tableScrollPosition = UITableViewScrollPositionNone;
+        if (scrollPosition <= ZFPlayerScrollViewScrollPositionBottom) {
+            tableScrollPosition = (UITableViewScrollPosition)scrollPosition;
         }
+        [tableView scrollToRowAtIndexPath:indexPath atScrollPosition:tableScrollPosition animated:animated];
+    } else if ([self _isCollectionView]) {
+        UICollectionView *collectionView = (UICollectionView *)self;
+        if (self.zf_scrollViewDirection == ZFPlayerScrollViewDirectionVertical) {
+            UICollectionViewScrollPosition collectionScrollPosition = UICollectionViewScrollPositionNone;
+            switch (scrollPosition) {
+                case ZFPlayerScrollViewScrollPositionNone:
+                    collectionScrollPosition = UICollectionViewScrollPositionNone;
+                    break;
+                case ZFPlayerScrollViewScrollPositionTop:
+                    collectionScrollPosition = UICollectionViewScrollPositionTop;
+                    break;
+                case ZFPlayerScrollViewScrollPositionCenteredVertically:
+                    collectionScrollPosition = UICollectionViewScrollPositionCenteredVertically;
+                    break;
+                case ZFPlayerScrollViewScrollPositionBottom:
+                    collectionScrollPosition = UICollectionViewScrollPositionBottom;
+                    break;
+                default:
+                    break;
+            }
+            [collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:collectionScrollPosition animated:animated];
+        } else if (self.zf_scrollViewDirection == ZFPlayerScrollViewDirectionHorizontal) {
+            UICollectionViewScrollPosition collectionScrollPosition = UICollectionViewScrollPositionNone;
+            switch (scrollPosition) {
+                case ZFPlayerScrollViewScrollPositionNone:
+                    collectionScrollPosition = UICollectionViewScrollPositionNone;
+                    break;
+                case ZFPlayerScrollViewScrollPositionLeft:
+                    collectionScrollPosition = UICollectionViewScrollPositionLeft;
+                    break;
+                case ZFPlayerScrollViewScrollPositionCenteredHorizontally:
+                    collectionScrollPosition = UICollectionViewScrollPositionCenteredHorizontally;
+                    break;
+                case ZFPlayerScrollViewScrollPositionRight:
+                    collectionScrollPosition = UICollectionViewScrollPositionRight;
+                    break;
+                default:
+                    break;
+            }
+            [collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:collectionScrollPosition animated:animated];
+        }
+    }
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(duration * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if (completionHandler) completionHandler();
     });
 }
 
-- (void)zf_setContentOffset:(CGPoint)contentOffset {
+- (void)zf_scrollViewDidEndDecelerating {
+    BOOL scrollToScrollStop = !self.tracking && !self.dragging && !self.decelerating;
+    if (scrollToScrollStop) {
+        [self _scrollViewDidStopScroll];
+    }
+}
+
+- (void)zf_scrollViewDidEndDraggingWillDecelerate:(BOOL)decelerate {
+    if (!decelerate) {
+        BOOL dragToDragStop = self.tracking && !self.dragging && !self.decelerating;
+        if (dragToDragStop) {
+            [self _scrollViewDidStopScroll];
+        }
+    }
+}
+
+- (void)zf_scrollViewDidScrollToTop {
+    [self _scrollViewDidStopScroll];
+}
+
+- (void)zf_scrollViewDidScroll {
     if (self.zf_scrollViewDirection == ZFPlayerScrollViewDirectionVertical) {
         [self _findCorrectCellWhenScrollViewDirectionVertical:nil];
+        [self _scrollViewScrollingDirectionVertical];
     } else {
         [self _findCorrectCellWhenScrollViewDirectionHorizontal:nil];
+        [self _scrollViewScrollingDirectionHorizontal];
     }
-    [self zf_setContentOffset:contentOffset];
+}
+
+- (void)zf_scrollViewWillBeginDragging {
+    [self _scrollViewBeginDragging];
 }
 
 #pragma mark - private method
@@ -559,140 +664,6 @@
 
 - (BOOL)_isCollectionView {
     return [self isKindOfClass:[UICollectionView class]];
-}
-
-#pragma mark - public method
-
-- (UIView *)zf_getCellForIndexPath:(NSIndexPath *)indexPath {
-    if ([self _isTableView]) {
-        UITableView *tableView = (UITableView *)self;
-        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-        return cell;
-    } else if ([self _isCollectionView]) {
-        UICollectionView *collectionView = (UICollectionView *)self;
-        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-        return cell;
-    }
-    return nil;
-}
-
-- (NSIndexPath *)zf_getIndexPathForCell:(UIView *)cell {
-    if ([self _isTableView]) {
-        UITableView *tableView = (UITableView *)self;
-        NSIndexPath *indexPath = [tableView indexPathForCell:(UITableViewCell *)cell];
-        return indexPath;
-    } else if ([self _isCollectionView]) {
-        UICollectionView *collectionView = (UICollectionView *)self;
-        NSIndexPath *indexPath = [collectionView indexPathForCell:(UICollectionViewCell *)cell];
-        return indexPath;
-    }
-    return nil;
-}
-
-/**
-Scroll to indexPath with position.
- 
-@param indexPath scroll the  indexPath.
-@param scrollPosition  scrollView scroll position.
-@param animated animate.
-@param completionHandler  Scroll completion callback.
-*/
-- (void)zf_scrollToRowAtIndexPath:(NSIndexPath *)indexPath
-                 atScrollPosition:(ZFPlayerScrollViewScrollPosition)scrollPosition
-                         animated:(BOOL)animated
-                completionHandler:(void (^ __nullable)(void))completionHandler {
-    [self zf_scrollToRowAtIndexPath:indexPath atScrollPosition:scrollPosition animateDuration:animated ? 0.4 : 0.0 completionHandler:completionHandler];
-}
-
-- (void)zf_scrollToRowAtIndexPath:(NSIndexPath *)indexPath
-                 atScrollPosition:(ZFPlayerScrollViewScrollPosition)scrollPosition
-                  animateDuration:(NSTimeInterval)duration
-                completionHandler:(void (^ __nullable)(void))completionHandler {
-    BOOL animated = duration > 0.0;
-    if ([self _isTableView]) {
-        UITableView *tableView = (UITableView *)self;
-        UITableViewScrollPosition tableScrollPosition = UITableViewScrollPositionNone;
-        if (scrollPosition <= ZFPlayerScrollViewScrollPositionBottom) {
-            tableScrollPosition = (UITableViewScrollPosition)scrollPosition;
-        }
-        [tableView scrollToRowAtIndexPath:indexPath atScrollPosition:tableScrollPosition animated:animated];
-    } else if ([self _isCollectionView]) {
-        UICollectionView *collectionView = (UICollectionView *)self;
-        if (self.zf_scrollViewDirection == ZFPlayerScrollViewDirectionVertical) {
-            UICollectionViewScrollPosition collectionScrollPosition = UICollectionViewScrollPositionNone;
-            switch (scrollPosition) {
-                case ZFPlayerScrollViewScrollPositionNone:
-                    collectionScrollPosition = UICollectionViewScrollPositionNone;
-                    break;
-                case ZFPlayerScrollViewScrollPositionTop:
-                    collectionScrollPosition = UICollectionViewScrollPositionTop;
-                    break;
-                case ZFPlayerScrollViewScrollPositionCenteredVertically:
-                    collectionScrollPosition = UICollectionViewScrollPositionCenteredVertically;
-                    break;
-                case ZFPlayerScrollViewScrollPositionBottom:
-                    collectionScrollPosition = UICollectionViewScrollPositionBottom;
-                    break;
-                default:
-                    break;
-            }
-            [collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:collectionScrollPosition animated:animated];
-        } else if (self.zf_scrollViewDirection == ZFPlayerScrollViewDirectionHorizontal) {
-            UICollectionViewScrollPosition collectionScrollPosition = UICollectionViewScrollPositionNone;
-            switch (scrollPosition) {
-                case ZFPlayerScrollViewScrollPositionNone:
-                    collectionScrollPosition = UICollectionViewScrollPositionNone;
-                    break;
-                case ZFPlayerScrollViewScrollPositionLeft:
-                    collectionScrollPosition = UICollectionViewScrollPositionLeft;
-                    break;
-                case ZFPlayerScrollViewScrollPositionCenteredHorizontally:
-                    collectionScrollPosition = UICollectionViewScrollPositionCenteredHorizontally;
-                    break;
-                case ZFPlayerScrollViewScrollPositionRight:
-                    collectionScrollPosition = UICollectionViewScrollPositionRight;
-                    break;
-                default:
-                    break;
-            }
-            [collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:collectionScrollPosition animated:animated];
-        }
-    }
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(duration * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        if (completionHandler) completionHandler();
-    });
-}
-
-- (void)zf_scrollViewDidEndDecelerating {
-    BOOL scrollToScrollStop = !self.tracking && !self.dragging && !self.decelerating;
-    if (scrollToScrollStop) {
-        [self _scrollViewDidStopScroll];
-    }
-}
-
-- (void)zf_scrollViewDidEndDraggingWillDecelerate:(BOOL)decelerate {
-    if (!decelerate) {
-        BOOL dragToDragStop = self.tracking && !self.dragging && !self.decelerating;
-        if (dragToDragStop) {
-            [self _scrollViewDidStopScroll];
-        }
-    }
-}
-
-- (void)zf_scrollViewDidScrollToTop {
-    [self _scrollViewDidStopScroll];
-}
-
-- (void)zf_scrollViewDidScroll {
-    if (self.zf_scrollViewDirection == ZFPlayerScrollViewDirectionVertical) {
-        [self _scrollViewScrollingDirectionVertical];
-    } else {
-        [self _scrollViewScrollingDirectionHorizontal];
-    }
-}
-
-- (void)zf_scrollViewWillBeginDragging {
-    [self _scrollViewBeginDragging];
 }
 
 #pragma mark - getter
