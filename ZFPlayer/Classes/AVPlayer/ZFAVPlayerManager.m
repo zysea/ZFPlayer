@@ -377,6 +377,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
                 }
             } else if (self.player.currentItem.status == AVPlayerItemStatusFailed) {
                 self.playState = ZFPlayerPlayStatePlayFailed;
+                self->_isPlaying = NO;
                 NSError *error = self.player.currentItem.error;
                 if (self.playerPlayFailed) self.playerPlayFailed(self, error);
             }
