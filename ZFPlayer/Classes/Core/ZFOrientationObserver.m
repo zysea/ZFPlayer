@@ -103,7 +103,7 @@
 
 @interface ZFOrientationObserver ()
 
-@property (nonatomic, weak) UIView *view;
+@property (nonatomic, weak) ZFPlayerView *view;
 
 @property (nonatomic, assign, getter=isFullScreen) BOOL fullScreen;
 
@@ -134,20 +134,20 @@
     return self;
 }
 
-- (void)updateRotateView:(UIView *)rotateView
+- (void)updateRotateView:(ZFPlayerView *)rotateView
            containerView:(UIView *)containerView {
     self.view = rotateView;
     self.containerView = containerView;
 }
 
-- (void)cellModelRotateView:(UIView *)rotateView rotateViewAtCell:(UIView *)cell playerViewTag:(NSInteger)playerViewTag {
+- (void)cellModelRotateView:(ZFPlayerView *)rotateView rotateViewAtCell:(UIView *)cell playerViewTag:(NSInteger)playerViewTag {
     self.roateType = ZFRotateTypeCell;
     self.view = rotateView;
     self.cell = cell;
     self.playerViewTag = playerViewTag;
 }
 
-- (void)cellOtherModelRotateView:(UIView *)rotateView containerView:(UIView *)containerView {
+- (void)cellOtherModelRotateView:(ZFPlayerView *)rotateView containerView:(UIView *)containerView {
     self.roateType = ZFRotateTypeCellOther;
     self.view = rotateView;
     self.containerView = containerView;

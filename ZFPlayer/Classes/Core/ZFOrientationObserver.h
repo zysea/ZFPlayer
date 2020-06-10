@@ -23,6 +23,7 @@
 // THE SOFTWARE.
 
 #import <UIKit/UIKit.h>
+@class ZFPlayerView;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -56,16 +57,16 @@ typedef NS_OPTIONS(NSUInteger, ZFInterfaceOrientationMask) {
 @interface ZFOrientationObserver : NSObject
 
 /// update the rotateView and containerView.
-- (void)updateRotateView:(UIView *)rotateView
+- (void)updateRotateView:(ZFPlayerView *)rotateView
            containerView:(UIView *)containerView;
 
 /// list play
-- (void)cellModelRotateView:(UIView *)rotateView
+- (void)cellModelRotateView:(ZFPlayerView *)rotateView
            rotateViewAtCell:(UIView *)cell
               playerViewTag:(NSInteger)playerViewTag;
 
 /// cell other view rotation
-- (void)cellOtherModelRotateView:(UIView *)rotateView
+- (void)cellOtherModelRotateView:(ZFPlayerView *)rotateView
                    containerView:(UIView *)containerView;
 
 /// Container view of a full screen state player.

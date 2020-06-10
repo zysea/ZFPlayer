@@ -940,7 +940,6 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
 @implementation ZFPlayerController (ZFPlayerScrollView)
 
 + (void)initialize {
-    [super initialize];
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         SEL selectors[] = {

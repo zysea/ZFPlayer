@@ -411,6 +411,16 @@ Scroll to indexPath with position.
     if (!self.zf_shouldAutoPlay) return;
     if (self.zf_containerType == ZFPlayerContainerTypeView) return;
 
+    if (!self.zf_stopWhileNotVisible) {
+        /// If you have a cell that is playing, stop the traversal.
+        if (self.zf_playingIndexPath) {
+            NSIndexPath *finalIndexPath = self.zf_playingIndexPath;
+            if (self.zf_scrollViewDidScrollCallback) self.zf_scrollViewDidScrollCallback(finalIndexPath);
+            if (handler) handler(finalIndexPath);
+            self.zf_shouldPlayIndexPath = finalIndexPath;
+            return;
+        }
+    }
     NSArray *visiableCells = nil;
     NSIndexPath *indexPath = nil;
     if ([self _isTableView]) {
@@ -510,13 +520,6 @@ Scroll to indexPath with position.
         
         /// Play when the video playback section is visible.
         if ((topSpacing >= -(1 - self.zf_playerApperaPercent) * CGRectGetHeight(rect)) && (bottomSpacing >= -(1 - self.zf_playerApperaPercent) * CGRectGetHeight(rect))) {
-            /// If you have a cell that is playing, stop the traversal.
-            if (self.zf_playingIndexPath) {
-                indexPath = self.zf_playingIndexPath;
-                finalIndexPath = indexPath;
-                *stop = YES;
-                return;
-            }
             if (!finalIndexPath || centerSpacing < finalSpace) {
                 finalIndexPath = indexPath;
                 finalSpace = centerSpacing;
@@ -537,6 +540,16 @@ Scroll to indexPath with position.
 - (void)_findCorrectCellWhenScrollViewDirectionHorizontal:(void (^ __nullable)(NSIndexPath *indexPath))handler {
     if (!self.zf_shouldAutoPlay) return;
     if (self.zf_containerType == ZFPlayerContainerTypeView) return;
+    if (!self.zf_stopWhileNotVisible) {
+        /// If you have a cell that is playing, stop the traversal.
+        if (self.zf_playingIndexPath) {
+            NSIndexPath *finalIndexPath = self.zf_playingIndexPath;
+            if (self.zf_scrollViewDidScrollCallback) self.zf_scrollViewDidScrollCallback(finalIndexPath);
+            if (handler) handler(finalIndexPath);
+            self.zf_shouldPlayIndexPath = finalIndexPath;
+            return;
+        }
+    }
     
     NSArray *visiableCells = nil;
     NSIndexPath *indexPath = nil;
@@ -637,13 +650,6 @@ Scroll to indexPath with position.
         
         /// Play when the video playback section is visible.
         if ((leftSpacing >= -(1 - self.zf_playerApperaPercent) * CGRectGetWidth(rect)) && (rightSpacing >= -(1 - self.zf_playerApperaPercent) * CGRectGetWidth(rect))) {
-            /// If you have a cell that is playing, stop the traversal.
-            if (self.zf_playingIndexPath) {
-                indexPath = self.zf_playingIndexPath;
-                finalIndexPath = indexPath;
-                *stop = YES;
-                return;
-            }
             if (!finalIndexPath || centerSpacing < finalSpace) {
                 finalIndexPath = indexPath;
                 finalSpace = centerSpacing;

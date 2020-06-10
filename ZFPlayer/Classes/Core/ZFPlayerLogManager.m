@@ -37,7 +37,7 @@ static BOOL kLogEnable = NO;
 }
 
 + (NSString *)version {
-    return @"3.3.3";
+    return @"3.3.4";
 }
 
 + (void)logWithFunction:(const char *)function lineNumber:(int)lineNumber formatString:(NSString *)formatString {

@@ -360,7 +360,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
                     if (self.playerReadyToPlay) self.playerReadyToPlay(self, self.assetURL);
                 }
                 if (self.seekTime) {
-                    if (self.shouldAutoPlay) [self pause];
+                    if (self.shouldAutoPlay) [self.player pause];
                     [self seekToTime:self.seekTime completionHandler:^(BOOL finished) {
                         if (finished) {
                             if (self.shouldAutoPlay) [self play];

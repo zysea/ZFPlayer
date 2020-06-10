@@ -27,7 +27,6 @@
 @implementation UITabBarController (ZFPlayerRotation)
 
 + (void)initialize {
-    [super initialize];
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         SEL selectors[] = {
