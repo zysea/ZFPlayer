@@ -238,7 +238,7 @@
     self.contentView.transform = CGAffineTransformIdentity;
     self.contentView.frame = tempImageViewFrame;
     
-    CGRect toRect = [fromVC.view convertRect:self.containerView.frame toView:toVC.view];
+    CGRect toRect = [self.containerView convertRect:self.containerView.bounds toView:self.containerView.window];
 //    [UIView animateWithDuration:0.2f animations:^{
     [UIView animateWithDuration:duration delay:0.0 usingSpringWithDamping:0.8 initialSpringVelocity:0.1 options:option animations:^{
         self.contentView.frame = toRect;

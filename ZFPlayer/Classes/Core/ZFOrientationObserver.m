@@ -228,10 +228,24 @@
 }
 
 - (void)enterPortraitFullScreen:(BOOL)fullScreen animated:(BOOL)animated {
-    ZFPortraitViewController *fullVC = [[ZFPortraitViewController alloc] init];
-    fullVC.contentView = self.view;
-    fullVC.containerView = self.containerView;
-    [[UIWindow zf_currentViewController] presentViewController:fullVC animated:YES completion:nil];
+    self.fullScreen = fullScreen;
+    @weakify(self)
+    if (fullScreen) {
+        self.portraitViewController.contentView = self.view;
+        self.portraitViewController.containerView = self.containerView;
+        if (self.orientationWillChange) self.orientationWillChange(self, self.isFullScreen);
+        [[UIWindow zf_currentViewController] presentViewController:self.portraitViewController animated:YES completion:^{
+            @strongify(self)
+            if (self.orientationDidChanged) self.orientationDidChanged(self, self.isFullScreen);
+        }];
+    } else {
+        if (self.orientationWillChange) self.orientationWillChange(self, self.isFullScreen);
+        [self.portraitViewController dismissViewControllerAnimated:YES completion:^{
+            @strongify(self)
+            if (self.orientationDidChanged) self.orientationDidChanged(self, self.isFullScreen);
+            self.portraitViewController = nil;
+        }];
+    }
 }
 
 - (void)exitFullScreenWithAnimated:(BOOL)animated {
@@ -280,11 +294,11 @@
     if (!self.activeDeviceObserver) {
         return NO;
     }
-    UIDeviceOrientation orientation = UIDevice.currentDevice.orientation;
-    if (!self.allowOrentitaionRotation) {
+    if (self.fullScreenMode == ZFFullScreenModePortrait || !self.allowOrentitaionRotation) {
         return NO;
     }
     
+    UIDeviceOrientation orientation = UIDevice.currentDevice.orientation;
     if (UIDeviceOrientationIsLandscape(orientation)) {
         UIWindow *keyWindow = UIApplication.sharedApplication.keyWindow;
         if (keyWindow != self.window && self.previousKeyWindow != keyWindow) {

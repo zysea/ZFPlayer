@@ -109,6 +109,7 @@
     }];
   [UIView animateWithDuration:[self transitionDuration:transitionContext] delay:0 usingSpringWithDamping:0.75f initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
       self.contentView.frame = CGRectMake((ZFPlayerScreenWidth - videoWidth) / 2, (ZFPlayerScreenHeight - videoHeight) / 2, videoWidth, videoHeight);
+      [self.contentView layoutIfNeeded];
     } completion:^(BOOL finished) {
         [transitionContext completeTransition:YES];
     }];
@@ -141,10 +142,11 @@
     CGRect originRect = [fromVC.view convertRect:self.contentView.frame toView:toVC.view];
     self.contentView.frame = originRect;
     
-    CGRect toRect = [fromVC.view convertRect:self.containerView.frame toView:toVC.view];
+    CGRect toRect = [self.containerView convertRect:self.containerView.bounds toView:self.containerView.window];
     [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
         fromVC.view.alpha = 0;
         self.contentView.frame = toRect;
+        [self.contentView layoutIfNeeded];
     } completion:^(BOOL finished) {
         [self.containerView addSubview:self.contentView];
         self.contentView.frame = self.containerView.bounds;
