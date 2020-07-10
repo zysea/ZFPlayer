@@ -75,14 +75,9 @@ typedef NS_OPTIONS(NSUInteger, ZFInterfaceOrientationMask) {
 /// Container view of a small screen state player.
 @property (nonatomic, weak) UIView *containerView;
 
-/// If the full screen.
-@property (nonatomic, readonly, getter=isFullScreen) BOOL fullScreen;
-
 /// Use device orientation, default NO.
 @property (nonatomic, assign) BOOL forceDeviceOrientation;
 
-/// Lock screen orientation
-@property (nonatomic, getter=isLockedScreen) BOOL lockedScreen;
 
 /// The block invoked When player will rotate.
 @property (nonatomic, copy, nullable) void(^orientationWillChange)(ZFOrientationObserver *observer, BOOL isFullScreen);
@@ -96,8 +91,19 @@ typedef NS_OPTIONS(NSUInteger, ZFInterfaceOrientationMask) {
 /// rotate duration, default is 0.30
 @property (nonatomic) float duration;
 
+/// If the full screen.
+@property (nonatomic, readonly, getter=isFullScreen) BOOL fullScreen;
+
+/// Lock screen orientation
+@property (nonatomic, getter=isLockedScreen) BOOL lockedScreen;
+
 /// The statusbar hidden.
 @property (nonatomic, getter=isStatusBarHidden) BOOL statusBarHidden;
+
+/// default is  UIStatusBarStyleLightContent.
+@property (nonatomic, assign) UIStatusBarStyle fullScreenStatusBarStyle;
+/// defalut is UIStatusBarAnimationSlide.
+@property (nonatomic, assign) UIStatusBarAnimation fullScreenStatusBarAnimation;
 
 /// The current orientation of the player.
 /// Default is UIInterfaceOrientationPortrait.

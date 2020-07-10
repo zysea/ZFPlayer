@@ -1,8 +1,8 @@
 //
-//  ZFPlayerView.h
+//  ZFPlayerPersentInteractiveTransition.h
 //  ZFPlayer
 //
-// Copyright (c) 2016年 任子丰 ( http://github.com/renzifeng )
+// Copyright (c) 2020年 任子丰 ( http://github.com/renzifeng )
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,13 +21,16 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+//
 
 #import <UIKit/UIKit.h>
 
-@interface ZFPlayerView : UIView
+@interface ZFPlayerPersentInteractiveTransition : UIPercentDrivenInteractiveTransition
 
-@property (nonatomic, assign) CGSize presentationSize;
+@property (nonatomic, assign) BOOL interation;
 
-@property (nonatomic, assign) CGSize scaleSize;
+- (void)addPanGestureForViewController:(UIViewController *)viewController
+                           contentView:(UIView *)contenView
+                         containerView:(UIView *)containerView;
 
 @end

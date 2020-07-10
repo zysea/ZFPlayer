@@ -57,4 +57,29 @@
 
 - (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {}
 
+- (CGSize)presentationSize {
+    if (CGSizeEqualToSize(_presentationSize, CGSizeZero)) {
+        _presentationSize = CGSizeMake(ZFPlayerScreenWidth, ZFPlayerScreenWidth * 9.0/16.0);
+    }
+    return _presentationSize;
+}
+
+- (CGSize)scaleSize {
+    CGFloat videoWidth = self.presentationSize.width;
+    CGFloat videoHeight = self.presentationSize.height;
+    CGFloat screenScale = (CGFloat)(ZFPlayerScreenWidth/ZFPlayerScreenHeight);
+    CGFloat videoScale = (CGFloat)(videoWidth/videoHeight);
+    if (screenScale > videoScale) {
+        CGFloat height = ZFPlayerScreenHeight;
+        CGFloat width = (CGFloat)(height * videoScale);
+        _scaleSize = CGSizeMake(width, height);
+    } else {
+        CGFloat width = ZFPlayerScreenWidth;
+        CGFloat height = (CGFloat)(width / videoScale);
+        _scaleSize = CGSizeMake(width, height);
+    }
+    
+    return _scaleSize;
+}
+
 @end

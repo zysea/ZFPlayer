@@ -1,8 +1,8 @@
 //
-//  ZFPlayerView.h
+//  ZFFullscreenViewController.h
 //  ZFPlayer
 //
-// Copyright (c) 2016年 任子丰 ( http://github.com/renzifeng )
+// Copyright (c) 2020年 任子丰 ( http://github.com/renzifeng )
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,38 @@
 // THE SOFTWARE.
 
 #import <UIKit/UIKit.h>
+@class ZFLandscapeViewController;
 
-@interface ZFPlayerView : UIView
+NS_ASSUME_NONNULL_BEGIN
 
-@property (nonatomic, assign) CGSize presentationSize;
+@protocol ZFLandscapeViewControllerDelegate <NSObject>
 
-@property (nonatomic, assign) CGSize scaleSize;
+- (BOOL)ls_shouldAutorotate;
+- (void)ls_willRotateToOrientation:(UIInterfaceOrientation)orientation;
+- (void)ls_didRotateFromOrientation:(UIInterfaceOrientation)orientation;
 
 @end
+
+@interface ZFLandscapeViewController : UIViewController
+
+@property (nonatomic, weak) UIView *rotateView;
+
+@property (nonatomic, weak) UIView *containerView;
+
+@property (nonatomic, assign) CGRect targetRect;
+
+@property (nonatomic, weak, nullable) id<ZFLandscapeViewControllerDelegate> delegate;
+
+@property (nonatomic, readonly) BOOL isFullscreen;
+
+@property (nonatomic, assign) BOOL disableAnimations;
+
+@property (nonatomic, assign) BOOL statusBarHidden;
+/// default is  UIStatusBarStyleLightContent.
+@property (nonatomic, assign) UIStatusBarStyle statusBarStyle;
+/// defalut is UIStatusBarAnimationSlide.
+@property (nonatomic, assign) UIStatusBarAnimation statusBarAnimation;
+
+@end
+
+NS_ASSUME_NONNULL_END

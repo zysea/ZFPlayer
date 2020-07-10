@@ -1,8 +1,8 @@
 //
-//  ZFPlayerView.h
+//  ZFPlayerPresentTransition.h
 //  ZFPlayer
 //
-// Copyright (c) 2016年 任子丰 ( http://github.com/renzifeng )
+// Copyright (c) 2020年 任子丰 ( http://github.com/renzifeng )
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,17 @@
 // THE SOFTWARE.
 
 #import <UIKit/UIKit.h>
+@class ZFPlayerView;
 
-@interface ZFPlayerView : UIView
+typedef NS_ENUM(NSUInteger, ZFPresentTransitionType) {
+    ZFPresentTransitionTypePresent,
+    ZFPresentTransitionTypeDismiss,
+};
 
-@property (nonatomic, assign) CGSize presentationSize;
+@interface ZFPlayerPresentTransition : NSObject<UIViewControllerAnimatedTransitioning>
 
-@property (nonatomic, assign) CGSize scaleSize;
++ (instancetype)transitionWithTransitionType:(ZFPresentTransitionType)type
+                                 contentView:(ZFPlayerView *)contentView
+                               containerView:(UIView *)containerView;
 
 @end

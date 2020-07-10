@@ -34,13 +34,10 @@
     
     /// 播放器相关
     self.player = [[ZFPlayerController alloc] initWithPlayerManager:playerManager containerView:self.containerView];
-    /// 适配横屏键盘，这里强制横屏处理
-    self.player.forceDeviceOrientation = YES;
     self.player.controlView = self.controlView;
     @weakify(self)
     self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
         @strongify(self)
-        self.view.backgroundColor = isFullScreen ? [UIColor blackColor] : [UIColor whiteColor];
         [self.textField resignFirstResponder];
         kAPPDelegate.allowOrentitaionRotation = isFullScreen;
         [self setNeedsStatusBarAppearanceUpdate];

@@ -70,6 +70,11 @@ static NSString *const kPresentationSize         = @"presentationSize";
     return self;
 }
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    NSLog(@"===========%@",NSStringFromCGRect(self.bounds));
+}
+
 - (void)setPlayer:(AVPlayer *)player {
     if (player == _player) return;
     self.avLayer.player = player;
@@ -399,6 +404,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
             if (self.playerBufferTimeChanged) self.playerBufferTimeChanged(self, bufferTime);
         } else if ([keyPath isEqualToString:kPresentationSize]) {
             self->_presentationSize = self.playerItem.presentationSize;
+            self.view.presentationSize = self.playerItem.presentationSize;
             if (self.presentationSizeChanged) {
                 self.presentationSizeChanged(self, self->_presentationSize);
             }
@@ -412,7 +418,8 @@ static NSString *const kPresentationSize         = @"presentationSize";
 
 - (UIView *)view {
     if (!_view) {
-        _view = [[ZFPlayerPresentView alloc] init];
+        ZFPlayerPresentView *view = [[ZFPlayerPresentView alloc] init];
+        _view = view;
     }
     return _view;
 }

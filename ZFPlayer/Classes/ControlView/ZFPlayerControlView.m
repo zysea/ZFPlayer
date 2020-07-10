@@ -109,7 +109,8 @@
     CGFloat min_h = 0;
     CGFloat min_view_w = self.zf_width;
     CGFloat min_view_h = self.zf_height;
-    
+    NSLog(@"~~~~~~~~~~~~~·%@",NSStringFromCGRect(self.bounds));
+
     self.portraitControlView.frame = self.bounds;
     self.landScapeControlView.frame = self.bounds;
     self.floatControlView.frame = self.bounds;
@@ -625,9 +626,9 @@
     self.landScapeControlView.player = player;
     self.portraitControlView.player = player;
     /// 解决播放时候黑屏闪一下问题
-    [player.currentPlayerManager.view insertSubview:self.bgImgView atIndex:0];
-    [self.bgImgView addSubview:self.effectView];
-    [player.currentPlayerManager.view insertSubview:self.coverImageView atIndex:1];
+//    [player.currentPlayerManager.view insertSubview:self.bgImgView atIndex:0];
+//    [self.bgImgView addSubview:self.effectView];
+    [player.currentPlayerManager.view insertSubview:self.coverImageView atIndex:0];
     self.coverImageView.frame = player.currentPlayerManager.view.bounds;
     self.coverImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.bgImgView.frame = player.currentPlayerManager.view.bounds;

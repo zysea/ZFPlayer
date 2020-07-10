@@ -53,6 +53,10 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
 - (instancetype)init {
     self = [super init];
     if (self) {
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            _zfPlayRecords = @{}.mutableCopy;
+        });
         @weakify(self)
         [[ZFReachabilityManager sharedManager] startMonitoring];
         [[ZFReachabilityManager sharedManager] setReachabilityStatusChangeBlock:^(ZFReachabilityStatus status) {
@@ -62,10 +66,6 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
             }
         }];
         [self configureVolume];
-        static dispatch_once_t onceToken;
-        dispatch_once(&onceToken, ^{
-            _zfPlayRecords = @{}.mutableCopy;
-        });
     }
     return self;
 }
@@ -812,6 +812,20 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
     return [objc_getAssociatedObject(self, _cmd) boolValue];
 }
 
+- (UIStatusBarStyle)fullScreenStatusBarStyle {
+    NSNumber *number = objc_getAssociatedObject(self, _cmd);
+    if (number) return number.integerValue;
+    self.fullScreenStatusBarStyle = UIStatusBarStyleLightContent;
+    return UIStatusBarStyleLightContent;
+}
+
+- (UIStatusBarAnimation)fullScreenStatusBarAnimation {
+    NSNumber *number = objc_getAssociatedObject(self, _cmd);
+    if (number) return number.integerValue;
+    self.fullScreenStatusBarAnimation = UIStatusBarAnimationSlide;
+    return UIStatusBarAnimationSlide;
+}
+
 #pragma mark - setter
 
 - (void)setOrientationWillChange:(void (^)(ZFPlayerController * _Nonnull, BOOL))orientationWillChange {
@@ -840,13 +854,23 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
     self.orientationObserver.allowOrentitaionRotation = allowOrentitaionRotation;
 }
 
+- (void)setExitFullScreenWhenStop:(BOOL)exitFullScreenWhenStop {
+    objc_setAssociatedObject(self, @selector(exitFullScreenWhenStop), @(exitFullScreenWhenStop), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 - (void)setForceDeviceOrientation:(BOOL)forceDeviceOrientation {
     objc_setAssociatedObject(self, @selector(forceDeviceOrientation), @(forceDeviceOrientation), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     self.orientationObserver.forceDeviceOrientation = forceDeviceOrientation;
 }
 
-- (void)setExitFullScreenWhenStop:(BOOL)exitFullScreenWhenStop {
-    objc_setAssociatedObject(self, @selector(exitFullScreenWhenStop), @(exitFullScreenWhenStop), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setFullScreenStatusBarStyle:(UIStatusBarStyle)fullScreenStatusBarStyle {
+    objc_setAssociatedObject(self, @selector(fullScreenStatusBarStyle), @(fullScreenStatusBarStyle), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    self.orientationObserver.fullScreenStatusBarStyle = fullScreenStatusBarStyle;
+}
+
+- (void)setFullScreenStatusBarAnimation:(UIStatusBarAnimation)fullScreenStatusBarAnimation {
+    objc_setAssociatedObject(self, @selector(fullScreenStatusBarAnimation), @(fullScreenStatusBarAnimation), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    self.orientationObserver.fullScreenStatusBarAnimation = fullScreenStatusBarAnimation;
 }
 
 @end

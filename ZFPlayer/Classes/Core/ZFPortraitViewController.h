@@ -1,8 +1,8 @@
 //
-//  ZFPlayerView.h
+//  ZFPortraitViewController.h
 //  ZFPlayer
 //
-// Copyright (c) 2016年 任子丰 ( http://github.com/renzifeng )
+// Copyright (c) 2020年 任子丰 ( http://github.com/renzifeng )
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,15 @@
 // THE SOFTWARE.
 
 #import <UIKit/UIKit.h>
+#import "ZFPlayerView.h"
 
-@interface ZFPlayerView : UIView
+NS_ASSUME_NONNULL_BEGIN
 
-@property (nonatomic, assign) CGSize presentationSize;
+@interface ZFPortraitViewController : UIViewController
 
-@property (nonatomic, assign) CGSize scaleSize;
+@property (nonatomic, strong) ZFPlayerView *contentView;
+@property (nonatomic, strong) UIView *containerView;
 
 @end
+
+NS_ASSUME_NONNULL_END

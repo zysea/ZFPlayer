@@ -316,6 +316,11 @@ NS_ASSUME_NONNULL_BEGIN
 /// The block invoked when player rotated.
 @property (nonatomic, copy, nullable) void(^orientationDidChanged)(ZFPlayerController *player, BOOL isFullScreen);
 
+/// default is  UIStatusBarStyleLightContent.
+@property (nonatomic, assign) UIStatusBarStyle fullScreenStatusBarStyle;
+/// defalut is UIStatusBarAnimationSlide.
+@property (nonatomic, assign) UIStatusBarAnimation fullScreenStatusBarAnimation;
+
 /**
  Add the device orientation observer.
  */
