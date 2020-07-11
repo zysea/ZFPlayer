@@ -75,7 +75,7 @@
     if (state == ZFPlayerLoadStatePrepare) {
         self.coverImageView.hidden = NO;
     } else if (state == ZFPlayerLoadStatePlaythroughOK || state == ZFPlayerLoadStatePlayable) {
-        self.coverImageView.hidden = YES;
+//        self.coverImageView.hidden = YES;
         self.player.currentPlayerManager.view.backgroundColor = [UIColor blackColor];
     }
     if (state == ZFPlayerLoadStateStalled && videoPlayer.currentPlayerManager.isPlaying) {

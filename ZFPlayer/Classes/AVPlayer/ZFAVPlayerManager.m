@@ -171,6 +171,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
     if (self.player.rate != 0) [self.player pause];
     [self.player removeTimeObserver:_timeObserver];
     [self.player replaceCurrentItemWithPlayerItem:nil];
+    self.view.presentationSize = CGSizeZero;
     _timeObserver = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:_itemEndObserver name:AVPlayerItemDidPlayToEndTimeNotification object:self.playerItem];
     _itemEndObserver = nil;
@@ -257,7 +258,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
     ZFPlayerPresentView *presentView = [[ZFPlayerPresentView alloc] init];
     presentView.player = _player;
     self.view.playerView = presentView;
-    
+
     self.scalingMode = _scalingMode;
     if (@available(iOS 9.0, *)) {
         _playerItem.canUseNetworkResourcesForLiveStreamingWhilePaused = NO;
