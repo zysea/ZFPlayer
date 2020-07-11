@@ -46,6 +46,7 @@ static NSString *kIdentifier = @"kIdentifier";
     return @[[ZFTableItem itemWithTitle:@"点击播放" subTitle:@"Click to play" viewControllerName:@"ZFNotAutoPlayViewController"],
              [ZFTableItem itemWithTitle:@"自动播放" subTitle:@"Auto play" viewControllerName:@"ZFAutoPlayerViewController"],
              [ZFTableItem itemWithTitle:@"列表明暗播放" subTitle:@"Light and dark style" viewControllerName:@"ZFLightTableViewController"],
+             [ZFTableItem itemWithTitle:@"微信朋友圈" subTitle:@"wechat friend circle style" viewControllerName:@"ZFWXViewController"],
              [ZFTableItem itemWithTitle:@"混合cell样式" subTitle:@"Mix cell style" viewControllerName:@"ZFMixViewController"],
              [ZFTableItem itemWithTitle:@"小窗播放" subTitle:@"Small view style" viewControllerName:@"ZFSmallPlayViewController"],
              [ZFTableItem itemWithTitle:@"抖音样式" subTitle:@"Douyin style" viewControllerName:@"ZFDouYinViewController"],

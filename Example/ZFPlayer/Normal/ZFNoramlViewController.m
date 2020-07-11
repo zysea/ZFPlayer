@@ -95,6 +95,8 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     self.player.resumePlayRecord = YES;
     self.player.disableGestureTypes = ZFPlayerDisableGestureTypesPan;
 //    self.player.fullScreenVideoSize = CGSizeMake(ZFPlayerScreenWidth, ZFPlayerScreenHeight);
+    self.player.orientationObserver.enablePortraitGesture = NO;
+    
     
     @weakify(self)
     self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
@@ -142,6 +144,10 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     } else {
         NSLog(@"最后一个视频了");
     }
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    self.player.orientationObserver.enablePortraitGesture = YES;
 }
 
 - (void)pushNewVC {

@@ -40,6 +40,8 @@
         [self.contentView addSubview:self.fullMaskView];
         self.contentView.backgroundColor = [UIColor blackColor];
         self.selectionStyle = UITableViewCellSelectionStyleNone;
+        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(playClick)];
+        [self.coverImageView addGestureRecognizer:tapGesture];
     }
     return self;
 }
@@ -86,8 +88,7 @@
     }];
 }
 
-
-- (void)playBtnClick:(UIButton *)sender {
+- (void)playClick {
     if ([self.delegate respondsToSelector:@selector(zf_playTheVideoAtIndexPath:)]) {
         [self.delegate zf_playTheVideoAtIndexPath:self.indexPath];
     }
@@ -99,7 +100,7 @@
     if (!_playBtn) {
         _playBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [_playBtn setImage:[UIImage imageNamed:@"new_allPlay_44x44_"] forState:UIControlStateNormal];
-        [_playBtn addTarget:self action:@selector(playBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+        [_playBtn addTarget:self action:@selector(playClick) forControlEvents:UIControlEventTouchUpInside];
     }
     return _playBtn;
 }
@@ -145,8 +146,8 @@
         _coverImageView = [[UIImageView alloc] init];
         _coverImageView.userInteractionEnabled = YES;
         _coverImageView.tag = kPlayerViewTag;
-        _coverImageView.contentMode = UIViewContentModeScaleAspectFill;
         _coverImageView.clipsToBounds = YES;
+        _coverImageView.contentMode = UIViewContentModeScaleAspectFit;
     }
     return _coverImageView;
 }

@@ -44,7 +44,7 @@ static NSString *const kPlaybackBufferEmpty      = @"playbackBufferEmpty";
 static NSString *const kPlaybackLikelyToKeepUp   = @"playbackLikelyToKeepUp";
 static NSString *const kPresentationSize         = @"presentationSize";
 
-@interface ZFPlayerPresentView : ZFPlayerView
+@interface ZFPlayerPresentView : UIView
 
 @property (nonatomic, strong) AVPlayer *player;
 /// default is AVLayerVideoGravityResizeAspect.
@@ -60,14 +60,6 @@ static NSString *const kPresentationSize         = @"presentationSize";
 
 - (AVPlayerLayer *)avLayer {
     return (AVPlayerLayer *)self.layer;
-}
-
-- (instancetype)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
-        self.backgroundColor = [UIColor blackColor];
-    }
-    return self;
 }
 
 - (void)setPlayer:(AVPlayer *)player {
@@ -259,8 +251,10 @@ static NSString *const kPresentationSize         = @"presentationSize";
     _player = [AVPlayer playerWithPlayerItem:_playerItem];
     [self enableAudioTracks:YES inPlayerItem:_playerItem];
     
-    ZFPlayerPresentView *presentView = (ZFPlayerPresentView *)self.view;
+    ZFPlayerPresentView *presentView = [[ZFPlayerPresentView alloc] init];
     presentView.player = _player;
+    self.view.playerView = presentView;
+    
     self.scalingMode = _scalingMode;
     if (@available(iOS 9.0, *)) {
         _playerItem.canUseNetworkResourcesForLiveStreamingWhilePaused = NO;
@@ -413,8 +407,9 @@ static NSString *const kPresentationSize         = @"presentationSize";
 
 - (UIView *)view {
     if (!_view) {
-        ZFPlayerPresentView *view = [[ZFPlayerPresentView alloc] init];
+        ZFPlayerView *view = [[ZFPlayerView alloc] init];
         _view = view;
+//        _view = [UIView new];
     }
     return _view;
 }
@@ -471,7 +466,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
 
 - (void)setScalingMode:(ZFPlayerScalingMode)scalingMode {
     _scalingMode = scalingMode;
-    ZFPlayerPresentView *presentView = (ZFPlayerPresentView *)self.view;
+    ZFPlayerPresentView *presentView = (ZFPlayerPresentView *)self.view.playerView;
     switch (scalingMode) {
         case ZFPlayerScalingModeNone:
             presentView.videoGravity = AVLayerVideoGravityResizeAspect;

@@ -1,36 +1,36 @@
 //
-//  ZFAutoPlayerViewController.m
-//  ZFPlayer
+//  ZFWXViewController.m
+//  ZFPlayer_Example
 //
-//  Created by 任子丰 on 2018/4/1.
-//  Copyright © 2018年 紫枫. All rights reserved.
+//  Created by 紫枫 on 2020/7/11.
+//  Copyright © 2020 紫枫. All rights reserved.
 //
 
-#import "ZFAutoPlayerViewController.h"
+#import "ZFWXViewController.h"
 #import <ZFPlayer/ZFPlayer.h>
 #import <ZFPlayer/ZFAVPlayerManager.h>
 #import <ZFPlayer/KSMediaPlayerManager.h>
 #import <ZFPlayer/ZFIJKPlayerManager.h>
 #import <ZFPlayer/ZFPlayerControlView.h>
 #import <ZFPlayer/UIView+ZFFrame.h>
-#import "ZFPlayerDetailViewController.h"
 #import "ZFTableViewCell.h"
 #import "ZFTableData.h"
 #import <AVFoundation/AVFoundation.h>
+#import "ZFWeChatControlView.h"
 
 static NSString *kIdentifier = @"kIdentifier";
 
-@interface ZFAutoPlayerViewController () <UITableViewDelegate,UITableViewDataSource,ZFTableViewCellDelegate>
+@interface ZFWXViewController () <UITableViewDelegate,UITableViewDataSource,ZFTableViewCellDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) ZFPlayerController *player;
-@property (nonatomic, strong) ZFPlayerControlView *controlView;
+@property (nonatomic, strong) ZFWeChatControlView *controlView;
 @property (nonatomic, strong) NSMutableArray *dataSource;
 @property (nonatomic, strong) NSMutableArray *urls;
 
 @end
 
-@implementation ZFAutoPlayerViewController
+@implementation ZFWXViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -40,7 +40,7 @@ static NSString *kIdentifier = @"kIdentifier";
     [self requestData];
     
     ZFAVPlayerManager *playerManager = [[ZFAVPlayerManager alloc] init];
-//    playerManager.scalingMode = ZFPlayerScalingModeAspectFill;
+    playerManager.scalingMode = ZFPlayerScalingModeAspectFill;
 
 //    KSMediaPlayerManager *playerManager = [[KSMediaPlayerManager alloc] init];
 //    ZFIJKPlayerManager *playerManager = [[ZFIJKPlayerManager alloc] init];
@@ -57,6 +57,9 @@ static NSString *kIdentifier = @"kIdentifier";
     self.player.WWANAutoPlay = YES;
     /// 续播
     self.player.resumePlayRecord = YES;
+    self.player.disableGestureTypes = ZFPlayerDisableGestureTypesPan;
+    self.player.orientationObserver.fullScreenMode = ZFFullScreenModePortrait;
+    self.player.statusBarHidden = YES;
     
     @weakify(self)
     self.player.playerDidToEnd = ^(id  _Nonnull asset) {
@@ -74,10 +77,6 @@ static NSString *kIdentifier = @"kIdentifier";
         [self setNeedsStatusBarAppearanceUpdate];
         self.tableView.scrollsToTop = !isFullScreen;
         kAPPDelegate.allowOrentitaionRotation = isFullScreen;
-        if (!isFullScreen) {
-            /// 解决导航栏上移问题
-            self.navigationController.navigationBar.zf_height = KNavBarHeight;
-        }
     };
     
     /// 停止的时候找出最合适的播放
@@ -126,7 +125,7 @@ static NSString *kIdentifier = @"kIdentifier";
     for (NSDictionary *dataDic in videoList) {
         ZFTableData *data = [[ZFTableData alloc] init];
         [data setValuesForKeysWithDictionary:dataDic];
-        ZFTableViewCellLayout *layout = [[ZFTableViewCellLayout alloc] initWithData:data];
+        ZFTableViewCellLayout *layout = [[ZFTableViewCellLayout alloc] initWXData:data];
         [self.dataSource addObject:layout];
         NSString *URLString = [data.video_url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
         NSURL *url = [NSURL URLWithString:URLString];
@@ -135,29 +134,19 @@ static NSString *kIdentifier = @"kIdentifier";
 }
 
 - (BOOL)shouldAutorotate {
-    return self.player.shouldAutorotate;
+    return NO;
 }
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-//    if (self.player.isFullScreen && self.player.orientationObserver.fullScreenMode == ZFFullScreenModeLandscape) {
-//        return UIInterfaceOrientationMaskLandscape;
-//    }
     return UIInterfaceOrientationMaskPortrait;
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
-    if (self.player.isFullScreen) {
-        return UIStatusBarStyleLightContent;
-    }
     return UIStatusBarStyleDefault;
 }
 
 - (BOOL)prefersStatusBarHidden {
-    return self.player.isStatusBarHidden;
-}
-
-- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
-    return UIStatusBarAnimationSlide;
+    return NO;
 }
 
 #pragma mark - UIScrollViewDelegate 列表播放必须实现
@@ -190,36 +179,11 @@ static NSString *kIdentifier = @"kIdentifier";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     ZFTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kIdentifier];
+    cell.coverImageView.contentMode = UIViewContentModeScaleAspectFill;
     [cell setDelegate:self withIndexPath:indexPath];
     cell.layout = self.dataSource[indexPath.row];
     [cell setNormalMode];
     return cell;
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    /// 如果正在播放的index和当前点击的index不同，则停止当前播放的index
-    if (self.player.playingIndexPath != indexPath) {
-        [self.player stopCurrentPlayingCell];
-    }
-    /// 如果没有播放，则点击进详情页会自动播放
-    if (!self.player.currentPlayerManager.isPlaying) {
-        [self playTheVideoAtIndexPath:indexPath scrollAnimated:NO];
-    }
-    /// 到详情页
-    ZFPlayerDetailViewController *detailVC = [ZFPlayerDetailViewController new];
-    detailVC.player = self.player;
-    @weakify(self)
-    /// 详情页返回的回调
-    detailVC.detailVCPopCallback = ^{
-        @strongify(self)
-        [self.player addPlayerViewToCell];
-    };
-    /// 详情页点击播放的回调
-    detailVC.detailVCPlayCallback = ^{
-        @strongify(self)
-        [self zf_playTheVideoAtIndexPath:indexPath];
-    };
-    [self.navigationController pushViewController:detailVC animated:YES];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -231,6 +195,7 @@ static NSString *kIdentifier = @"kIdentifier";
 
 - (void)zf_playTheVideoAtIndexPath:(NSIndexPath *)indexPath {
     [self playTheVideoAtIndexPath:indexPath scrollAnimated:NO];
+    [self.player enterPortraitFullScreen:YES animated:YES];
 }
 
 #pragma mark - private method
@@ -243,9 +208,7 @@ static NSString *kIdentifier = @"kIdentifier";
         [self.player playTheIndexPath:indexPath];
     }
     ZFTableViewCellLayout *layout = self.dataSource[indexPath.row];
-    [self.controlView showTitle:layout.data.title
-                 coverURLString:layout.data.thumbnail_url
-                 fullScreenMode:layout.isVerticalVideo?ZFFullScreenModePortrait:ZFFullScreenModeLandscape];
+    [self.controlView showCoverViewWithUrl:layout.data.thumbnail_url];
 }
 
 #pragma mark - getter
@@ -268,15 +231,13 @@ static NSString *kIdentifier = @"kIdentifier";
     return _tableView;
 }
 
-- (ZFPlayerControlView *)controlView {
+- (ZFWeChatControlView *)controlView {
     if (!_controlView) {
-        _controlView = [ZFPlayerControlView new];
-        _controlView.fastViewAnimated = YES;
-        _controlView.horizontalPanShowControlView = NO;
-        _controlView.prepareShowLoading = YES;
+        _controlView = [ZFWeChatControlView new];
     }
     return _controlView;
 }
 
-@end
 
+
+@end

@@ -110,6 +110,7 @@
         _allowOrentitaionRotation = YES;
         _roateType = ZFRotateTypeNormal;
         _currentOrientation = UIInterfaceOrientationPortrait;
+        self.enablePortraitGesture = YES;
     }
     return self;
 }
@@ -422,6 +423,11 @@
         self.window.landscapeViewController.statusBarAnimation = fullScreenStatusBarAnimation;
         [self.window.landscapeViewController setNeedsStatusBarAppearanceUpdate];
     }
+}
+
+- (void)setEnablePortraitGesture:(BOOL)enablePortraitGesture {
+    _enablePortraitGesture = enablePortraitGesture;
+    self.portraitViewController.enablePortraitGesture = enablePortraitGesture;
 }
 
 @end

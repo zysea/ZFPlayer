@@ -45,6 +45,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// defalut is UIStatusBarAnimationSlide.
 @property (nonatomic, assign) UIStatusBarAnimation statusBarAnimation;
 
+/// default is NO.
+@property (nonatomic, assign) BOOL enablePortraitGesture;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -28,10 +28,9 @@
 
 @interface ZFPlayerPersentInteractiveTransition : UIPercentDrivenInteractiveTransition
 
-@property (nonatomic, assign) BOOL interation;
-
 @property (nonatomic, weak) id<ZFOrientationObserverDelegate> delagate;
-
+@property (nonatomic, assign) BOOL interation;
+@property (nonatomic, assign) BOOL enablePortraitGesture;
 
 - (void)addPanGestureForViewController:(UIViewController *)viewController
                            contentView:(UIView *)contenView

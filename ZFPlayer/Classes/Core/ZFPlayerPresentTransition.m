@@ -45,21 +45,18 @@
 }
 
 - (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext {
-//    if (self.type == ZFPresentTransitionTypePresent) {
-//        return 0.3f;
-//    } else {
-        return 0.25f;
-//    }
+    return 0.25f;
 }
 
 - (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext {
     switch (self.type) {
-        case ZFPresentTransitionTypePresent:
+        case ZFPresentTransitionTypePresent: {
             [self presentAnimation:transitionContext];
+        }
             break;
-            
-        case ZFPresentTransitionTypeDismiss:
+        case ZFPresentTransitionTypeDismiss: {
             [self dismissAnimation:transitionContext];
+        }
             break;
     }
 }
@@ -112,7 +109,6 @@
  */
 - (void)dismissAnimation:(id<UIViewControllerContextTransitioning>)transitionContext {
     UIView *containerView = [transitionContext containerView];
-    
     UIViewController *toVC = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     if ([toVC isKindOfClass:[UINavigationController class]]) {
         UINavigationController *nav = (UINavigationController *)toVC;
@@ -137,7 +133,6 @@
     CGRect toRect = [self.containerView convertRect:self.containerView.bounds toView:toVC.view];
     [fromVC.view convertRect:self.contentView.bounds toView:self.containerView.window];
     [self.delagate zf_orientationWillChange:NO];
-//    [self.contentView.view layoutIfNeeded];
     
     [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
         fromVC.view.alpha = 0;

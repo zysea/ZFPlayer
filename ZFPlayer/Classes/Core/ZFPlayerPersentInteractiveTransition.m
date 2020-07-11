@@ -28,20 +28,17 @@
 
 @property (nonatomic, weak) id<UIViewControllerContextTransitioning> transitionContext;
 @property (nonatomic, weak) UIViewController *vc;
-@property (strong, nonatomic) UIImageView *imageView;
-@property (strong, nonatomic) UIView *bgView;
+@property (nonatomic, strong) UIView *bgView;
 @property (nonatomic, assign) CGPoint transitionImgViewCenter;
-@property (nonatomic, assign) CGFloat beginX;
-@property (nonatomic, assign) CGFloat beginY;
-@property (strong, nonatomic) UIView *contentView;
+@property (nonatomic, strong) UIView *contentView;
 @property (nonatomic, strong) UIView *containerView;
-@property (assign, nonatomic) BOOL isPanGesture;
-@property (assign, nonatomic) CGFloat scrollViewZoomScale;
-@property (assign, nonatomic) CGSize scrollViewContentSize;
-@property (assign, nonatomic) CGPoint scrollViewContentOffset;
-@property (assign, nonatomic) CGRect imageInitialFrame;
-@property (strong, nonatomic) UIPanGestureRecognizer *panGesture;
-@property (assign, nonatomic) BOOL atFirstPan;
+@property (nonatomic, assign) CGFloat scrollViewZoomScale;
+@property (nonatomic, assign) CGSize scrollViewContentSize;
+@property (nonatomic, assign) CGPoint scrollViewContentOffset;
+@property (nonatomic, assign) CGRect conentInitialFrame;
+@property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
+@property (nonatomic, strong) UITapGestureRecognizer *tapGesture;
+@property (nonatomic, assign) BOOL atFirstPan;
 
 @end
 
@@ -55,8 +52,18 @@
     self.vc = viewController;
     self.contentView = contenView;
     self.containerView = containerView;
-    self.imageInitialFrame = self.contentView.frame;
+    self.conentInitialFrame = self.contentView.frame;
     [viewController.view addGestureRecognizer:self.panGesture];
+    self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureAction)];
+    [viewController.view addGestureRecognizer:self.tapGesture];
+    self.tapGesture.enabled = self.enablePortraitGesture;
+    self.panGesture.enabled = self.enablePortraitGesture;
+}
+
+- (void)setEnablePortraitGesture:(BOOL)enablePortraitGesture {
+    _enablePortraitGesture = enablePortraitGesture;
+    self.tapGesture.enabled = enablePortraitGesture;
+    self.panGesture.enabled = enablePortraitGesture;
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
@@ -71,6 +78,13 @@
         }
     }
     return NO;
+}
+
+- (void)tapGestureAction {
+    [self.vc dismissViewControllerAnimated:YES completion:nil];
+    self.interation = NO;
+    [self cancelInteractiveTransition];
+    [self interPercentFinish];
 }
 
 - (void)gestureRecognizeDidUpdate:(UIPanGestureRecognizer *)gestureRecognizer {
@@ -88,9 +102,6 @@
                 [self.vc.view addGestureRecognizer:self.panGesture];
                 return;
             }
-            self.isPanGesture = YES;
-            self.beginX = [gestureRecognizer locationInView:gestureRecognizer.view].x;
-            self.beginY = [gestureRecognizer locationInView:gestureRecognizer.view].y;
             self.interation = YES;
             [self.vc dismissViewControllerAnimated:YES completion:nil];
         } break;
@@ -113,6 +124,7 @@
                 [self updateInteractiveTransition:scale];
             }
             break;
+        case UIGestureRecognizerStateCancelled:
         case UIGestureRecognizerStateEnded:
             if (self.interation) {
                 if (scale < 0.f) {
@@ -122,7 +134,7 @@
                 if (scale < 0.15f){
                     [self cancelInteractiveTransition];
                     [self interPercentCancel];
-                }else {
+                } else {
                     [self finishInteractiveTransition];
                     [self interPercentFinish];
                 }
@@ -159,28 +171,6 @@
     CGRect tempImageViewFrame = [fromVC.view convertRect:self.contentView.frame toView:toVC.view];
     
     self.bgView = [[UIView alloc] initWithFrame:containerView.bounds];
-    CGFloat scaleX;
-    CGFloat scaleY;
-    if (self.isPanGesture) {
-        if (self.beginX < tempImageViewFrame.origin.x) {
-            scaleX = 0;
-        } else if (self.beginX > CGRectGetMaxX(tempImageViewFrame)) {
-            scaleX = 1.0f;
-        } else {
-            scaleX = (self.beginX - tempImageViewFrame.origin.x) / tempImageViewFrame.size.width;
-        }
-        if (self.beginY < tempImageViewFrame.origin.y) {
-            scaleY = 0;
-        } else if (self.beginY > CGRectGetMaxY(tempImageViewFrame)){
-            scaleY = 1.0f;
-        } else {
-            scaleY = (self.beginY - tempImageViewFrame.origin.y) / tempImageViewFrame.size.height;
-        }
-    } else {
-        scaleX = 0.5f;
-        scaleY = 0.5f;
-    }
-    self.contentView.layer.anchorPoint = CGPointMake(scaleX, scaleY);
     self.contentView.frame = tempImageViewFrame;
     self.transitionImgViewCenter = self.contentView.center;
     
@@ -208,8 +198,8 @@
         self.bgView.alpha = 1;
     } completion:^(BOOL finished) {
         fromVC.view.backgroundColor = [UIColor blackColor];
-        self.contentView.layer.anchorPoint = CGPointMake(0.5f, 0.5f);
-        self.contentView.frame = self.imageInitialFrame;
+//        self.contentView.layer.anchorPoint = CGPointMake(0.5f, 0.5f);
+        self.contentView.frame = self.conentInitialFrame;
         if (self.scrollViewContentOffset.y < 0) {
             self.scrollViewContentOffset = CGPointMake(self.scrollViewContentOffset.x, 0);
         }
@@ -220,14 +210,24 @@
     }];
 }
 
-//完成
 - (void)interPercentFinish {
     id<UIViewControllerContextTransitioning> transitionContext = self.transitionContext;
     UIViewController *fromVC = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
     UIViewController *toVC = [self.transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
-        
+    if ([toVC isKindOfClass:[UINavigationController class]]) {
+        UINavigationController *nav = (UINavigationController *)toVC;
+        toVC = nav.viewControllers.lastObject;
+    } else if ([toVC isKindOfClass:[UITabBarController class]]) {
+        UITabBarController *tabBar = (UITabBarController *)toVC;
+        if ([tabBar.selectedViewController isKindOfClass:[UINavigationController class]]) {
+            UINavigationController *nav = (UINavigationController *)tabBar.selectedViewController;
+            toVC = nav.viewControllers.lastObject;
+        } else {
+            toVC = tabBar.selectedViewController;
+        }
+    }
     CGRect tempImageViewFrame = self.contentView.frame;
-    self.contentView.layer.anchorPoint = CGPointMake(0.5, 0.5);
+//    self.contentView.layer.anchorPoint = CGPointMake(0.5, 0.5);
     self.contentView.transform = CGAffineTransformIdentity;
     self.contentView.frame = tempImageViewFrame;
     
@@ -238,6 +238,7 @@
         fromVC.view.alpha = 0;
         self.bgView.alpha = 0;
         toVC.navigationController.navigationBar.alpha = 1;
+        [self.contentView layoutIfNeeded];
     } completion:^(BOOL finished) {
         [self.delagate zf_orientationDidChanged:NO];
         [self.containerView addSubview:self.contentView];

@@ -160,12 +160,7 @@
     self.player.shouldAutoplay = self.shouldAutoPlay;
     [self.player prepareToPlay];
     self.view.backgroundColor = [UIColor grayColor];
-    self.view.view = self.player.view;
-    
-//    [self.view insertSubview:self.player.view atIndex:1];
-//    self.player.view.frame = self.view.bounds;
-//    self.player.view.backgroundColor = [UIColor clearColor];
-//    self.player.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.view.playerView = self.player.view;
     self.scalingMode = self->_scalingMode;
     [self addPlayerNotificationObservers];
 }

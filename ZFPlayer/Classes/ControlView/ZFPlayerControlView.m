@@ -625,9 +625,9 @@
     self.landScapeControlView.player = player;
     self.portraitControlView.player = player;
     /// 解决播放时候黑屏闪一下问题
-//    [player.currentPlayerManager.view insertSubview:self.bgImgView atIndex:0];
-//    [self.bgImgView addSubview:self.effectView];
-    [player.currentPlayerManager.view insertSubview:self.coverImageView atIndex:0];
+    [player.currentPlayerManager.view insertSubview:self.bgImgView atIndex:0];
+    [self.bgImgView addSubview:self.effectView];
+    [player.currentPlayerManager.view addSubview:self.coverImageView];
     self.coverImageView.frame = player.currentPlayerManager.view.bounds;
     self.coverImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.bgImgView.frame = player.currentPlayerManager.view.bounds;
@@ -804,6 +804,8 @@
         _coverImageView = [[UIImageView alloc] init];
         _coverImageView.userInteractionEnabled = YES;
         _coverImageView.contentMode = UIViewContentModeScaleAspectFit;
+//        _coverImageView.contentMode = UIViewContentModeScaleAspectFill;
+//        _coverImageView.clipsToBounds = YES;
     }
     return _coverImageView;
 }

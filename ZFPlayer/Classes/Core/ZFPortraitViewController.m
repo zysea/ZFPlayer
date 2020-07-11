@@ -72,8 +72,9 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    // 给当前控制器的视图添加手势
-    [self.interactiveTransition addPanGestureForViewController:self contentView:self.contentView containerView:self.containerView];
+    [self.interactiveTransition addPanGestureForViewController:self
+                                                   contentView:self.contentView
+                                                 containerView:self.containerView];
 }
 
 - (BOOL)shouldAutorotate {
@@ -125,6 +126,11 @@
         _interactiveTransition.delagate = self;
     }
     return _interactiveTransition;;
+}
+
+- (void)setEnablePortraitGesture:(BOOL)enablePortraitGesture {
+    _enablePortraitGesture = enablePortraitGesture;
+    self.interactiveTransition.enablePortraitGesture = enablePortraitGesture;
 }
 
 @end

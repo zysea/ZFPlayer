@@ -112,6 +112,9 @@ typedef NS_OPTIONS(NSUInteger, ZFInterfaceOrientationMask) {
 /// defalut is UIStatusBarAnimationSlide.
 @property (nonatomic, assign) UIStatusBarAnimation fullScreenStatusBarAnimation;
 
+/// default is YES.
+@property (nonatomic, assign) BOOL enablePortraitGesture;
+
 /// The current orientation of the player.
 /// Default is UIInterfaceOrientationPortrait.
 @property (nonatomic, readonly) UIInterfaceOrientation currentOrientation;
