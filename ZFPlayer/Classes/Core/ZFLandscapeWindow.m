@@ -23,7 +23,6 @@
 // THE SOFTWARE.
 
 #import "ZFLandscapeWindow.h"
-#import "ZFPlayer.h"
 
 @implementation ZFLandscapeWindow
 @dynamic rootViewController;

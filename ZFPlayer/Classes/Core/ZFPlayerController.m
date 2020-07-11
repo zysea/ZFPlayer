@@ -28,7 +28,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "UIScrollView+ZFPlayer.h"
 #import "ZFReachabilityManager.h"
-#import "ZFPlayer.h"
+#import "ZFPlayerConst.h"
 
 static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
 

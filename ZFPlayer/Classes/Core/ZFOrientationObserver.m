@@ -23,9 +23,9 @@
 // THE SOFTWARE.
 
 #import "ZFOrientationObserver.h"
-#import "ZFPlayer.h"
 #import "ZFLandscapeWindow.h"
 #import "ZFPortraitViewController.h"
+#import "ZFPlayerConst.h"
 
 @interface UIWindow (CurrentViewController)
 

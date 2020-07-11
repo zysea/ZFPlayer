@@ -25,7 +25,7 @@
 #import "UIScrollView+ZFPlayer.h"
 #import <objc/runtime.h>
 #import "ZFReachabilityManager.h"
-#import "ZFPlayer.h"
+#import "ZFPlayerConst.h"
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored"-Wdeprecated-declarations"

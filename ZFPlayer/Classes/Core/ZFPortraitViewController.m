@@ -23,7 +23,6 @@
 // THE SOFTWARE.
 
 #import "ZFPortraitViewController.h"
-#import "ZFPlayer.h"
 #import "ZFPlayerPersentInteractiveTransition.h"
 #import "ZFPlayerPresentTransition.h"
 
