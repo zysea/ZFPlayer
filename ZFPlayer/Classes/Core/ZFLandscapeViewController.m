@@ -23,7 +23,6 @@
 // THE SOFTWARE.
 
 #import "ZFLandscapeViewController.h"
-#import "ZFPlayer.h"
 
 @interface ZFLandscapeViewController ()
 

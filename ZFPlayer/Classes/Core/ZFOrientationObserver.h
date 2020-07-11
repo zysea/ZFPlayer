@@ -112,6 +112,8 @@ typedef NS_OPTIONS(NSUInteger, ZFInterfaceOrientationMask) {
 /// defalut is UIStatusBarAnimationSlide.
 @property (nonatomic, assign) UIStatusBarAnimation fullScreenStatusBarAnimation;
 
+@property (nonatomic, assign) CGSize presentationSize;
+
 /// default is YES.
 @property (nonatomic, assign) BOOL enablePortraitGesture;
 

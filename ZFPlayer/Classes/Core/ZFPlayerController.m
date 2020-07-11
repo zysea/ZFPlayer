@@ -28,7 +28,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "UIScrollView+ZFPlayer.h"
 #import "ZFReachabilityManager.h"
-#import "ZFPlayer.h"
+#import "ZFPlayerConst.h"
 
 static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
 
@@ -222,6 +222,7 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
                 self.orientationObserver.fullScreenMode = ZFFullScreenModePortrait;
             }
         }
+        self.orientationObserver.presentationSize = size;
         if (self.presentationSizeChanged) self.presentationSizeChanged(asset, size);
         if ([self.controlView respondsToSelector:@selector(videoPlayer:presentationSizeChanged:)]) {
             [self.controlView videoPlayer:self presentationSizeChanged:size];

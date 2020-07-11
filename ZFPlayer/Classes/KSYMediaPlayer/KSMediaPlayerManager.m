@@ -25,10 +25,10 @@
 #import "KSMediaPlayerManager.h"
 #if __has_include(<ZFPlayer/ZFPlayer.h>)
 #import <ZFPlayer/ZFPlayer.h>
-#import <ZFPlayer/ZFPlayerView.h>
+#import <ZFPlayer/ZFPlayerConst.h>
 #else
 #import "ZFPlayer.h"
-#import "ZFPlayerView.h"
+#import "ZFPlayerConst.h"
 #endif
 #if __has_include(<KSYMediaPlayer/KSYMediaPlayer.h>)
 

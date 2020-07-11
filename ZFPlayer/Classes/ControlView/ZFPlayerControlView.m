@@ -32,10 +32,11 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import "ZFVolumeBrightnessView.h"
 #if __has_include(<ZFPlayer/ZFPlayer.h>)
-#import <ZFPlayer/ZFPlayer.h>
+#import <ZFPlayer/ZFPlayerConst.h>
 #else
-#import "ZFPlayer.h"
+#import "ZFPlayerConst.h"
 #endif
+
 
 @interface ZFPlayerControlView () <ZFSliderViewDelegate>
 /// 竖屏控制层的View

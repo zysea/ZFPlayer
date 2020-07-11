@@ -23,9 +23,9 @@
 // THE SOFTWARE.
 
 #import "ZFOrientationObserver.h"
-#import "ZFPlayer.h"
 #import "ZFLandscapeWindow.h"
 #import "ZFPortraitViewController.h"
+#import "ZFPlayerConst.h"
 
 @interface UIWindow (CurrentViewController)
 
@@ -428,6 +428,13 @@
 - (void)setEnablePortraitGesture:(BOOL)enablePortraitGesture {
     _enablePortraitGesture = enablePortraitGesture;
     self.portraitViewController.enablePortraitGesture = enablePortraitGesture;
+}
+
+- (void)setPresentationSize:(CGSize)presentationSize {
+    _presentationSize = presentationSize;
+    if (self.fullScreenMode == ZFFullScreenModePortrait) {
+        self.portraitViewController.presentationSize = presentationSize;
+    }
 }
 
 @end

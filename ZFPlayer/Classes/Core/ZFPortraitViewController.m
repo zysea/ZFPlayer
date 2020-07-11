@@ -23,7 +23,6 @@
 // THE SOFTWARE.
 
 #import "ZFPortraitViewController.h"
-#import "ZFPlayer.h"
 #import "ZFPlayerPersentInteractiveTransition.h"
 #import "ZFPlayerPresentTransition.h"
 
@@ -31,6 +30,7 @@
 
 @property (nonatomic, strong) ZFPlayerPresentTransition *transition;
 @property (nonatomic, strong) ZFPlayerPersentInteractiveTransition *interactiveTransition;
+@property (nonatomic, assign, getter=isFullScreen) BOOL fullScreen;
 
 @end
 
@@ -99,12 +99,14 @@
 #pragma mark - ZFOrientationObserverDelegate
 
 - (void)zf_orientationWillChange:(BOOL)isFullScreen {
+    self.fullScreen = isFullScreen;
     if (self.orientationWillChange) {
         self.orientationWillChange(isFullScreen);
     }
 }
 
 - (void)zf_orientationDidChanged:(BOOL)isFullScreen {
+    self.fullScreen = isFullScreen;
     if (self.orientationDidChanged) {
         self.orientationDidChanged(isFullScreen);
     }
@@ -131,6 +133,16 @@
 - (void)setEnablePortraitGesture:(BOOL)enablePortraitGesture {
     _enablePortraitGesture = enablePortraitGesture;
     self.interactiveTransition.enablePortraitGesture = enablePortraitGesture;
+}
+
+- (void)setPresentationSize:(CGSize)presentationSize {
+    _presentationSize = presentationSize;
+    if (self.isFullScreen) {
+        CGFloat videoWidth = self.contentView.scaleSize.width;
+        CGFloat videoHeight = self.contentView.scaleSize.height;
+        self.contentView.frame = CGRectMake(0, 0, videoWidth, videoHeight);
+        self.contentView.center = self.view.center;
+    }
 }
 
 @end

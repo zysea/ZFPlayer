@@ -12,6 +12,7 @@
 #import <ZFPlayer/ZFUtilities.h>
 #import "ZFLoadingView.h"
 #import <ZFPlayer/ZFSliderView.h>
+#import <ZFPlayer/ZFPlayerController.h>
 
 @interface ZFDouYinControlView ()
 /// 封面图

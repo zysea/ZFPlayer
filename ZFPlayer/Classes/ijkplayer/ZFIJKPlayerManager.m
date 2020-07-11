@@ -25,8 +25,10 @@
 #import "ZFIJKPlayerManager.h"
 #if __has_include(<ZFPlayer/ZFPlayer.h>)
 #import <ZFPlayer/ZFPlayer.h>
+#import <ZFPlayer/ZFPlayerConst.h>
 #else
 #import "ZFPlayer.h"
+#import "ZFPlayerConst.h"
 #endif
 #if __has_include(<IJKMediaFramework/IJKMediaFramework.h>)
 

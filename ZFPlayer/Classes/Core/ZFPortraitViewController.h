@@ -48,6 +48,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// default is NO.
 @property (nonatomic, assign) BOOL enablePortraitGesture;
 
+@property (nonatomic, assign) CGSize presentationSize;
+
 @end
 
 NS_ASSUME_NONNULL_END

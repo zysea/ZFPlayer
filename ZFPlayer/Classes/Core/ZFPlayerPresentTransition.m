@@ -23,7 +23,9 @@
 // THE SOFTWARE.
 
 #import "ZFPlayerPresentTransition.h"
-#import "ZFPlayer.h"
+#import "ZFPlayerConst.h"
+#import "ZFPlayerView.h"
+
 
 @interface ZFPlayerPresentTransition ()
 
