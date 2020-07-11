@@ -32,6 +32,26 @@
 
 @implementation ZFPlayerView
 
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.clipsToBounds = YES;
+    }
+    return self;
+}
+
+- (void)setView:(UIView *)view {
+    if (_view) [_view removeFromSuperview];
+    _view = view;
+    if (view != nil) [self addSubview:view];
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    NSLog(@"======%@",NSStringFromCGRect(self.frame));
+    self.view.frame = self.bounds;
+}
+
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
     // Determine whether you can receive touch events
     if (self.userInteractionEnabled == NO || self.hidden == YES || self.alpha <= 0.01) return nil;
@@ -59,7 +79,7 @@
 
 - (CGSize)presentationSize {
     if (CGSizeEqualToSize(_presentationSize, CGSizeZero)) {
-        _presentationSize = CGSizeMake(ZFPlayerScreenWidth, ZFPlayerScreenWidth * 9.0/16.0);
+        _presentationSize = self.frame.size;
     }
     return _presentationSize;
 }

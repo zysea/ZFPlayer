@@ -826,6 +826,10 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
     return UIStatusBarAnimationSlide;
 }
 
+- (CGSize)fullScreenVideoSize {
+    return self.currentPlayerManager.presentationSize;
+}
+
 #pragma mark - setter
 
 - (void)setOrientationWillChange:(void (^)(ZFPlayerController * _Nonnull, BOOL))orientationWillChange {
@@ -871,6 +875,11 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
 - (void)setFullScreenStatusBarAnimation:(UIStatusBarAnimation)fullScreenStatusBarAnimation {
     objc_setAssociatedObject(self, @selector(fullScreenStatusBarAnimation), @(fullScreenStatusBarAnimation), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     self.orientationObserver.fullScreenStatusBarAnimation = fullScreenStatusBarAnimation;
+}
+
+- (void)setFullScreenVideoSize:(CGSize)fullScreenVideoSize {
+    objc_setAssociatedObject(self, @selector(fullScreenVideoSize), @(fullScreenVideoSize), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    self.currentPlayerManager.view.presentationSize = fullScreenVideoSize;
 }
 
 @end

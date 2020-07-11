@@ -40,6 +40,8 @@ static NSString *kIdentifier = @"kIdentifier";
     [self requestData];
     
     ZFAVPlayerManager *playerManager = [[ZFAVPlayerManager alloc] init];
+    playerManager.scalingMode = ZFPlayerScalingModeAspectFill;
+
 //    KSMediaPlayerManager *playerManager = [[KSMediaPlayerManager alloc] init];
 //    ZFIJKPlayerManager *playerManager = [[ZFIJKPlayerManager alloc] init];
     

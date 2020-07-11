@@ -48,9 +48,14 @@
         min_h = 15;
         self.nickNameRect = CGRectMake(min_x, min_y, min_w, min_h);
         
-        min_x = 0;
+        min_x = 20;
         min_y = CGRectGetMaxY(self.headerRect)+margin;
-        min_w = min_view_w;
+        if (self.isVerticalVideo) {
+            min_w = 200;
+        } else {
+            min_w = min_view_w - min_x * 2;
+        }
+//        min_w = 200;
         min_h = self.videoHeight;
         self.videoRect = CGRectMake(min_x, min_y, min_w, min_h);
         
@@ -85,7 +90,8 @@
 - (CGFloat)videoHeight {
     CGFloat videoHeight;
     if (self.isVerticalVideo) {
-        videoHeight = [UIScreen mainScreen].bounds.size.width * 0.6 * self.data.video_height/self.data.video_width;
+//        videoHeight = [UIScreen mainScreen].bounds.size.width * 0.6 * self.data.video_height/self.data.video_width;
+        videoHeight = 200;
     } else {
         videoHeight = [UIScreen mainScreen].bounds.size.width * self.data.video_height/self.data.video_width;
     }

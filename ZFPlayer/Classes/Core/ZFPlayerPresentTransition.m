@@ -35,33 +35,24 @@
 
 @implementation ZFPlayerPresentTransition
 
-+ (instancetype)transitionWithTransitionType:(ZFPresentTransitionType)type
-                                 contentView:(ZFPlayerView *)contentView
-                               containerView:(UIView *)containerView {
-    return [[self alloc] initWithTransitionType:type contentView:contentView containerView:containerView];
+- (void)transitionWithTransitionType:(ZFPresentTransitionType)type
+                         contentView:(ZFPlayerView *)contentView
+                       containerView:(UIView *)containerView {
+    
+    self.type = type;
+    self.contentView = contentView;
+    self.containerView = containerView;
 }
 
-- (instancetype)initWithTransitionType:(ZFPresentTransitionType)type
-                           contentView:(ZFPlayerView *)contentView
-                         containerView:(UIView *)containerView {
-    self = [super init];
-    if (self) {
-        self.type = type;
-        self.contentView = contentView;
-        self.containerView = containerView;
-    }
-    return self;
-}
-
-- (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext{
-    if (self.type == ZFPresentTransitionTypePresent) {
-        return 0.45f;
-    } else {
+- (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext {
+//    if (self.type == ZFPresentTransitionTypePresent) {
+//        return 0.3f;
+//    } else {
         return 0.25f;
-    }
+//    }
 }
 
-- (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext{
+- (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext {
     switch (self.type) {
         case ZFPresentTransitionTypePresent:
             [self presentAnimation:transitionContext];
@@ -76,7 +67,7 @@
 /**
  *  实现present动画
  */
-- (void)presentAnimation:(id<UIViewControllerContextTransitioning>)transitionContext{
+- (void)presentAnimation:(id<UIViewControllerContextTransitioning>)transitionContext {
     UIViewController *toVC = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     UIViewController *fromVC = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
     if ([fromVC isKindOfClass:[UINavigationController class]]) {
@@ -97,21 +88,22 @@
     CGRect originRect = [self.containerView convertRect:self.contentView.frame toView:toVC.view];
     self.contentView.frame = originRect;
     
-    CGFloat videoWidth = self.contentView.scaleSize.width;
-    CGFloat videoHeight = self.contentView.scaleSize.height;
-    
-    
     UIColor *tempColor = toVC.view.backgroundColor;
     toVC.view.backgroundColor = [tempColor colorWithAlphaComponent:0];
+    toVC.view.alpha = 1;
+    [self.delagate zf_orientationWillChange:YES];
     
-    [UIView animateWithDuration:0.2 animations:^{
+    CGFloat videoWidth = self.contentView.scaleSize.width;
+    CGFloat videoHeight = self.contentView.scaleSize.height;
+    CGRect toRect = CGRectMake((ZFPlayerScreenWidth - videoWidth) / 2, (ZFPlayerScreenHeight - videoHeight) / 2, videoWidth, videoHeight);
+
+    [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
+        self.contentView.frame = toRect;
+        [self.contentView layoutIfNeeded];
         toVC.view.backgroundColor = [tempColor colorWithAlphaComponent:1.f];
-    }];
-  [UIView animateWithDuration:[self transitionDuration:transitionContext] delay:0 usingSpringWithDamping:0.75f initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-      self.contentView.frame = CGRectMake((ZFPlayerScreenWidth - videoWidth) / 2, (ZFPlayerScreenHeight - videoHeight) / 2, videoWidth, videoHeight);
-      [self.contentView layoutIfNeeded];
     } completion:^(BOOL finished) {
         [transitionContext completeTransition:YES];
+        [self.delagate zf_orientationDidChanged:YES];
     }];
 }
 
@@ -139,10 +131,14 @@
     fromVC.view.frame = containerView.bounds;
     [containerView addSubview:fromVC.view];
     [containerView addSubview:self.contentView];
+    
     CGRect originRect = [fromVC.view convertRect:self.contentView.frame toView:toVC.view];
     self.contentView.frame = originRect;
+    CGRect toRect = [self.containerView convertRect:self.containerView.bounds toView:toVC.view];
+    [fromVC.view convertRect:self.contentView.bounds toView:self.containerView.window];
+    [self.delagate zf_orientationWillChange:NO];
+//    [self.contentView.view layoutIfNeeded];
     
-    CGRect toRect = [self.containerView convertRect:self.containerView.bounds toView:self.containerView.window];
     [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
         fromVC.view.alpha = 0;
         self.contentView.frame = toRect;
@@ -151,6 +147,8 @@
         [self.containerView addSubview:self.contentView];
         self.contentView.frame = self.containerView.bounds;
         [transitionContext completeTransition:YES];
+        [self.delagate zf_orientationDidChanged:NO];
     }];
 }
+
 @end

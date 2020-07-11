@@ -54,6 +54,14 @@ typedef NS_OPTIONS(NSUInteger, ZFInterfaceOrientationMask) {
     ZFInterfaceOrientationMaskAllButUpsideDown = (ZFInterfaceOrientationMaskPortrait | ZFInterfaceOrientationMaskLandscapeLeft | ZFInterfaceOrientationMaskLandscapeRight),
 };
 
+@protocol ZFOrientationObserverDelegate <NSObject>
+
+- (void)zf_orientationWillChange:(BOOL)isFullScreen;
+
+- (void)zf_orientationDidChanged:(BOOL)isFullScreen;
+
+@end
+
 @interface ZFOrientationObserver : NSObject
 
 /// update the rotateView and containerView.
@@ -77,7 +85,6 @@ typedef NS_OPTIONS(NSUInteger, ZFInterfaceOrientationMask) {
 
 /// Use device orientation, default NO.
 @property (nonatomic, assign) BOOL forceDeviceOrientation;
-
 
 /// The block invoked When player will rotate.
 @property (nonatomic, copy, nullable) void(^orientationWillChange)(ZFOrientationObserver *observer, BOOL isFullScreen);

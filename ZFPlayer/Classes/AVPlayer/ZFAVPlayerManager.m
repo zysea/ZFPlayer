@@ -70,11 +70,6 @@ static NSString *const kPresentationSize         = @"presentationSize";
     return self;
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    NSLog(@"===========%@",NSStringFromCGRect(self.bounds));
-}
-
 - (void)setPlayer:(AVPlayer *)player {
     if (player == _player) return;
     self.avLayer.player = player;

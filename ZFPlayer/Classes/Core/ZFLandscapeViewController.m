@@ -36,7 +36,7 @@
 
 - (instancetype)init {
     self = [super init];
-    if ( self ) {
+    if (self) {
         _currentOrientation = UIInterfaceOrientationPortrait;
         _statusBarStyle = UIStatusBarStyleLightContent;
         _statusBarAnimation = UIStatusBarAnimationSlide;

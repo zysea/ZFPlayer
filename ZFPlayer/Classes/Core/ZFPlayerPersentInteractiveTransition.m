@@ -157,7 +157,7 @@
     
     UIView *containerView = [transitionContext containerView];
     CGRect tempImageViewFrame = [fromVC.view convertRect:self.contentView.frame toView:toVC.view];
-
+    
     self.bgView = [[UIView alloc] initWithFrame:containerView.bounds];
     CGFloat scaleX;
     CGFloat scaleY;
@@ -187,7 +187,7 @@
     [containerView addSubview:self.bgView];
     [containerView addSubview:self.contentView];
     [containerView addSubview:fromVC.view];
- 
+    
     self.bgView.backgroundColor = [UIColor blackColor];
     fromVC.view.backgroundColor = [UIColor clearColor];
 }
@@ -201,7 +201,6 @@
 - (void)interPercentCancel {
     id<UIViewControllerContextTransitioning> transitionContext = self.transitionContext;
     UIViewController *fromVC = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
-    UIViewController *toVC = [self.transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     [UIView animateWithDuration:0.2f animations:^{
         fromVC.view.alpha = 1;
         self.contentView.transform = CGAffineTransformIdentity;
@@ -214,9 +213,7 @@
         if (self.scrollViewContentOffset.y < 0) {
             self.scrollViewContentOffset = CGPointMake(self.scrollViewContentOffset.x, 0);
         }
-        
         [self.vc.view addSubview:self.contentView];
-        
         [self.bgView removeFromSuperview];
         self.bgView = nil;
         [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
@@ -227,25 +224,22 @@
 - (void)interPercentFinish {
     id<UIViewControllerContextTransitioning> transitionContext = self.transitionContext;
     UIViewController *fromVC = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
-    
     UIViewController *toVC = [self.transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
-    
-    NSTimeInterval duration = 0.35;
-    UIViewAnimationOptions option = UIViewAnimationOptionCurveEaseOut;
-    
+        
     CGRect tempImageViewFrame = self.contentView.frame;
     self.contentView.layer.anchorPoint = CGPointMake(0.5, 0.5);
     self.contentView.transform = CGAffineTransformIdentity;
     self.contentView.frame = tempImageViewFrame;
     
     CGRect toRect = [self.containerView convertRect:self.containerView.bounds toView:self.containerView.window];
-//    [UIView animateWithDuration:0.2f animations:^{
-    [UIView animateWithDuration:duration delay:0.0 usingSpringWithDamping:0.8 initialSpringVelocity:0.1 options:option animations:^{
+    [self.delagate zf_orientationWillChange:NO];
+    [UIView animateWithDuration:0.3f animations:^{
         self.contentView.frame = toRect;
         fromVC.view.alpha = 0;
         self.bgView.alpha = 0;
         toVC.navigationController.navigationBar.alpha = 1;
     } completion:^(BOOL finished) {
+        [self.delagate zf_orientationDidChanged:NO];
         [self.containerView addSubview:self.contentView];
         self.contentView.frame = self.containerView.bounds;
         [self.bgView removeFromSuperview];

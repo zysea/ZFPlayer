@@ -83,6 +83,7 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
 }
 
 - (void)setupPlayer {
+    
     ZFAVPlayerManager *playerManager = [[ZFAVPlayerManager alloc] init];
     playerManager.view.backgroundColor = [UIColor blackColor];
     
@@ -92,12 +93,19 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     /// 设置退到后台继续播放
     self.player.pauseWhenAppResignActive = NO;
     self.player.resumePlayRecord = YES;
+    self.player.disableGestureTypes = ZFPlayerDisableGestureTypesPan;
+//    self.player.fullScreenVideoSize = CGSizeMake(ZFPlayerScreenWidth, ZFPlayerScreenHeight);
     
     @weakify(self)
     self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
         @strongify(self)
         kAPPDelegate.allowOrentitaionRotation = isFullScreen;
         [self setNeedsStatusBarAppearanceUpdate];
+//        if (self.player.orientationObserver.fullScreenMode == ZFFullScreenModePortrait && isFullScreen) {
+//            self.controlView.hidden = YES;
+//        } else {
+//            self.controlView.hidden = NO;
+//        }
     };
     
     /// 播放完成

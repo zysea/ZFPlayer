@@ -24,10 +24,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ZFOrientationObserver.h"
 
 @interface ZFPlayerPersentInteractiveTransition : UIPercentDrivenInteractiveTransition
 
 @property (nonatomic, assign) BOOL interation;
+
+@property (nonatomic, weak) id<ZFOrientationObserverDelegate> delagate;
+
 
 - (void)addPanGestureForViewController:(UIViewController *)viewController
                            contentView:(UIView *)contenView

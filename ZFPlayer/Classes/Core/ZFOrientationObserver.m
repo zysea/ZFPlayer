@@ -229,21 +229,12 @@
 
 - (void)enterPortraitFullScreen:(BOOL)fullScreen animated:(BOOL)animated {
     self.fullScreen = fullScreen;
-    @weakify(self)
     if (fullScreen) {
         self.portraitViewController.contentView = self.view;
         self.portraitViewController.containerView = self.containerView;
-        if (self.orientationWillChange) self.orientationWillChange(self, self.isFullScreen);
-        [[UIWindow zf_currentViewController] presentViewController:self.portraitViewController animated:YES completion:^{
-            @strongify(self)
-            if (self.orientationDidChanged) self.orientationDidChanged(self, self.isFullScreen);
-        }];
+        [[UIWindow zf_currentViewController] presentViewController:self.portraitViewController animated:YES completion:nil];
     } else {
-        if (self.orientationWillChange) self.orientationWillChange(self, self.isFullScreen);
         [self.portraitViewController dismissViewControllerAnimated:YES completion:^{
-            @strongify(self)
-            if (self.orientationDidChanged) self.orientationDidChanged(self, self.isFullScreen);
-            self.portraitViewController = nil;
         }];
     }
 }
@@ -355,12 +346,23 @@
 
 - (ZFPortraitViewController *)portraitViewController {
     if (!_portraitViewController) {
+        @weakify(self)
         _portraitViewController = [[ZFPortraitViewController alloc] init];
         if (@available(iOS 9.0, *)) {
             [_portraitViewController loadViewIfNeeded];
         } else {
             [_portraitViewController view];
         }
+        _portraitViewController.orientationWillChange = ^(BOOL isFullScreen) {
+            @strongify(self)
+            self.fullScreen = isFullScreen;
+            if (self.orientationWillChange) self.orientationWillChange(self, isFullScreen);
+        };
+        _portraitViewController.orientationDidChanged = ^(BOOL isFullScreen) {
+            @strongify(self)
+            self.fullScreen = isFullScreen;
+            if (self.orientationDidChanged) self.orientationDidChanged(self, isFullScreen);
+        };
     }
     return _portraitViewController;;
 }
@@ -391,20 +393,35 @@
 
 - (void)setStatusBarHidden:(BOOL)statusBarHidden {
     _statusBarHidden = statusBarHidden;
-    self.window.landscapeViewController.statusBarHidden = statusBarHidden;
-    [self.window.landscapeViewController setNeedsStatusBarAppearanceUpdate];
+    if (self.fullScreenMode == ZFFullScreenModePortrait) {
+        self.portraitViewController.statusBarHidden = statusBarHidden;
+        [self.portraitViewController setNeedsStatusBarAppearanceUpdate];
+    } else if (self.fullScreenMode == ZFFullScreenModeLandscape) {
+        self.window.landscapeViewController.statusBarHidden = statusBarHidden;
+        [self.window.landscapeViewController setNeedsStatusBarAppearanceUpdate];
+    }
 }
 
 - (void)setFullScreenStatusBarStyle:(UIStatusBarStyle)fullScreenStatusBarStyle {
     _fullScreenStatusBarStyle = fullScreenStatusBarStyle;
-    self.window.landscapeViewController.statusBarStyle = fullScreenStatusBarStyle;
-    [self.window.landscapeViewController setNeedsStatusBarAppearanceUpdate];
+    if (self.fullScreenMode == ZFFullScreenModePortrait) {
+        self.portraitViewController.statusBarStyle = fullScreenStatusBarStyle;
+        [self.portraitViewController setNeedsStatusBarAppearanceUpdate];
+    } else if (self.fullScreenMode == ZFFullScreenModeLandscape) {
+        self.window.landscapeViewController.statusBarStyle = fullScreenStatusBarStyle;
+        [self.window.landscapeViewController setNeedsStatusBarAppearanceUpdate];
+    }
 }
 
 - (void)setFullScreenStatusBarAnimation:(UIStatusBarAnimation)fullScreenStatusBarAnimation {
     _fullScreenStatusBarAnimation = fullScreenStatusBarAnimation;
-    self.window.landscapeViewController.statusBarAnimation = fullScreenStatusBarAnimation;
-    [self.window.landscapeViewController setNeedsStatusBarAppearanceUpdate];
+    if (self.fullScreenMode == ZFFullScreenModePortrait) {
+        self.portraitViewController.statusBarAnimation = fullScreenStatusBarAnimation;
+        [self.portraitViewController setNeedsStatusBarAppearanceUpdate];
+    } else if (self.fullScreenMode == ZFFullScreenModeLandscape) {
+        self.window.landscapeViewController.statusBarAnimation = fullScreenStatusBarAnimation;
+        [self.window.landscapeViewController setNeedsStatusBarAppearanceUpdate];
+    }
 }
 
 @end

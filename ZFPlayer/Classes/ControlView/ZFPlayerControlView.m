@@ -109,7 +109,6 @@
     CGFloat min_h = 0;
     CGFloat min_view_w = self.zf_width;
     CGFloat min_view_h = self.zf_height;
-    NSLog(@"~~~~~~~~~~~~~·%@",NSStringFromCGRect(self.bounds));
 
     self.portraitControlView.frame = self.bounds;
     self.landScapeControlView.frame = self.bounds;

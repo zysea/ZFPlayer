@@ -321,6 +321,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// defalut is UIStatusBarAnimationSlide.
 @property (nonatomic, assign) UIStatusBarAnimation fullScreenStatusBarAnimation;
 
+///  全屏时候播放器size，默认视频本身宽高
+@property (nonatomic, assign) CGSize fullScreenVideoSize;
+
+
 /**
  Add the device orientation observer.
  */

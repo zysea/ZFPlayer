@@ -27,10 +27,10 @@
 #import "ZFPlayerPersentInteractiveTransition.h"
 #import "ZFPlayerPresentTransition.h"
 
-@interface ZFPortraitViewController ()<UIViewControllerTransitioningDelegate>
+@interface ZFPortraitViewController ()<UIViewControllerTransitioningDelegate,ZFOrientationObserverDelegate>
 
-@property (nonatomic, assign) UIInterfaceOrientationMask interfaceOrientationMask;
-@property (strong, nonatomic) ZFPlayerPersentInteractiveTransition *persentInteractiveTransition;
+@property (nonatomic, strong) ZFPlayerPresentTransition *transition;
+@property (nonatomic, strong) ZFPlayerPersentInteractiveTransition *interactiveTransition;
 
 @end
 
@@ -41,6 +41,9 @@
     if (self) {
         self.transitioningDelegate = self;
         self.modalPresentationStyle = UIModalPresentationOverFullScreen;
+        self.modalPresentationCapturesStatusBarAppearance = YES;
+        _statusBarStyle = UIStatusBarStyleLightContent;
+        _statusBarAnimation = UIStatusBarAnimationSlide;
     }
     return self;
 }
@@ -49,15 +52,17 @@
 #pragma mark - transition delegate
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source {
-    return [ZFPlayerPresentTransition transitionWithTransitionType:ZFPresentTransitionTypePresent contentView:self.contentView containerView:self.containerView];
+    [self.transition transitionWithTransitionType:ZFPresentTransitionTypePresent contentView:self.contentView containerView:self.containerView];
+    return self.transition;
 }
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed {
-    return [ZFPlayerPresentTransition transitionWithTransitionType:ZFPresentTransitionTypeDismiss contentView:self.contentView containerView:self.containerView];
+    [self.transition transitionWithTransitionType:ZFPresentTransitionTypeDismiss contentView:self.contentView containerView:self.containerView];
+    return self.transition;
 }
 
 - (id<UIViewControllerInteractiveTransitioning>)interactionControllerForDismissal:(id<UIViewControllerAnimatedTransitioning>)animator {
-    return self.persentInteractiveTransition.interation ? self.persentInteractiveTransition : nil;
+    return self.interactiveTransition.interation ? self.interactiveTransition : nil;
 }
 
 - (void)viewDidLoad {
@@ -67,30 +72,59 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    // 初始化手势过渡的代理
-    self.persentInteractiveTransition = [[ZFPlayerPersentInteractiveTransition alloc] init];
     // 给当前控制器的视图添加手势
-    [self.persentInteractiveTransition addPanGestureForViewController:self contentView:self.contentView containerView:self.containerView];
+    [self.interactiveTransition addPanGestureForViewController:self contentView:self.contentView containerView:self.containerView];
 }
 
 - (BOOL)shouldAutorotate {
     return NO;
 }
 
-- (UIStatusBarStyle)preferredStatusBarStyle {
-    return UIStatusBarStyleLightContent;
-}
-
 - (BOOL)prefersStatusBarHidden {
-    return YES;
+    return self.statusBarHidden;
 }
 
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return self.statusBarStyle;
+}
+
+- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
+    return self.statusBarAnimation;
+}
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskPortrait;
 }
 
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-//    [self dismissViewControllerAnimated:YES completion:nil];
+#pragma mark - ZFOrientationObserverDelegate
+
+- (void)zf_orientationWillChange:(BOOL)isFullScreen {
+    if (self.orientationWillChange) {
+        self.orientationWillChange(isFullScreen);
+    }
+}
+
+- (void)zf_orientationDidChanged:(BOOL)isFullScreen {
+    if (self.orientationDidChanged) {
+        self.orientationDidChanged(isFullScreen);
+    }
+}
+
+#pragma mark - getter
+
+- (ZFPlayerPresentTransition *)transition {
+    if (!_transition) {
+        _transition = [[ZFPlayerPresentTransition alloc] init];
+        _transition.delagate = self;
+    }
+    return _transition;
+}
+
+- (ZFPlayerPersentInteractiveTransition *)interactiveTransition {
+    if (!_interactiveTransition) {
+        _interactiveTransition = [[ZFPlayerPersentInteractiveTransition alloc] init];
+        _interactiveTransition.delagate = self;
+    }
+    return _interactiveTransition;;
 }
 
 @end

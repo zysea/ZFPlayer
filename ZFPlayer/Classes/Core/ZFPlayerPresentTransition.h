@@ -23,6 +23,7 @@
 // THE SOFTWARE.
 
 #import <UIKit/UIKit.h>
+#import "ZFOrientationObserver.h"
 @class ZFPlayerView;
 
 typedef NS_ENUM(NSUInteger, ZFPresentTransitionType) {
@@ -32,8 +33,10 @@ typedef NS_ENUM(NSUInteger, ZFPresentTransitionType) {
 
 @interface ZFPlayerPresentTransition : NSObject<UIViewControllerAnimatedTransitioning>
 
-+ (instancetype)transitionWithTransitionType:(ZFPresentTransitionType)type
-                                 contentView:(ZFPlayerView *)contentView
-                               containerView:(UIView *)containerView;
+@property (nonatomic, weak) id<ZFOrientationObserverDelegate> delagate;
+
+- (void)transitionWithTransitionType:(ZFPresentTransitionType)type
+                         contentView:(ZFPlayerView *)contentView
+                       containerView:(UIView *)containerView;
 
 @end

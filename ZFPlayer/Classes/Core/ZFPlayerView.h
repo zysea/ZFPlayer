@@ -26,6 +26,8 @@
 
 @interface ZFPlayerView : UIView
 
+@property (nonatomic, strong) UIView *view;
+
 @property (nonatomic, assign) CGSize presentationSize;
 
 @property (nonatomic, assign) CGSize scaleSize;
