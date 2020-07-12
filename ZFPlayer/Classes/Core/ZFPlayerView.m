@@ -25,31 +25,70 @@
 #import "ZFPlayerView.h"
 #import "ZFPlayerConst.h"
 
-@interface ZFPlayerView ()
-
-@property (nonatomic, weak) UIView *fitView;
-@end
-
 @implementation ZFPlayerView
+@synthesize presentationSize = _presentationSize;
 
 - (instancetype)init {
     self = [super init];
     if (self) {
         self.clipsToBounds = YES;
         self.backgroundColor = [UIColor blackColor];
+        [self addSubview:self.coverImageView];
     }
     return self;
 }
 
 - (void)setPlayerView:(UIView *)playerView {
-    if (_playerView) [_playerView removeFromSuperview];
+    if (_playerView) {
+        [_playerView removeFromSuperview];
+        self.presentationSize = CGSizeZero;
+    }
     _playerView = playerView;
-    if (playerView != nil) [self addSubview:playerView];
+    if (playerView != nil) {
+        [self addSubview:playerView];
+    }
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.playerView.frame = self.bounds;
+    CGFloat min_x = 0;
+    CGFloat min_y = 0;
+    CGFloat min_w = 0;
+    CGFloat min_h = 0;
+    CGFloat min_view_w = self.frame.size.width;
+    CGFloat min_view_h = self.frame.size.height;
+    
+    CGSize playerViewSize = CGSizeZero;
+    CGFloat videoWidth = self.presentationSize.width;
+    CGFloat videoHeight = self.presentationSize.height;
+    CGFloat screenScale = min_view_w/min_view_h;
+    CGFloat videoScale = videoWidth/videoHeight;
+    if (screenScale > videoScale) {
+        CGFloat height = min_view_h;
+        CGFloat width = height * videoScale;
+        playerViewSize = CGSizeMake(width, height);
+    } else {
+        CGFloat width = min_view_w;
+        CGFloat height = width / videoScale;
+        playerViewSize = CGSizeMake(width, height);
+    }
+    
+    if (self.scalingMode == ZFPlayerScalingModeNone || self.scalingMode == ZFPlayerScalingModeAspectFit) {
+        min_w = playerViewSize.width;
+        min_h = playerViewSize.height;
+        min_x = (min_view_w - min_w) / 2.0;
+        min_y = (min_view_h - min_h) / 2.0;
+        self.playerView.frame = CGRectMake(min_x, min_y, min_w, min_h);
+    } else if (self.scalingMode == ZFPlayerScalingModeAspectFill || self.scalingMode == ZFPlayerScalingModeFill) {
+        self.playerView.frame = self.bounds;
+    }
+    
+    if (self.loadState == ZFPlayerLoadStateUnknown || self.loadState == ZFPlayerLoadStatePrepare ) {
+        self.coverImageView.frame = self.bounds;
+    } else {
+        self.coverImageView.frame = self.playerView.frame;
+    }
+    NSLog(@"======%@",NSStringFromCGRect(self.frame));
 }
 
 - (CGSize)presentationSize {
@@ -59,22 +98,59 @@
     return _presentationSize;
 }
 
-- (CGSize)scaleSize {
-    CGFloat videoWidth = self.presentationSize.width;
-    CGFloat videoHeight = self.presentationSize.height;
-    CGFloat screenScale = (CGFloat)(ZFPlayerScreenWidth/ZFPlayerScreenHeight);
-    CGFloat videoScale = (CGFloat)(videoWidth/videoHeight);
-    if (screenScale > videoScale) {
-        CGFloat height = ZFPlayerScreenHeight;
-        CGFloat width = (CGFloat)(height * videoScale);
-        _scaleSize = CGSizeMake(width, height);
-    } else {
-        CGFloat width = ZFPlayerScreenWidth;
-        CGFloat height = (CGFloat)(width / videoScale);
-        _scaleSize = CGSizeMake(width, height);
+//- (CGSize)fullScreenScaleSize {
+//    CGFloat videoWidth = self.presentationSize.width;
+//    CGFloat videoHeight = self.presentationSize.height;
+//    CGFloat screenScale = (CGFloat)(ZFPlayerScreenWidth/ZFPlayerScreenHeight);
+//    CGFloat videoScale = (CGFloat)(videoWidth/videoHeight);
+//    if (screenScale > videoScale) {
+//        CGFloat height = ZFPlayerScreenHeight;
+//        CGFloat width = (CGFloat)(height * videoScale);
+//        _fullScreenScaleSize = CGSizeMake(width, height);
+//    } else {
+//        CGFloat width = ZFPlayerScreenWidth;
+//        CGFloat height = (CGFloat)(width / videoScale);
+//        _fullScreenScaleSize = CGSizeMake(width, height);
+//    }
+//    return _fullScreenScaleSize;
+//}
+
+- (UIImageView *)coverImageView {
+    if (!_coverImageView) {
+        _coverImageView = [[UIImageView alloc] init];
+        _coverImageView.userInteractionEnabled = YES;
+        _coverImageView.clipsToBounds = YES;
+        _coverImageView.contentMode = UIViewContentModeScaleAspectFit;
     }
-    
-    return _scaleSize;
+    return _coverImageView;
+}
+
+- (void)setScalingMode:(ZFPlayerScalingMode)scalingMode {
+    _scalingMode = scalingMode;
+     if (scalingMode == ZFPlayerScalingModeNone || scalingMode == ZFPlayerScalingModeAspectFit) {
+         self.coverImageView.contentMode = UIViewContentModeScaleAspectFit;
+    } else if (scalingMode == ZFPlayerScalingModeAspectFill) {
+        self.coverImageView.contentMode = UIViewContentModeScaleAspectFill;
+    } else if (scalingMode == ZFPlayerScalingModeFill) {
+        self.coverImageView.contentMode = UIViewContentModeScaleToFill;
+    }
+    [self setNeedsLayout];
+    [self layoutIfNeeded];
+}
+
+- (void)setPresentationSize:(CGSize)presentationSize {
+    _presentationSize = presentationSize;
+    if (CGSizeEqualToSize(CGSizeZero, presentationSize)) return;
+    [self setNeedsLayout];
+    [self layoutIfNeeded];
+}
+
+- (void)setLoadState:(ZFPlayerLoadState)loadState {
+    _loadState = loadState;
+    if (loadState == ZFPlayerLoadStatePlaythroughOK) {
+        [self setNeedsLayout];
+        [self layoutIfNeeded];
+    }
 }
 
 @end

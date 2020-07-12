@@ -233,10 +233,10 @@
     if (fullScreen) {
         self.portraitViewController.contentView = self.view;
         self.portraitViewController.containerView = self.containerView;
+        self.portraitViewController.presentationSize = self.presentationSize;
         [[UIWindow zf_currentViewController] presentViewController:self.portraitViewController animated:YES completion:nil];
     } else {
-        [self.portraitViewController dismissViewControllerAnimated:YES completion:^{
-        }];
+        [self.portraitViewController dismissViewControllerAnimated:YES completion:nil];
     }
 }
 
@@ -271,7 +271,6 @@
     [nav.navigationBar layoutSubviews];
 }
 
-/// 寻找响应者
 - (__kindof UIResponder *_Nullable)_lookupResponderForClass:(Class)cls {
     __kindof UIResponder *_Nullable next = self.containerView.nextResponder;
     while ( next != nil && [next isKindOfClass:cls] == NO ) {

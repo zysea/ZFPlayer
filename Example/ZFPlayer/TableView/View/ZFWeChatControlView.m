@@ -14,8 +14,6 @@
 
 @interface ZFWeChatControlView ()
 
-/// 封面图
-@property (nonatomic, strong) UIImageView *coverImageView;
 /// 加载loading
 @property (nonatomic, strong) ZFLoadingView *activity;
 
@@ -28,15 +26,12 @@
     self = [super init];
     if (self) {
         [self addSubview:self.activity];
-        [self resetControlView];
     }
     return self;
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.coverImageView.frame = self.bounds;
-    
     CGFloat min_x = 0;
     CGFloat min_y = 0;
     CGFloat min_w = 0;
@@ -47,10 +42,6 @@
     self.activity.frame = CGRectMake(min_x, min_y, min_w, min_h);
     self.activity.zf_centerX = self.zf_centerX;
     self.activity.zf_centerY = self.zf_centerY;
-}
-
-- (void)resetControlView {
-
 }
 
 /// 播放状态改变
@@ -72,12 +63,6 @@
 
 /// 加载状态改变
 - (void)videoPlayer:(ZFPlayerController *)videoPlayer loadStateChanged:(ZFPlayerLoadState)state {
-    if (state == ZFPlayerLoadStatePrepare) {
-        self.coverImageView.hidden = NO;
-    } else if (state == ZFPlayerLoadStatePlaythroughOK || state == ZFPlayerLoadStatePlayable) {
-//        self.coverImageView.hidden = YES;
-        self.player.currentPlayerManager.view.backgroundColor = [UIColor blackColor];
-    }
     if (state == ZFPlayerLoadStateStalled && videoPlayer.currentPlayerManager.isPlaying) {
         [self.activity startAnimating];
     } else if ((state == ZFPlayerLoadStateStalled || state == ZFPlayerLoadStatePrepare) && videoPlayer.currentPlayerManager.isPlaying) {
@@ -93,24 +78,13 @@
 
 - (void)setPlayer:(ZFPlayerController *)player {
     _player = player;
-    [player.currentPlayerManager.view insertSubview:self.coverImageView atIndex:0];
 }
 
 - (void)showCoverViewWithUrl:(NSString *)coverUrl {
-    [self.coverImageView setImageWithURLString:coverUrl placeholder:[UIImage imageNamed:@"img_video_loading"]];
+    [self.player.currentPlayerManager.view.coverImageView setImageWithURLString:coverUrl placeholder:[UIImage imageNamed:@"img_video_loading"]];
 }
 
 #pragma mark - getter
-
-- (UIImageView *)coverImageView {
-    if (!_coverImageView) {
-        _coverImageView = [[UIImageView alloc] init];
-        _coverImageView.userInteractionEnabled = YES;
-        _coverImageView.contentMode = UIViewContentModeScaleAspectFill;
-        _coverImageView.clipsToBounds = YES;
-    }
-    return _coverImageView;
-}
 
 - (ZFLoadingView *)activity {
     if (!_activity) {

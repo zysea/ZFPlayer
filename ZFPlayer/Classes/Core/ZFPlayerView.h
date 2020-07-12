@@ -23,13 +23,21 @@
 // THE SOFTWARE.
 
 #import <UIKit/UIKit.h>
+#import "ZFPlayerConst.h"
 
 @interface ZFPlayerView : UIView
+
+/// the cover for playerView
+@property (nonatomic, strong) UIImageView *coverImageView;
 
 @property (nonatomic, strong) UIView *playerView;
 
 @property (nonatomic, assign) CGSize presentationSize;
 
-@property (nonatomic, assign) CGSize scaleSize;
+//@property (nonatomic, assign) CGSize fullScreenScaleSize;
+
+@property (nonatomic, assign) ZFPlayerScalingMode scalingMode;
+
+@property (nonatomic, assign) ZFPlayerLoadState loadState;
 
 @end

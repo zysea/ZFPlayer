@@ -83,20 +83,24 @@
     }
     UIView *containerView = [transitionContext containerView];
     [containerView addSubview:toVC.view];
-    [toVC.view insertSubview:self.contentView atIndex:0];
+    [toVC.view addSubview:self.contentView];
+    
+    [containerView addSubview:self.contentView];
     CGRect originRect = [self.containerView convertRect:self.contentView.frame toView:toVC.view];
     self.contentView.frame = originRect;
-    
+    [self.contentView layoutIfNeeded];
+
     UIColor *tempColor = toVC.view.backgroundColor;
     toVC.view.backgroundColor = [tempColor colorWithAlphaComponent:0];
     toVC.view.alpha = 1;
     [self.delagate zf_orientationWillChange:YES];
     
-    CGFloat videoWidth = self.contentView.scaleSize.width;
-    CGFloat videoHeight = self.contentView.scaleSize.height;
-    CGRect toRect = CGRectMake((ZFPlayerScreenWidth - videoWidth) / 2, (ZFPlayerScreenHeight - videoHeight) / 2, videoWidth, videoHeight);
-
-    [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
+    CGFloat videoWidth = self.fullScreenScaleSize.width;
+    CGFloat videoHeight = self.fullScreenScaleSize.height;
+    CGRect toRect = CGRectMake((ZFPlayerScreenWidth - videoWidth) / 2.0, (ZFPlayerScreenHeight - videoHeight) / 2.0, videoWidth, videoHeight);
+    NSLog(@"sssssss===origin=%@\n to =%@", NSStringFromCGRect(originRect),NSStringFromCGRect(toRect));
+//    [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
+    [UIView animateWithDuration:2 animations:^{
         self.contentView.frame = toRect;
         [self.contentView layoutIfNeeded];
         toVC.view.backgroundColor = [tempColor colorWithAlphaComponent:1.f];

@@ -24,31 +24,9 @@
 
 #import <Foundation/Foundation.h>
 #import "ZFPlayerView.h"
+#import "ZFPlayerConst.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
-typedef NS_ENUM(NSUInteger, ZFPlayerPlaybackState) {
-    ZFPlayerPlayStateUnknown,
-    ZFPlayerPlayStatePlaying,
-    ZFPlayerPlayStatePaused,
-    ZFPlayerPlayStatePlayFailed,
-    ZFPlayerPlayStatePlayStopped
-};
-
-typedef NS_OPTIONS(NSUInteger, ZFPlayerLoadState) {
-    ZFPlayerLoadStateUnknown        = 0,
-    ZFPlayerLoadStatePrepare        = 1 << 0,
-    ZFPlayerLoadStatePlayable       = 1 << 1,
-    ZFPlayerLoadStatePlaythroughOK  = 1 << 2, // Playback will be automatically started.
-    ZFPlayerLoadStateStalled        = 1 << 3, // Playback will be automatically paused in this state, if started.
-};
-
-typedef NS_ENUM(NSInteger, ZFPlayerScalingMode) {
-    ZFPlayerScalingModeNone,       // No scaling.
-    ZFPlayerScalingModeAspectFit,  // Uniform scale until one dimension fits.
-    ZFPlayerScalingModeAspectFill, // Uniform scale until the movie fills the visible bounds. One dimension may have clipped contents.
-    ZFPlayerScalingModeFill        // Non-uniform scale. Both render dimensions will exactly match the visible bounds.
-};
 
 @protocol ZFPlayerMediaPlayback <NSObject>
 

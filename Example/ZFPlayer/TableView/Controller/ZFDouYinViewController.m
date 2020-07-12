@@ -67,11 +67,11 @@ static NSString *kIdentifier = @"kIdentifier";
     
     self.player.presentationSizeChanged = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, CGSize size) {
         @strongify(self)
-        if (size.width >= size.height) {
-            self.player.currentPlayerManager.scalingMode = ZFPlayerScalingModeAspectFit;
-        } else {
-            self.player.currentPlayerManager.scalingMode = ZFPlayerScalingModeAspectFill;
-        }
+//        if (size.width >= size.height) {
+//            self.player.currentPlayerManager.scalingMode = ZFPlayerScalingModeAspectFit;
+//        } else {
+//            self.player.currentPlayerManager.scalingMode = ZFPlayerScalingModeAspectFill;
+//        }
     };
     
     /// 停止的时候找出最合适的播放
@@ -217,13 +217,7 @@ static NSString *kIdentifier = @"kIdentifier";
     [self.player playTheIndexPath:indexPath];
     [self.controlView resetControlView];
     ZFTableData *data = self.dataSource[indexPath.row];
-    UIViewContentMode imageMode;
-    if (data.thumbnail_width >= data.thumbnail_height) {
-        imageMode = UIViewContentModeScaleAspectFit;
-    } else {
-        imageMode = UIViewContentModeScaleAspectFill;
-    }
-    [self.controlView showCoverViewWithUrl:data.thumbnail_url withImageMode:imageMode];
+    [self.controlView showCoverViewWithUrl:data.thumbnail_url];
 }
 
 #pragma mark - getter

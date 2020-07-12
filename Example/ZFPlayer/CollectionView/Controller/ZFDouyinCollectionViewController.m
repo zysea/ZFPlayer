@@ -57,10 +57,6 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
         @strongify(self)
         kAPPDelegate.allowOrentitaionRotation = isFullScreen;
         [self setNeedsStatusBarAppearanceUpdate];
-        if (!isFullScreen) {
-            /// 解决导航栏上移问题
-            self.navigationController.navigationBar.zf_height = KNavBarHeight;
-        }
         self.collectionView.scrollsToTop = !isFullScreen;
         if (isFullScreen) {
             self.player.disablePanMovingDirection = ZFPlayerDisablePanMovingDirectionNone;
@@ -156,13 +152,7 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
     [self.player playTheIndexPath:indexPath];
     [self.controlView resetControlView];
     ZFTableData *data = self.dataSource[indexPath.row];
-    UIViewContentMode imageMode;
-    if (data.thumbnail_width >= data.thumbnail_height) {
-        imageMode = UIViewContentModeScaleAspectFit;
-    } else {
-        imageMode = UIViewContentModeScaleAspectFill;
-    }
-    [self.controlView showCoverViewWithUrl:data.thumbnail_url withImageMode:imageMode];
+    [self.controlView showCoverViewWithUrl:data.thumbnail_url];
 }
 
 - (void)backClick:(UIButton *)sender {

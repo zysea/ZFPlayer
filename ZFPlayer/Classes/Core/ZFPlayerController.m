@@ -180,6 +180,11 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
     
     self.currentPlayerManager.playerPlayStateChanged = ^(id  _Nonnull asset, ZFPlayerPlaybackState playState) {
         @strongify(self)
+        if (playState == ZFPlayerPlayStatePlayStopped) {
+            CGSize size = self.currentPlayerManager.view.frame.size;
+
+            self.orientationObserver.presentationSize = size;
+        }
         if (self.playerPlayStateChanged) self.playerPlayStateChanged(asset, playState);
         if ([self.controlView respondsToSelector:@selector(videoPlayer:playStateChanged:)]) {
             [self.controlView videoPlayer:self playStateChanged:playState];
@@ -188,6 +193,11 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
     
     self.currentPlayerManager.playerLoadStateChanged = ^(id  _Nonnull asset, ZFPlayerLoadState loadState) {
         @strongify(self)
+        if (loadState == ZFPlayerLoadStatePrepare) {
+            CGSize size = self.currentPlayerManager.view.frame.size;
+            self.orientationObserver.presentationSize = size;
+        }
+        self.currentPlayerManager.view.loadState = loadState;
         if (self.playerLoadStateChanged) self.playerLoadStateChanged(asset, loadState);
         if ([self.controlView respondsToSelector:@selector(videoPlayer:loadStateChanged:)]) {
             [self.controlView videoPlayer:self loadStateChanged:loadState];
@@ -215,6 +225,8 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
     
     self.currentPlayerManager.presentationSizeChanged = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, CGSize size){
         @strongify(self)
+        self.currentPlayerManager.view.presentationSize = size;
+        self.orientationObserver.presentationSize = size;
         if (self.orientationObserver.fullScreenMode == ZFFullScreenModeAutomatic) {
             if (size.width > size.height) {
                 self.orientationObserver.fullScreenMode = ZFFullScreenModeLandscape;
@@ -222,7 +234,6 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
                 self.orientationObserver.fullScreenMode = ZFFullScreenModePortrait;
             }
         }
-        self.orientationObserver.presentationSize = size;
         if (self.presentationSizeChanged) self.presentationSizeChanged(asset, size);
         if ([self.controlView respondsToSelector:@selector(videoPlayer:presentationSizeChanged:)]) {
             [self.controlView videoPlayer:self presentationSizeChanged:size];
@@ -880,7 +891,7 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
 
 - (void)setFullScreenVideoSize:(CGSize)fullScreenVideoSize {
     objc_setAssociatedObject(self, @selector(fullScreenVideoSize), @(fullScreenVideoSize), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    self.currentPlayerManager.view.presentationSize = fullScreenVideoSize;
+//    self.currentPlayerManager.view.presentationSize = fullScreenVideoSize;
 }
 
 @end

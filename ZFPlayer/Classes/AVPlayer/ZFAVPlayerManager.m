@@ -397,7 +397,6 @@ static NSString *const kPresentationSize         = @"presentationSize";
             if (self.playerBufferTimeChanged) self.playerBufferTimeChanged(self, bufferTime);
         } else if ([keyPath isEqualToString:kPresentationSize]) {
             self->_presentationSize = self.playerItem.presentationSize;
-            self.view.presentationSize = self.playerItem.presentationSize;
             if (self.presentationSizeChanged) {
                 self.presentationSizeChanged(self, self->_presentationSize);
             }
@@ -409,11 +408,10 @@ static NSString *const kPresentationSize         = @"presentationSize";
 
 #pragma mark - getter
 
-- (UIView *)view {
+- (ZFPlayerView *)view {
     if (!_view) {
         ZFPlayerView *view = [[ZFPlayerView alloc] init];
         _view = view;
-//        _view = [UIView new];
     }
     return _view;
 }
@@ -471,6 +469,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
 - (void)setScalingMode:(ZFPlayerScalingMode)scalingMode {
     _scalingMode = scalingMode;
     ZFPlayerPresentView *presentView = (ZFPlayerPresentView *)self.view.playerView;
+    self.view.scalingMode = scalingMode;
     switch (scalingMode) {
         case ZFPlayerScalingModeNone:
             presentView.videoGravity = AVLayerVideoGravityResizeAspect;

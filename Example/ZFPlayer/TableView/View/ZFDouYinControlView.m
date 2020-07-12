@@ -19,8 +19,6 @@
 @property (nonatomic, strong) UIImageView *coverImageView;
 @property (nonatomic, strong) UIButton *playBtn;
 @property (nonatomic, strong) ZFSliderView *sliderView;
-@property (nonatomic, strong) UIImageView *bgImgView;
-@property (nonatomic, strong) UIView *effectView;
 
 @end
 
@@ -58,9 +56,6 @@
     min_w = min_view_w;
     min_h = 1;
     self.sliderView.frame = CGRectMake(min_x, min_y, min_w, min_h);
-    
-    self.bgImgView.frame = self.bounds;
-    self.effectView.frame = self.bgImgView.bounds;
 }
 
 - (void)resetControlView {
@@ -76,7 +71,6 @@
         self.coverImageView.hidden = NO;
     } else if (state == ZFPlayerLoadStatePlaythroughOK || state == ZFPlayerLoadStatePlayable) {
         self.coverImageView.hidden = YES;
-        self.effectView.hidden = NO;
     }
     if ((state == ZFPlayerLoadStateStalled || state == ZFPlayerLoadStatePrepare) && videoPlayer.currentPlayerManager.isPlaying) {
         [self.sliderView startAnimating];
@@ -97,9 +91,8 @@
         self.playBtn.transform = CGAffineTransformMakeScale(1.5f, 1.5f);
         [UIView animateWithDuration:0.2f delay:0
                             options:UIViewAnimationOptionCurveEaseIn animations:^{
-                                self.playBtn.transform = CGAffineTransformIdentity;
-                            } completion:^(BOOL finished) {
-                            }];
+            self.playBtn.transform = CGAffineTransformIdentity;
+        } completion:nil];
     } else {
         [self.player.currentPlayerManager play];
         self.playBtn.hidden = YES;
@@ -108,40 +101,14 @@
 
 - (void)setPlayer:(ZFPlayerController *)player {
     _player = player;
-    [player.currentPlayerManager.view insertSubview:self.bgImgView atIndex:0];
-    [self.bgImgView addSubview:self.effectView];
-    [player.currentPlayerManager.view insertSubview:self.coverImageView atIndex:1];
+    [player.currentPlayerManager.view insertSubview:self.coverImageView atIndex:0];
 }
 
-- (void)showCoverViewWithUrl:(NSString *)coverUrl withImageMode:(UIViewContentMode)contentMode {
-    self.coverImageView.contentMode = contentMode;
+- (void)showCoverViewWithUrl:(NSString *)coverUrl {
     [self.coverImageView setImageWithURLString:coverUrl placeholder:[UIImage imageNamed:@"img_video_loading"]];
-    [self.bgImgView setImageWithURLString:coverUrl placeholder:[UIImage imageNamed:@"img_video_loading"]];
 }
 
 #pragma mark - getter
-
-- (UIImageView *)bgImgView {
-    if (!_bgImgView) {
-        _bgImgView = [[UIImageView alloc] init];
-        _bgImgView.userInteractionEnabled = YES;
-    }
-    return _bgImgView;
-}
-
-- (UIView *)effectView {
-    if (!_effectView) {
-        if (@available(iOS 8.0, *)) {
-            UIBlurEffect *effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
-            _effectView = [[UIVisualEffectView alloc] initWithEffect:effect];
-        } else {
-            UIToolbar *effectView = [[UIToolbar alloc] init];
-            effectView.barStyle = UIBarStyleBlackTranslucent;
-            _effectView = effectView;
-        }
-    }
-    return _effectView;
-}
 
 - (UIButton *)playBtn {
     if (!_playBtn) {

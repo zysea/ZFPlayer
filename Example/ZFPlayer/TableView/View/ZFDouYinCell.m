@@ -39,8 +39,9 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         self.selectionStyle = UITableViewCellSelectionStyleNone;
-        [self.contentView addSubview:self.bgImgView];
-        [self.bgImgView addSubview:self.effectView];
+        self.contentView.backgroundColor = [UIColor blackColor];
+//        [self.contentView addSubview:self.bgImgView];
+//        [self.bgImgView addSubview:self.effectView];
         [self.contentView addSubview:self.coverImageView];
         [self.contentView addSubview:self.titleLabel];
         [self.contentView addSubview:self.likeBtn];
@@ -132,13 +133,13 @@
 
 - (void)setData:(ZFTableData *)data {
     _data = data;
-    if (data.thumbnail_width >= data.thumbnail_height) {
-        self.coverImageView.contentMode = UIViewContentModeScaleAspectFit;
-        self.coverImageView.clipsToBounds = NO;
-    } else {
-        self.coverImageView.contentMode = UIViewContentModeScaleAspectFill;
-        self.coverImageView.clipsToBounds = YES;
-    }
+//    if (data.thumbnail_width >= data.thumbnail_height) {
+//        self.coverImageView.contentMode = UIViewContentModeScaleAspectFit;
+//        self.coverImageView.clipsToBounds = NO;
+//    } else {
+//        self.coverImageView.contentMode = UIViewContentModeScaleAspectFill;
+//        self.coverImageView.clipsToBounds = YES;
+//    }
     [self.coverImageView setImageWithURLString:data.thumbnail_url placeholder:[UIImage imageNamed:@"loading_bgView"]];
     [self.bgImgView setImageWithURLString:data.thumbnail_url placeholder:[UIImage imageNamed:@"loading_bgView"]];
     self.titleLabel.text = data.title;
@@ -149,7 +150,7 @@
         _coverImageView = [[UIImageView alloc] init];
         _coverImageView.userInteractionEnabled = YES;
         _coverImageView.tag = kPlayerViewTag;
-//        _coverImageView.contentMode = UIViewContentModeScaleAspectFit;
+        _coverImageView.contentMode = UIViewContentModeScaleAspectFit;
     }
     return _coverImageView;
 }

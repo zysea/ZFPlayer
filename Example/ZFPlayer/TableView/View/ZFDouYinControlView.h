@@ -13,6 +13,6 @@
 
 - (void)resetControlView;
 
-- (void)showCoverViewWithUrl:(NSString *)coverUrl withImageMode:(UIViewContentMode)contentMode;
+- (void)showCoverViewWithUrl:(NSString *)coverUrl;
 
 @end

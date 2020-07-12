@@ -31,6 +31,7 @@
 @property (nonatomic, strong) ZFPlayerPresentTransition *transition;
 @property (nonatomic, strong) ZFPlayerPersentInteractiveTransition *interactiveTransition;
 @property (nonatomic, assign, getter=isFullScreen) BOOL fullScreen;
+@property (nonatomic, assign) CGSize fullScreenScaleSize;
 
 @end
 
@@ -117,6 +118,7 @@
 - (ZFPlayerPresentTransition *)transition {
     if (!_transition) {
         _transition = [[ZFPlayerPresentTransition alloc] init];
+        _transition.fullScreenScaleSize = self.fullScreenScaleSize;
         _transition.delagate = self;
     }
     return _transition;
@@ -137,12 +139,30 @@
 
 - (void)setPresentationSize:(CGSize)presentationSize {
     _presentationSize = presentationSize;
+    self.transition.fullScreenScaleSize = self.fullScreenScaleSize;
     if (self.isFullScreen) {
-        CGFloat videoWidth = self.contentView.scaleSize.width;
-        CGFloat videoHeight = self.contentView.scaleSize.height;
+        CGFloat videoWidth = self.fullScreenScaleSize.width;
+        CGFloat videoHeight = self.fullScreenScaleSize.height;
         self.contentView.frame = CGRectMake(0, 0, videoWidth, videoHeight);
         self.contentView.center = self.view.center;
     }
+}
+
+- (CGSize)fullScreenScaleSize {
+    CGFloat videoWidth = self.presentationSize.width;
+    CGFloat videoHeight = self.presentationSize.height;
+    CGFloat screenScale = (CGFloat)(ZFPlayerScreenWidth/ZFPlayerScreenHeight);
+    CGFloat videoScale = (CGFloat)(videoWidth/videoHeight);
+    if (screenScale > videoScale) {
+        CGFloat height = ZFPlayerScreenHeight;
+        CGFloat width = (CGFloat)(height * videoScale);
+        _fullScreenScaleSize = CGSizeMake(width, height);
+    } else {
+        CGFloat width = ZFPlayerScreenWidth;
+        CGFloat height = (CGFloat)(width / videoScale);
+        _fullScreenScaleSize = CGSizeMake(width, height);
+    }
+    return _fullScreenScaleSize;
 }
 
 @end

@@ -161,7 +161,6 @@
     self.player = [[IJKFFMoviePlayerController alloc] initWithContentURL:self.assetURL withOptions:self.options];
     self.player.shouldAutoplay = self.shouldAutoPlay;
     [self.player prepareToPlay];
-    self.view.backgroundColor = [UIColor grayColor];
     self.view.playerView = self.player.view;
     self.scalingMode = self->_scalingMode;
     [self addPlayerNotificationObservers];
@@ -360,7 +359,7 @@
 
 #pragma mark - getter
 
-- (UIView *)view {
+- (ZFPlayerView *)view {
     if (!_view) {
         _view = [[ZFPlayerView alloc] init];
     }
@@ -421,6 +420,7 @@
 
 - (void)setScalingMode:(ZFPlayerScalingMode)scalingMode {
     _scalingMode = scalingMode;
+    self.view.scalingMode = scalingMode;
     switch (scalingMode) {
         case ZFPlayerScalingModeNone:
             self.player.scalingMode = IJKMPMovieScalingModeNone;
