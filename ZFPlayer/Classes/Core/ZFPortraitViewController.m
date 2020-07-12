@@ -140,12 +140,6 @@
 - (void)setPresentationSize:(CGSize)presentationSize {
     _presentationSize = presentationSize;
     self.transition.fullScreenScaleSize = self.fullScreenScaleSize;
-    if (self.isFullScreen) {
-        CGFloat videoWidth = self.fullScreenScaleSize.width;
-        CGFloat videoHeight = self.fullScreenScaleSize.height;
-        self.contentView.frame = CGRectMake(0, 0, videoWidth, videoHeight);
-        self.contentView.center = self.view.center;
-    }
 }
 
 - (CGSize)fullScreenScaleSize {

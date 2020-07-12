@@ -34,8 +34,6 @@
 
 @property (nonatomic, assign) CGSize presentationSize;
 
-//@property (nonatomic, assign) CGSize fullScreenScaleSize;
-
 @property (nonatomic, assign) ZFPlayerScalingMode scalingMode;
 
 @property (nonatomic, assign) ZFPlayerLoadState loadState;

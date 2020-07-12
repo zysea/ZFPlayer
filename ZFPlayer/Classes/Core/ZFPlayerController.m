@@ -180,11 +180,6 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
     
     self.currentPlayerManager.playerPlayStateChanged = ^(id  _Nonnull asset, ZFPlayerPlaybackState playState) {
         @strongify(self)
-        if (playState == ZFPlayerPlayStatePlayStopped) {
-            CGSize size = self.currentPlayerManager.view.frame.size;
-
-            self.orientationObserver.presentationSize = size;
-        }
         if (self.playerPlayStateChanged) self.playerPlayStateChanged(asset, playState);
         if ([self.controlView respondsToSelector:@selector(videoPlayer:playStateChanged:)]) {
             [self.controlView videoPlayer:self playStateChanged:playState];

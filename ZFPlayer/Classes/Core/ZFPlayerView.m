@@ -98,23 +98,6 @@
     return _presentationSize;
 }
 
-//- (CGSize)fullScreenScaleSize {
-//    CGFloat videoWidth = self.presentationSize.width;
-//    CGFloat videoHeight = self.presentationSize.height;
-//    CGFloat screenScale = (CGFloat)(ZFPlayerScreenWidth/ZFPlayerScreenHeight);
-//    CGFloat videoScale = (CGFloat)(videoWidth/videoHeight);
-//    if (screenScale > videoScale) {
-//        CGFloat height = ZFPlayerScreenHeight;
-//        CGFloat width = (CGFloat)(height * videoScale);
-//        _fullScreenScaleSize = CGSizeMake(width, height);
-//    } else {
-//        CGFloat width = ZFPlayerScreenWidth;
-//        CGFloat height = (CGFloat)(width / videoScale);
-//        _fullScreenScaleSize = CGSizeMake(width, height);
-//    }
-//    return _fullScreenScaleSize;
-//}
-
 - (UIImageView *)coverImageView {
     if (!_coverImageView) {
         _coverImageView = [[UIImageView alloc] init];

@@ -44,6 +44,7 @@
 
 @implementation ZFPlayerPersentInteractiveTransition
 
+
 - (void)addPanGestureForViewController:(UIViewController *)viewController
                            contentView:(UIView *)contenView
                          containerView:(UIView *)containerView {
