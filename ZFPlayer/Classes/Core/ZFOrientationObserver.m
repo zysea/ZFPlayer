@@ -46,10 +46,10 @@
             if ([scene isKindOfClass: [UIWindowScene class]]) {
                 UIWindowScene * windowScene = (UIWindowScene *)scene;
                 [windowScene.windows enumerateObjectsUsingBlock:^(UIWindow * _Nonnull windowTemp, NSUInteger idx, BOOL * _Nonnull windowStop) {
-                    if ([windowTemp isKeyWindow]) {
+                    if (windowTemp.isKeyWindow) {
                         window = windowTemp;
-                        *windowStop = true;
-                        *scenesStop = true;
+                        *windowStop = YES;
+                        *scenesStop = YES;
                     }
                 }];
             }
@@ -85,7 +85,7 @@
 
 @property (nonatomic, assign) NSInteger playerViewTag;
 
-@property (nonatomic, assign) ZFRotateType roateType;
+@property (nonatomic, assign) ZFRotateType rotateType;
 
 @property (nonatomic, strong) UIWindow *previousKeyWindow;
 
@@ -107,8 +107,8 @@
         _duration = 0.30;
         _fullScreenMode = ZFFullScreenModeLandscape;
         _supportInterfaceOrientation = ZFInterfaceOrientationMaskAllButUpsideDown;
-        _allowOrentitaionRotation = YES;
-        _roateType = ZFRotateTypeNormal;
+        _allowOrientationRotation = YES;
+        _rotateType = ZFRotateTypeNormal;
         _currentOrientation = UIInterfaceOrientationPortrait;
         self.enablePortraitGesture = YES;
     }
@@ -122,14 +122,14 @@
 }
 
 - (void)cellModelRotateView:(ZFPlayerView *)rotateView rotateViewAtCell:(UIView *)cell playerViewTag:(NSInteger)playerViewTag {
-    self.roateType = ZFRotateTypeCell;
+    self.rotateType = ZFRotateTypeCell;
     self.view = rotateView;
     self.cell = cell;
     self.playerViewTag = playerViewTag;
 }
 
 - (void)cellOtherModelRotateView:(ZFPlayerView *)rotateView containerView:(UIView *)containerView {
-    self.roateType = ZFRotateTypeCellOther;
+    self.rotateType = ZFRotateTypeCellOther;
     self.view = rotateView;
     self.containerView = containerView;
 }
@@ -155,7 +155,7 @@
 }
 
 - (void)handleDeviceOrientationChange {
-    if (self.fullScreenMode == ZFFullScreenModePortrait || !self.allowOrentitaionRotation) return;
+    if (self.fullScreenMode == ZFFullScreenModePortrait || !self.allowOrientationRotation) return;
     UIInterfaceOrientation currentOrientation = UIInterfaceOrientationUnknown;
     if (UIDeviceOrientationIsValidInterfaceOrientation([UIDevice currentDevice].orientation)) {
         currentOrientation = (UIInterfaceOrientation)[UIDevice currentDevice].orientation;
@@ -209,7 +209,7 @@
     if (UIInterfaceOrientationIsLandscape(orientation)) {
         if (!self.fullScreen) {
             UIView *containerView = nil;
-            if (self.roateType == ZFRotateTypeCell) {
+            if (self.rotateType == ZFRotateTypeCell) {
                 containerView = [self.cell viewWithTag:self.playerViewTag];
             } else {
                 containerView = self.containerView;
@@ -233,9 +233,9 @@
     if (fullScreen) {
         self.portraitViewController.contentView = self.view;
         self.portraitViewController.containerView = self.containerView;
-        [[UIWindow zf_currentViewController] presentViewController:self.portraitViewController animated:YES completion:nil];
+        [[UIWindow zf_currentViewController] presentViewController:self.portraitViewController animated:animated completion:nil];
     } else {
-        [self.portraitViewController dismissViewControllerAnimated:YES completion:^{
+        [self.portraitViewController dismissViewControllerAnimated:animated completion:^{
         }];
     }
 }
@@ -286,7 +286,7 @@
     if (!self.activeDeviceObserver) {
         return NO;
     }
-    if (self.fullScreenMode == ZFFullScreenModePortrait || !self.allowOrentitaionRotation) {
+    if (self.fullScreenMode == ZFFullScreenModePortrait || !self.allowOrientationRotation) {
         return NO;
     }
     
@@ -316,7 +316,7 @@
     if (self.orientationDidChanged) self.orientationDidChanged(self, self.isFullScreen);
     if (!self.isFullScreen) {
         UIView *containerView = nil;
-        if (self.roateType == ZFRotateTypeCell) {
+        if (self.rotateType == ZFRotateTypeCell) {
             containerView = [self.cell viewWithTag:self.playerViewTag];
         } else {
             containerView = self.containerView;

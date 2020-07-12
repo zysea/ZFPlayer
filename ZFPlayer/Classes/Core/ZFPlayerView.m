@@ -60,20 +60,18 @@
 }
 
 - (CGSize)scaleSize {
+    CGFloat height = ZFPlayerScreenHeight;
+    CGFloat width = ZFPlayerScreenWidth;
     CGFloat videoWidth = self.presentationSize.width;
     CGFloat videoHeight = self.presentationSize.height;
     CGFloat screenScale = (CGFloat)(ZFPlayerScreenWidth/ZFPlayerScreenHeight);
     CGFloat videoScale = (CGFloat)(videoWidth/videoHeight);
     if (screenScale > videoScale) {
-        CGFloat height = ZFPlayerScreenHeight;
-        CGFloat width = (CGFloat)(height * videoScale);
-        _scaleSize = CGSizeMake(width, height);
+        width = (CGFloat)(height * videoScale);
     } else {
-        CGFloat width = ZFPlayerScreenWidth;
-        CGFloat height = (CGFloat)(width / videoScale);
-        _scaleSize = CGSizeMake(width, height);
+        height = (CGFloat)(width / videoScale);
     }
-    
+    _scaleSize = CGSizeMake(width, height);
     return _scaleSize;
 }
 
