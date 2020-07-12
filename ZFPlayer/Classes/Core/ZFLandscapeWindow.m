@@ -31,16 +31,17 @@
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
-    if (!self) return nil;
-    self.windowLevel = UIWindowLevelNormal;
-    _landscapeViewController = [[ZFLandscapeViewController alloc] init];
-    self.rootViewController = _landscapeViewController;
-    if (@available(iOS 13.0, *)) {
-        if (self.windowScene == nil) {
-            self.windowScene = UIApplication.sharedApplication.keyWindow.windowScene;
+    if (self) {
+        self.windowLevel = UIWindowLevelNormal;
+        _landscapeViewController = [[ZFLandscapeViewController alloc] init];
+        self.rootViewController = _landscapeViewController;
+        if (@available(iOS 13.0, *)) {
+            if (self.windowScene == nil) {
+                self.windowScene = UIApplication.sharedApplication.keyWindow.windowScene;
+            }
         }
+        self.hidden = YES;
     }
-    self.hidden = YES;
     return self;
 }
 

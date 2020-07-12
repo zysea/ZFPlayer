@@ -867,7 +867,7 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
 
 - (void)setAllowOrentitaionRotation:(BOOL)allowOrentitaionRotation {
     objc_setAssociatedObject(self, @selector(allowOrentitaionRotation), @(allowOrentitaionRotation), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    self.orientationObserver.allowOrentitaionRotation = allowOrentitaionRotation;
+    self.orientationObserver.allowOrientationRotation = allowOrentitaionRotation;
 }
 
 - (void)setExitFullScreenWhenStop:(BOOL)exitFullScreenWhenStop {

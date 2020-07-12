@@ -50,8 +50,8 @@ typedef NS_OPTIONS(NSUInteger, ZFInterfaceOrientationMask) {
     ZFInterfaceOrientationMaskLandscapeRight = (1 << 2),
     ZFInterfaceOrientationMaskPortraitUpsideDown = (1 << 3),
     ZFInterfaceOrientationMaskLandscape = (ZFInterfaceOrientationMaskLandscapeLeft | ZFInterfaceOrientationMaskLandscapeRight),
-    ZFInterfaceOrientationMaskAll = (ZFInterfaceOrientationMaskPortrait | ZFInterfaceOrientationMaskLandscapeLeft | ZFInterfaceOrientationMaskLandscapeRight | ZFInterfaceOrientationMaskPortraitUpsideDown),
-    ZFInterfaceOrientationMaskAllButUpsideDown = (ZFInterfaceOrientationMaskPortrait | ZFInterfaceOrientationMaskLandscapeLeft | ZFInterfaceOrientationMaskLandscapeRight),
+    ZFInterfaceOrientationMaskAll = (ZFInterfaceOrientationMaskPortrait | ZFInterfaceOrientationMaskLandscape | ZFInterfaceOrientationMaskPortraitUpsideDown),
+    ZFInterfaceOrientationMaskAllButUpsideDown = (ZFInterfaceOrientationMaskPortrait | ZFInterfaceOrientationMaskLandscape),
 };
 
 @protocol ZFOrientationObserverDelegate <NSObject>
@@ -123,7 +123,7 @@ typedef NS_OPTIONS(NSUInteger, ZFInterfaceOrientationMask) {
 
 /// Whether allow the video orientation rotate.
 /// default is YES.
-@property (nonatomic) BOOL allowOrentitaionRotation;
+@property (nonatomic) BOOL allowOrientationRotation;
 
 /// The support Interface Orientation,default is ZFInterfaceOrientationMaskAllButUpsideDown
 @property (nonatomic, assign) ZFInterfaceOrientationMask supportInterfaceOrientation;
