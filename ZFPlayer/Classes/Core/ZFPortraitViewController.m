@@ -31,7 +31,7 @@
 @property (nonatomic, strong) ZFPlayerPresentTransition *transition;
 @property (nonatomic, strong) ZFPlayerPersentInteractiveTransition *interactiveTransition;
 @property (nonatomic, assign, getter=isFullScreen) BOOL fullScreen;
-@property (nonatomic, assign) CGSize fullScreenScaleSize;
+//@property (nonatomic, assign) CGSize fullScreenScaleSize;
 
 @end
 
@@ -49,6 +49,23 @@
     return self;
 }
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.view.backgroundColor = [UIColor blackColor];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    self.fullScreen = YES;
+    [self.interactiveTransition addPanGestureForViewController:self
+                                                   contentView:self.contentView
+                                                 containerView:self.containerView];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    self.fullScreen = NO;
+}
 
 #pragma mark - transition delegate
 
@@ -66,17 +83,6 @@
     return self.interactiveTransition.interation ? self.interactiveTransition : nil;
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    self.view.backgroundColor = [UIColor blackColor];
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    [self.interactiveTransition addPanGestureForViewController:self
-                                                   contentView:self.contentView
-                                                 containerView:self.containerView];
-}
 
 - (BOOL)shouldAutorotate {
     return NO;
@@ -100,14 +106,12 @@
 #pragma mark - ZFOrientationObserverDelegate
 
 - (void)zf_orientationWillChange:(BOOL)isFullScreen {
-    self.fullScreen = isFullScreen;
     if (self.orientationWillChange) {
         self.orientationWillChange(isFullScreen);
     }
 }
 
 - (void)zf_orientationDidChanged:(BOOL)isFullScreen {
-    self.fullScreen = isFullScreen;
     if (self.orientationDidChanged) {
         self.orientationDidChanged(isFullScreen);
     }
@@ -118,7 +122,7 @@
 - (ZFPlayerPresentTransition *)transition {
     if (!_transition) {
         _transition = [[ZFPlayerPresentTransition alloc] init];
-        _transition.fullScreenScaleSize = self.fullScreenScaleSize;
+        _transition.contentFullScreenRect = [self contentFullScreenRect:self.presentationSize];
         _transition.delagate = self;
     }
     return _transition;
@@ -127,6 +131,7 @@
 - (ZFPlayerPersentInteractiveTransition *)interactiveTransition {
     if (!_interactiveTransition) {
         _interactiveTransition = [[ZFPlayerPersentInteractiveTransition alloc] init];
+        _interactiveTransition.contentFullScreenRect = [self contentFullScreenRect:self.presentationSize];
         _interactiveTransition.delagate = self;
     }
     return _interactiveTransition;;
@@ -139,24 +144,38 @@
 
 - (void)setPresentationSize:(CGSize)presentationSize {
     _presentationSize = presentationSize;
-    self.transition.fullScreenScaleSize = self.fullScreenScaleSize;
+    self.transition.contentFullScreenRect = [self contentFullScreenRect:presentationSize];
+    self.interactiveTransition.contentFullScreenRect = [self contentFullScreenRect:presentationSize];
 }
 
-- (CGSize)fullScreenScaleSize {
-    CGFloat videoWidth = self.presentationSize.width;
-    CGFloat videoHeight = self.presentationSize.height;
-    CGFloat screenScale = (CGFloat)(ZFPlayerScreenWidth/ZFPlayerScreenHeight);
-    CGFloat videoScale = (CGFloat)(videoWidth/videoHeight);
+- (void)setFullScreen:(BOOL)fullScreen {
+    _fullScreen = fullScreen;
+    self.transition.fullScreen = fullScreen;
+}
+
+- (CGRect)contentFullScreenRect:(CGSize)presentationSize {
+    CGFloat videoWidth = presentationSize.width;
+    CGFloat videoHeight = presentationSize.height;
+    if (videoHeight == 0) {
+        return CGRectZero;
+    }
+    CGSize fullScreenScaleSize = CGSizeZero;
+    CGFloat screenScale = ZFPlayerScreenWidth/ZFPlayerScreenHeight;
+    CGFloat videoScale = videoWidth/videoHeight;
     if (screenScale > videoScale) {
         CGFloat height = ZFPlayerScreenHeight;
-        CGFloat width = (CGFloat)(height * videoScale);
-        _fullScreenScaleSize = CGSizeMake(width, height);
+        CGFloat width = height * videoScale;
+        fullScreenScaleSize = CGSizeMake(width, height);
     } else {
         CGFloat width = ZFPlayerScreenWidth;
         CGFloat height = (CGFloat)(width / videoScale);
-        _fullScreenScaleSize = CGSizeMake(width, height);
+        fullScreenScaleSize = CGSizeMake(width, height);
     }
-    return _fullScreenScaleSize;
+    
+    videoWidth = fullScreenScaleSize.width;
+    videoHeight = fullScreenScaleSize.height;
+    CGRect rect = CGRectMake((ZFPlayerScreenWidth - videoWidth) / 2.0, (ZFPlayerScreenHeight - videoHeight) / 2.0, videoWidth, videoHeight);
+    return rect;
 }
 
 @end

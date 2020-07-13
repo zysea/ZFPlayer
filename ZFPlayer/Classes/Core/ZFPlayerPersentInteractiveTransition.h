@@ -32,6 +32,8 @@
 @property (nonatomic, assign) BOOL interation;
 @property (nonatomic, assign) BOOL enablePortraitGesture;
 
+@property (nonatomic, assign) CGRect contentFullScreenRect;
+
 - (void)addPanGestureForViewController:(UIViewController *)viewController
                            contentView:(UIView *)contenView
                          containerView:(UIView *)containerView;

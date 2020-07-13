@@ -83,7 +83,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) NSURL *assetURL;
 
 /// The video size.
-@property (nonatomic, readonly) CGSize presentationSize;
+@property (nonatomic) CGSize presentationSize;
 
 /// The playback state.
 @property (nonatomic, readonly) ZFPlayerPlaybackState playState;

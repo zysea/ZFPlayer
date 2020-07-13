@@ -171,7 +171,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
     if (self.player.rate != 0) [self.player pause];
     [self.player removeTimeObserver:_timeObserver];
     [self.player replaceCurrentItemWithPlayerItem:nil];
-    self.view.presentationSize = CGSizeZero;
+    self.presentationSize = CGSizeZero;
     _timeObserver = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:_itemEndObserver name:AVPlayerItemDidPlayToEndTimeNotification object:self.playerItem];
     _itemEndObserver = nil;
@@ -396,10 +396,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
             self->_bufferTime = bufferTime;
             if (self.playerBufferTimeChanged) self.playerBufferTimeChanged(self, bufferTime);
         } else if ([keyPath isEqualToString:kPresentationSize]) {
-            self->_presentationSize = self.playerItem.presentationSize;
-            if (self.presentationSizeChanged) {
-                self.presentationSizeChanged(self, self->_presentationSize);
-            }
+            self.presentationSize = self.playerItem.presentationSize;
         } else {
             [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
         }
@@ -491,6 +488,14 @@ static NSString *const kPresentationSize         = @"presentationSize";
 - (void)setVolume:(float)volume {
     _volume = MIN(MAX(0, volume), 1);
     self.player.volume = volume;
+}
+
+- (void)setPresentationSize:(CGSize)presentationSize {
+    _presentationSize = presentationSize;
+    self.view.presentationSize = presentationSize;
+    if (self.presentationSizeChanged) {
+        self.presentationSizeChanged(self, self.presentationSize);
+    }
 }
 
 @end

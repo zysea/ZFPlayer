@@ -35,10 +35,9 @@
 @property (nonatomic, assign) CGFloat scrollViewZoomScale;
 @property (nonatomic, assign) CGSize scrollViewContentSize;
 @property (nonatomic, assign) CGPoint scrollViewContentOffset;
-@property (nonatomic, assign) CGRect conentInitialFrame;
+//@property (nonatomic, assign) CGRect conentInitialFrame;
 @property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
 @property (nonatomic, strong) UITapGestureRecognizer *tapGesture;
-@property (nonatomic, assign) BOOL atFirstPan;
 
 @end
 
@@ -53,7 +52,6 @@
     self.vc = viewController;
     self.contentView = contenView;
     self.containerView = containerView;
-    self.conentInitialFrame = self.contentView.frame;
     [viewController.view addGestureRecognizer:self.panGesture];
     self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureAction)];
     [viewController.view addGestureRecognizer:self.tapGesture];
@@ -73,8 +71,7 @@
     }
     if ([otherGestureRecognizer.view isKindOfClass:[UIScrollView class]]) {
         UIScrollView *scrollView = (UIScrollView *)otherGestureRecognizer.view;
-        if (scrollView.contentOffset.y <= 0 &&
-            !scrollView.zooming && self.atFirstPan) {
+        if (scrollView.contentOffset.y <= 0 && !scrollView.zooming) {
             return YES;
         }
     }
@@ -105,8 +102,9 @@
             }
             self.interation = YES;
             [self.vc dismissViewControllerAnimated:YES completion:nil];
-        } break;
-        case UIGestureRecognizerStateChanged:
+        }
+            break;
+        case UIGestureRecognizerStateChanged: {
             if (self.interation) {
                 if (scale < 0.f) {
                     scale = 0.f;
@@ -115,8 +113,6 @@
                 if (imageViewScale < 0.4) {
                     imageViewScale = 0.4;
                 }
-                NSLog(@"%f",imageViewScale);
-
                 self.contentView.center = CGPointMake(self.transitionImgViewCenter.x + translation.x, self.transitionImgViewCenter.y + translation.y);
                 self.contentView.transform = CGAffineTransformMakeScale(imageViewScale, imageViewScale);
                 
@@ -124,9 +120,9 @@
                 
                 [self updateInteractiveTransition:scale];
             }
+        }
             break;
-        case UIGestureRecognizerStateCancelled:
-        case UIGestureRecognizerStateEnded:
+        case UIGestureRecognizerStateEnded: {
             if (self.interation) {
                 if (scale < 0.f) {
                     scale = 0.f;
@@ -140,13 +136,15 @@
                     [self interPercentFinish];
                 }
             }
+        }
             break;
-        default:
+        default: {
             if (self.interation) {
                 self.interation = NO;
                 [self cancelInteractiveTransition];
                 [self interPercentCancel];
             }
+        }
             break;
     }
 }
@@ -199,8 +197,8 @@
         self.bgView.alpha = 1;
     } completion:^(BOOL finished) {
         fromVC.view.backgroundColor = [UIColor blackColor];
-//        self.contentView.layer.anchorPoint = CGPointMake(0.5f, 0.5f);
-        self.contentView.frame = self.conentInitialFrame;
+        self.contentView.layer.anchorPoint = CGPointMake(0.5f, 0.5f);
+        self.contentView.frame = self.contentFullScreenRect;
         if (self.scrollViewContentOffset.y < 0) {
             self.scrollViewContentOffset = CGPointMake(self.scrollViewContentOffset.x, 0);
         }
@@ -228,7 +226,7 @@
         }
     }
     CGRect tempImageViewFrame = self.contentView.frame;
-//    self.contentView.layer.anchorPoint = CGPointMake(0.5, 0.5);
+    self.contentView.layer.anchorPoint = CGPointMake(0.5, 0.5);
     self.contentView.transform = CGAffineTransformIdentity;
     self.contentView.frame = tempImageViewFrame;
     
@@ -241,10 +239,11 @@
         toVC.navigationController.navigationBar.alpha = 1;
         [self.contentView layoutIfNeeded];
     } completion:^(BOOL finished) {
-        [self.delagate zf_orientationDidChanged:NO];
         [self.containerView addSubview:self.contentView];
         self.contentView.frame = self.containerView.bounds;
+        [self.contentView layoutIfNeeded];
         [self.bgView removeFromSuperview];
+        [self.delagate zf_orientationDidChanged:NO];
         [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
     }];
 }

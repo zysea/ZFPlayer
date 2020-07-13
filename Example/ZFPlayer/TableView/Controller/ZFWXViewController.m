@@ -204,6 +204,8 @@ static NSString *kIdentifier = @"kIdentifier";
     }
     ZFTableViewCellLayout *layout = self.dataSource[indexPath.row];
     [self.controlView showCoverViewWithUrl:layout.data.thumbnail_url];
+    CGSize videoSize = CGSizeMake(layout.data.video_width, layout.data.video_height);
+    self.player.currentPlayerManager.presentationSize = videoSize;
 }
 
 #pragma mark - getter

@@ -26,14 +26,12 @@
 #import "ZFPlayerConst.h"
 #import "ZFPlayerView.h"
 
-
 @interface ZFPlayerPresentTransition ()
 
 @property (strong, nonatomic) ZFPlayerView *contentView;
 @property (assign, nonatomic) ZFPresentTransitionType type;
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, assign, getter=isTransiting) BOOL transiting;
-@property (nonatomic, assign, getter=isFullScreen) BOOL fullScreen;
 @property (nonatomic, assign, getter=isSizeChanged) BOOL sizeChanged;
 
 @end
@@ -66,9 +64,6 @@
     }
 }
 
-/**
- *  实现present动画
- */
 - (void)presentAnimation:(id<UIViewControllerContextTransitioning>)transitionContext {
     self.sizeChanged = NO;
 
@@ -88,40 +83,33 @@
     }
     UIView *containerView = [transitionContext containerView];
     [containerView addSubview:toVC.view];
-    [toVC.view addSubview:self.contentView];
-    
     [containerView addSubview:self.contentView];
     CGRect originRect = [self.containerView convertRect:self.contentView.frame toView:toVC.view];
     self.contentView.frame = originRect;
-    [self.contentView layoutIfNeeded];
 
     UIColor *tempColor = toVC.view.backgroundColor;
     toVC.view.backgroundColor = [tempColor colorWithAlphaComponent:0];
     toVC.view.alpha = 1;
     [self.delagate zf_orientationWillChange:YES];
     
-    CGRect toRect = [self contentViewFullScreenRect];
+    CGRect toRect = self.contentFullScreenRect;
     self.transiting = YES;
-    self.fullScreen = NO;
     [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
         self.contentView.frame = toRect;
         [self.contentView layoutIfNeeded];
         toVC.view.backgroundColor = [tempColor colorWithAlphaComponent:1.f];
     } completion:^(BOOL finished) {
         self.transiting = NO;
-        self.fullScreen = YES;
+        [toVC.view addSubview:self.contentView];
         [transitionContext completeTransition:YES];
         [self.delagate zf_orientationDidChanged:YES];
         if (self.sizeChanged) {
-            self.contentView.frame = [self contentViewFullScreenRect];
+            self.contentView.frame = self.contentFullScreenRect;
             [self.contentView layoutIfNeeded];
         }
     }];
 }
 
-/**
- *  实现dimiss动画
- */
 - (void)dismissAnimation:(id<UIViewControllerContextTransitioning>)transitionContext {
     UIView *containerView = [transitionContext containerView];
     UIViewController *toVC = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
@@ -149,7 +137,6 @@
     [fromVC.view convertRect:self.contentView.bounds toView:self.containerView.window];
     [self.delagate zf_orientationWillChange:NO];
     self.transiting = YES;
-    self.fullScreen = YES;
     [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
         fromVC.view.alpha = 0;
         self.contentView.frame = toRect;
@@ -160,24 +147,16 @@
         [transitionContext completeTransition:YES];
         [self.delagate zf_orientationDidChanged:NO];
         self.transiting = NO;
-        self.fullScreen = NO;
     }];
 }
 
-- (void)setFullScreenScaleSize:(CGSize)fullScreenScaleSize {
-    _fullScreenScaleSize = fullScreenScaleSize;
+- (void)setContentFullScreenRect:(CGRect)contentFullScreenRect {
+    _contentFullScreenRect = contentFullScreenRect;
     if (!self.transiting && self.isFullScreen) {
-        self.contentView.frame = [self contentViewFullScreenRect];
+        self.contentView.frame = contentFullScreenRect;
     } else if (self.transiting && !self.isFullScreen) {
         self.sizeChanged = YES;
     }
-}
-
-- (CGRect)contentViewFullScreenRect {
-    CGFloat videoWidth = self.fullScreenScaleSize.width;
-    CGFloat videoHeight = self.fullScreenScaleSize.height;
-    CGRect rect = CGRectMake((ZFPlayerScreenWidth - videoWidth) / 2.0, (ZFPlayerScreenHeight - videoHeight) / 2.0, videoWidth, videoHeight);
-    return rect;
 }
 
 @end

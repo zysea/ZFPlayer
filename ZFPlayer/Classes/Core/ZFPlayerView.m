@@ -88,7 +88,7 @@
     } else {
         self.coverImageView.frame = self.playerView.frame;
     }
-    NSLog(@"======%@",NSStringFromCGRect(self.frame));
+    NSLog(@"====%@",NSStringFromCGRect(self.frame));
 }
 
 - (CGSize)presentationSize {

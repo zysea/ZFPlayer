@@ -35,7 +35,11 @@ typedef NS_ENUM(NSUInteger, ZFPresentTransitionType) {
 
 @property (nonatomic, weak) id<ZFOrientationObserverDelegate> delagate;
 
-@property (nonatomic, assign) CGSize fullScreenScaleSize;
+//@property (nonatomic, assign) CGSize fullScreenScaleSize;
+
+@property (nonatomic, assign) CGRect contentFullScreenRect;
+
+@property (nonatomic, assign, getter=isFullScreen) BOOL fullScreen;
 
 - (void)transitionWithTransitionType:(ZFPresentTransitionType)type
                          contentView:(ZFPlayerView *)contentView
