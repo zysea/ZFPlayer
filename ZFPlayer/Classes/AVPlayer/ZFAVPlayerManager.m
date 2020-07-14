@@ -169,6 +169,8 @@ static NSString *const kPresentationSize         = @"presentationSize";
     self.loadState = ZFPlayerLoadStateUnknown;
     self.playState = ZFPlayerPlayStatePlayStopped;
     if (self.player.rate != 0) [self.player pause];
+    [_playerItem cancelPendingSeeks];
+    [_asset cancelLoading];
     [self.player removeTimeObserver:_timeObserver];
     [self.player replaceCurrentItemWithPlayerItem:nil];
     self.presentationSize = CGSizeZero;
