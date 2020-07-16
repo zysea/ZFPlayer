@@ -50,6 +50,10 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
 
 @implementation ZFPlayerController
 
+@dynamic scrollView;
+@dynamic containerViewTag;
+@dynamic playingIndexPath;
+
 - (instancetype)init {
     self = [super init];
     if (self) {
