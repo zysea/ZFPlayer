@@ -27,6 +27,7 @@
 
 @implementation ZFPlayerView
 @synthesize presentationSize = _presentationSize;
+@synthesize coverImageView = _coverImageView;
 
 - (instancetype)init {
     self = [super init];
@@ -61,6 +62,7 @@
     CGSize playerViewSize = CGSizeZero;
     CGFloat videoWidth = self.presentationSize.width;
     CGFloat videoHeight = self.presentationSize.height;
+    if (videoHeight == 0) return;
     CGFloat screenScale = min_view_w/min_view_h;
     CGFloat videoScale = videoWidth/videoHeight;
     if (screenScale > videoScale) {
@@ -82,13 +84,7 @@
     } else if (self.scalingMode == ZFPlayerScalingModeAspectFill || self.scalingMode == ZFPlayerScalingModeFill) {
         self.playerView.frame = self.bounds;
     }
-    
-    if (self.loadState == ZFPlayerLoadStateUnknown || self.loadState == ZFPlayerLoadStatePrepare ) {
-        self.coverImageView.frame = self.bounds;
-    } else {
-        self.coverImageView.frame = self.playerView.frame;
-    }
-    NSLog(@"====%@",NSStringFromCGRect(self.frame));
+    self.coverImageView.frame = self.playerView.frame;
 }
 
 - (CGSize)presentationSize {
@@ -117,7 +113,6 @@
     } else if (scalingMode == ZFPlayerScalingModeFill) {
         self.coverImageView.contentMode = UIViewContentModeScaleToFill;
     }
-    [self setNeedsLayout];
     [self layoutIfNeeded];
 }
 
@@ -126,14 +121,6 @@
     if (CGSizeEqualToSize(CGSizeZero, presentationSize)) return;
     [self setNeedsLayout];
     [self layoutIfNeeded];
-}
-
-- (void)setLoadState:(ZFPlayerLoadState)loadState {
-    _loadState = loadState;
-    if (loadState == ZFPlayerLoadStatePlaythroughOK) {
-        [self setNeedsLayout];
-        [self layoutIfNeeded];
-    }
 }
 
 @end

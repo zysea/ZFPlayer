@@ -89,6 +89,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
 @property (nonatomic, strong) AVPlayerLayer *playerLayer;
 @property (nonatomic, assign) BOOL isBuffering;
 @property (nonatomic, assign) BOOL isReadyToPlay;
+@property (nonatomic, strong) AVAssetImageGenerator *imageGenerator;
 
 @end
 
@@ -206,22 +207,31 @@ static NSString *const kPresentationSize         = @"presentationSize";
 }
 
 - (UIImage *)thumbnailImageAtCurrentTime {
-    AVAssetImageGenerator *imageGenerator = [AVAssetImageGenerator assetImageGeneratorWithAsset:_asset];
-    CMTime expectedTime = _playerItem.currentTime;
+    CMTime expectedTime = self.playerItem.currentTime;
     CGImageRef cgImage = NULL;
     
-    imageGenerator.requestedTimeToleranceBefore = kCMTimeZero;
-    imageGenerator.requestedTimeToleranceAfter = kCMTimeZero;
-    cgImage = [imageGenerator copyCGImageAtTime:expectedTime actualTime:NULL error:NULL];
-    
+    self.imageGenerator.requestedTimeToleranceBefore = kCMTimeZero;
+    self.imageGenerator.requestedTimeToleranceAfter = kCMTimeZero;
+    cgImage = [self.imageGenerator copyCGImageAtTime:expectedTime actualTime:NULL error:NULL];
+
     if (!cgImage) {
-        imageGenerator.requestedTimeToleranceBefore = kCMTimePositiveInfinity;
-        imageGenerator.requestedTimeToleranceAfter = kCMTimePositiveInfinity;
-        cgImage = [imageGenerator copyCGImageAtTime:expectedTime actualTime:NULL error:NULL];
+        self.imageGenerator.requestedTimeToleranceBefore = kCMTimePositiveInfinity;
+        self.imageGenerator.requestedTimeToleranceAfter = kCMTimePositiveInfinity;
+        cgImage = [self.imageGenerator copyCGImageAtTime:expectedTime actualTime:NULL error:NULL];
     }
     
     UIImage *image = [UIImage imageWithCGImage:cgImage];
     return image;
+}
+
+- (void)thumbnailImageAtCurrentTime:(void(^)(UIImage *))handler {
+    CMTime expectedTime = self.playerItem.currentTime;
+    [self.imageGenerator generateCGImagesAsynchronouslyForTimes:@[[NSValue valueWithCMTime:expectedTime]] completionHandler:^(CMTime requestedTime, CGImageRef  _Nullable image, CMTime actualTime, AVAssetImageGeneratorResult result, NSError * _Nullable error) {
+        if (handler) {
+            UIImage *finalImage = [UIImage imageWithCGImage:image];
+            handler(finalImage);
+        }
+    }];
 }
 
 #pragma mark - private method
@@ -253,6 +263,8 @@ static NSString *const kPresentationSize         = @"presentationSize";
     _asset = [AVURLAsset URLAssetWithURL:self.assetURL options:self.requestHeader];
     _playerItem = [AVPlayerItem playerItemWithAsset:_asset];
     _player = [AVPlayer playerWithPlayerItem:_playerItem];
+    _imageGenerator = [AVAssetImageGenerator assetImageGeneratorWithAsset:_asset];
+
     [self enableAudioTracks:YES inPlayerItem:_playerItem];
     
     ZFPlayerPresentView *presentView = [[ZFPlayerPresentView alloc] init];

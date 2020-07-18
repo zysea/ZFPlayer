@@ -23,7 +23,6 @@
 // THE SOFTWARE.
 
 #import <UIKit/UIKit.h>
-#import "ZFPlayerView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -35,7 +34,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// The block invoked when player rotated.
 @property (nonatomic, copy, nullable) void(^orientationDidChanged)(BOOL isFullScreen);
 
-@property (nonatomic, strong) ZFPlayerView *contentView;
+@property (nonatomic, strong) UIView *contentView;
+
 @property (nonatomic, strong) UIView *containerView;
 
 @property (nonatomic, assign) BOOL statusBarHidden;
@@ -49,6 +49,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL enablePortraitGesture;
 
 @property (nonatomic, assign) CGSize presentationSize;
+
+@property (nonatomic, assign) BOOL fullScreenAnimation;
 
 @end
 

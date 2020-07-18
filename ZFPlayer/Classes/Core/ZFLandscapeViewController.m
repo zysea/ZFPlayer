@@ -53,10 +53,10 @@
     }
     
     if (UIInterfaceOrientationIsLandscape(self.currentOrientation)) {
-        if (self.rotateView.superview != self.view) {
-            [self.view addSubview:self.rotateView];
-            self.rotateView.frame = self.targetRect;
-            [self.rotateView layoutIfNeeded];
+        if (self.contentView.superview != self.view) {
+            [self.view addSubview:self.contentView];
+            self.contentView.frame = self.targetRect;
+            [self.contentView layoutIfNeeded];
         }
     }
     [self.delegate ls_willRotateToOrientation:self.currentOrientation];
@@ -65,11 +65,11 @@
     [CATransaction setDisableActions:self.disableAnimations];
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> _Nonnull context) {
         if (isFullscreen) {
-            self.rotateView.frame = CGRectMake(0, 0, size.width, size.height);
+            self.contentView.frame = CGRectMake(0, 0, size.width, size.height);
         } else {
-            self.rotateView.frame = self.targetRect;
+            self.contentView.frame = self.targetRect;
         }
-        [self.rotateView layoutIfNeeded];
+        [self.contentView layoutIfNeeded];
     } completion:^(id<UIViewControllerTransitionCoordinatorContext> _Nonnull context) {
         [CATransaction commit];
         self->_rotating = NO;

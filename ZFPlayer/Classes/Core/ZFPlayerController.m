@@ -180,9 +180,6 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
     
     self.currentPlayerManager.playerPlayStateChanged = ^(id  _Nonnull asset, ZFPlayerPlaybackState playState) {
         @strongify(self)
-//        if (playState == ZFPlayerPlayStatePlayStopped) {
-//            self.orientationObserver.presentationSize = CGSizeZero;
-//        }
         if (self.playerPlayStateChanged) self.playerPlayStateChanged(asset, playState);
         if ([self.controlView respondsToSelector:@selector(videoPlayer:playStateChanged:)]) {
             [self.controlView videoPlayer:self playStateChanged:playState];
@@ -195,7 +192,6 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
             CGSize size = self.currentPlayerManager.view.frame.size;
             self.orientationObserver.presentationSize = size;
         }
-        self.currentPlayerManager.view.loadState = loadState;
         if (self.playerLoadStateChanged) self.playerLoadStateChanged(asset, loadState);
         if ([self.controlView respondsToSelector:@selector(videoPlayer:loadStateChanged:)]) {
             [self.controlView videoPlayer:self loadStateChanged:loadState];
@@ -835,8 +831,8 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
     return UIStatusBarAnimationSlide;
 }
 
-- (CGSize)fullScreenVideoSize {
-    return self.currentPlayerManager.presentationSize;
+- (ZFPortraitFullScreenMode)portraitFullScreenMode {
+    return [objc_getAssociatedObject(self, _cmd) integerValue];;
 }
 
 #pragma mark - setter
@@ -886,9 +882,9 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
     self.orientationObserver.fullScreenStatusBarAnimation = fullScreenStatusBarAnimation;
 }
 
-- (void)setFullScreenVideoSize:(CGSize)fullScreenVideoSize {
-    objc_setAssociatedObject(self, @selector(fullScreenVideoSize), @(fullScreenVideoSize), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-//    self.currentPlayerManager.view.presentationSize = fullScreenVideoSize;
+- (void)setPortraitFullScreenMode:(ZFPortraitFullScreenMode)portraitFullScreenMode {
+    objc_setAssociatedObject(self, @selector(portraitFullScreenMode), @(portraitFullScreenMode), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    self.orientationObserver.portraitFullScreenMode = portraitFullScreenMode;
 }
 
 @end

@@ -26,16 +26,13 @@
 #import "ZFPlayerConst.h"
 
 @interface ZFPlayerView : UIView
-
-/// the cover for playerView
-@property (nonatomic, strong) UIImageView *coverImageView;
-
+/// player content view.
 @property (nonatomic, strong) UIView *playerView;
-
-@property (nonatomic, assign) CGSize presentationSize;
-
+/// Determines how the content scales to fit the view.
 @property (nonatomic, assign) ZFPlayerScalingMode scalingMode;
-
-@property (nonatomic, assign) ZFPlayerLoadState loadState;
+/// The cover for playerView.
+@property (nonatomic, strong, readonly) UIImageView *coverImageView;
+/// The video size.
+@property (nonatomic, assign) CGSize presentationSize;
 
 @end

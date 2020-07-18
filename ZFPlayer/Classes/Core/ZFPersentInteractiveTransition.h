@@ -1,5 +1,5 @@
 //
-//  ZFPlayerPersentInteractiveTransition.h
+//  ZFPersentInteractiveTransition.h
 //  ZFPlayer
 //
 // Copyright (c) 2020年 任子丰 ( http://github.com/renzifeng )
@@ -26,11 +26,15 @@
 #import <UIKit/UIKit.h>
 #import "ZFOrientationObserver.h"
 
-@interface ZFPlayerPersentInteractiveTransition : UIPercentDrivenInteractiveTransition
+@interface ZFPersentInteractiveTransition : UIPercentDrivenInteractiveTransition
 
-@property (nonatomic, weak) id<ZFOrientationObserverDelegate> delagate;
+@property (nonatomic, weak) id<ZFPortraitOrientationDelegate> delagate;
+
 @property (nonatomic, assign) BOOL interation;
+
 @property (nonatomic, assign) BOOL enablePortraitGesture;
+
+@property (nonatomic, assign) BOOL fullScreenAnimation;
 
 @property (nonatomic, assign) CGRect contentFullScreenRect;
 

@@ -1,5 +1,5 @@
 //
-//  ZFPlayerPresentTransition.h
+//  ZFPresentTransition.h
 //  ZFPlayer
 //
 // Copyright (c) 2020年 任子丰 ( http://github.com/renzifeng )
@@ -24,25 +24,24 @@
 
 #import <UIKit/UIKit.h>
 #import "ZFOrientationObserver.h"
-@class ZFPlayerView;
 
 typedef NS_ENUM(NSUInteger, ZFPresentTransitionType) {
     ZFPresentTransitionTypePresent,
     ZFPresentTransitionTypeDismiss,
 };
 
-@interface ZFPlayerPresentTransition : NSObject<UIViewControllerAnimatedTransitioning>
+@interface ZFPresentTransition : NSObject<UIViewControllerAnimatedTransitioning>
 
-@property (nonatomic, weak) id<ZFOrientationObserverDelegate> delagate;
-
-//@property (nonatomic, assign) CGSize fullScreenScaleSize;
+@property (nonatomic, weak) id<ZFPortraitOrientationDelegate> delagate;
 
 @property (nonatomic, assign) CGRect contentFullScreenRect;
 
 @property (nonatomic, assign, getter=isFullScreen) BOOL fullScreen;
 
+@property (nonatomic, assign) BOOL interation;
+
 - (void)transitionWithTransitionType:(ZFPresentTransitionType)type
-                         contentView:(ZFPlayerView *)contentView
+                         contentView:(UIView *)contentView
                        containerView:(UIView *)containerView;
 
 @end

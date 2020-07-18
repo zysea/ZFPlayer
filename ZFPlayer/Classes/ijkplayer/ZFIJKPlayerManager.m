@@ -122,6 +122,7 @@
     self.player = nil;
     _assetURL = nil;
     [self.timer invalidate];
+    self.presentationSize = CGSizeZero;
     self.timer = nil;
     _isPlaying = NO;
     _isPreparedToPlay = NO;
@@ -351,7 +352,7 @@
 
 /// 视频的尺寸变化了
 - (void)sizeAvailableChange:(NSNotification *)notify {
-    self->_presentationSize = self.player.naturalSize;
+    self.presentationSize = self.player.naturalSize;
     if (self.presentationSizeChanged) {
         self.presentationSizeChanged(self, self->_presentationSize);
     }
@@ -442,6 +443,14 @@
 - (void)setVolume:(float)volume {
     _volume = MIN(MAX(0, volume), 1);
     self.player.playbackVolume = volume;
+}
+
+- (void)setPresentationSize:(CGSize)presentationSize {
+    _presentationSize = presentationSize;
+    self.view.presentationSize = presentationSize;
+    if (self.presentationSizeChanged) {
+        self.presentationSizeChanged(self, self.presentationSize);
+    }
 }
 
 @end

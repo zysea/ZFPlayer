@@ -1,5 +1,5 @@
 //
-//  ZFPlayerPresentTransition.m
+//  ZFPresentTransition.m
 //  ZFPlayer
 //
 // Copyright (c) 2020年 任子丰 ( http://github.com/renzifeng )
@@ -22,24 +22,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#import "ZFPlayerPresentTransition.h"
+#import "ZFPresentTransition.h"
 #import "ZFPlayerConst.h"
-#import "ZFPlayerView.h"
 
-@interface ZFPlayerPresentTransition ()
+@interface ZFPresentTransition ()
 
-@property (strong, nonatomic) ZFPlayerView *contentView;
-@property (assign, nonatomic) ZFPresentTransitionType type;
+@property (nonatomic, strong) UIView *contentView;
+@property (nonatomic, assign) ZFPresentTransitionType type;
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, assign, getter=isTransiting) BOOL transiting;
-@property (nonatomic, assign, getter=isSizeChanged) BOOL sizeChanged;
 
 @end
 
-@implementation ZFPlayerPresentTransition
+@implementation ZFPresentTransition
 
 - (void)transitionWithTransitionType:(ZFPresentTransitionType)type
-                         contentView:(ZFPlayerView *)contentView
+                         contentView:(UIView *)contentView
                        containerView:(UIView *)containerView {
     
     self.type = type;
@@ -65,8 +63,6 @@
 }
 
 - (void)presentAnimation:(id<UIViewControllerContextTransitioning>)transitionContext {
-    self.sizeChanged = NO;
-
     UIViewController *toVC = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     UIViewController *fromVC = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
     if ([fromVC isKindOfClass:[UINavigationController class]]) {
@@ -103,7 +99,7 @@
         [toVC.view addSubview:self.contentView];
         [transitionContext completeTransition:YES];
         [self.delagate zf_orientationDidChanged:YES];
-        if (self.sizeChanged) {
+        if (!CGRectEqualToRect(toRect, self.contentFullScreenRect)) {
             self.contentView.frame = self.contentFullScreenRect;
             [self.contentView layoutIfNeeded];
         }
@@ -152,10 +148,8 @@
 
 - (void)setContentFullScreenRect:(CGRect)contentFullScreenRect {
     _contentFullScreenRect = contentFullScreenRect;
-    if (!self.transiting && self.isFullScreen) {
+    if (!self.transiting && self.isFullScreen && !self.interation) {
         self.contentView.frame = contentFullScreenRect;
-    } else if (self.transiting && !self.isFullScreen) {
-        self.sizeChanged = YES;
     }
 }
 

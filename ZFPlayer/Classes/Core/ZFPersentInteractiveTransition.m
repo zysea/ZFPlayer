@@ -1,5 +1,5 @@
 //
-//  ZFPlayerPersentInteractiveTransition.m
+//  ZFPersentInteractiveTransition.m
 //  ZFPlayer
 //
 // Copyright (c) 2020年 任子丰 ( http://github.com/renzifeng )
@@ -22,9 +22,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#import "ZFPlayerPersentInteractiveTransition.h"
+#import "ZFPersentInteractiveTransition.h"
 
-@interface ZFPlayerPersentInteractiveTransition () <UIGestureRecognizerDelegate>
+@interface ZFPersentInteractiveTransition () <UIGestureRecognizerDelegate>
 
 @property (nonatomic, weak) id<UIViewControllerContextTransitioning> transitionContext;
 @property (nonatomic, weak) UIViewController *vc;
@@ -35,13 +35,13 @@
 @property (nonatomic, assign) CGFloat scrollViewZoomScale;
 @property (nonatomic, assign) CGSize scrollViewContentSize;
 @property (nonatomic, assign) CGPoint scrollViewContentOffset;
-//@property (nonatomic, assign) CGRect conentInitialFrame;
 @property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
 @property (nonatomic, strong) UITapGestureRecognizer *tapGesture;
+@property (nonatomic, assign) BOOL isDragging;
 
 @end
 
-@implementation ZFPlayerPersentInteractiveTransition
+@implementation ZFPersentInteractiveTransition
 
 
 - (void)addPanGestureForViewController:(UIViewController *)viewController
@@ -79,7 +79,7 @@
 }
 
 - (void)tapGestureAction {
-    [self.vc dismissViewControllerAnimated:YES completion:nil];
+    [self.vc dismissViewControllerAnimated:self.fullScreenAnimation completion:nil];
     self.interation = NO;
     [self cancelInteractiveTransition];
     [self interPercentFinish];
@@ -88,8 +88,8 @@
 - (void)gestureRecognizeDidUpdate:(UIPanGestureRecognizer *)gestureRecognizer {
     CGFloat scale = 0;
     CGPoint translation = [gestureRecognizer translationInView:gestureRecognizer.view];
-    CGFloat transitionY = translation.y;
-    scale = transitionY / ((gestureRecognizer.view.frame.size.height - 50) / 2);
+    scale = translation.y / ((gestureRecognizer.view.frame.size.height - 50) / 2);
+
     if (scale > 1.f) {
         scale = 1.f;
     }
@@ -101,7 +101,7 @@
                 return;
             }
             self.interation = YES;
-            [self.vc dismissViewControllerAnimated:YES completion:nil];
+            [self.vc dismissViewControllerAnimated:self.fullScreenAnimation completion:nil];
         }
             break;
         case UIGestureRecognizerStateChanged: {
@@ -115,9 +115,7 @@
                 }
                 self.contentView.center = CGPointMake(self.transitionImgViewCenter.x + translation.x, self.transitionImgViewCenter.y + translation.y);
                 self.contentView.transform = CGAffineTransformMakeScale(imageViewScale, imageViewScale);
-                
-                [self updateInterPercent:1 - scale * scale];
-                
+                [self updateInterPercent:imageViewScale];
                 [self updateInteractiveTransition:scale];
             }
         }
@@ -243,6 +241,7 @@
         self.contentView.frame = self.containerView.bounds;
         [self.contentView layoutIfNeeded];
         [self.bgView removeFromSuperview];
+        fromVC.view.backgroundColor = [UIColor blackColor];
         [self.delagate zf_orientationDidChanged:NO];
         [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
     }];
@@ -251,6 +250,13 @@
 - (void)startInteractiveTransition:(id<UIViewControllerContextTransitioning>)transitionContext {
     self.transitionContext = transitionContext;
     [self beginInterPercent];
+}
+
+- (void)setInteration:(BOOL)interation {
+    _interation = interation;
+    if ([self.delagate respondsToSelector:@selector(zf_interationState:)]) {
+        [self.delagate zf_interationState:interation];
+    }
 }
 
 @end

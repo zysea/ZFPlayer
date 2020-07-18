@@ -23,15 +23,14 @@
 // THE SOFTWARE.
 
 #import "ZFPortraitViewController.h"
-#import "ZFPlayerPersentInteractiveTransition.h"
-#import "ZFPlayerPresentTransition.h"
+#import "ZFPersentInteractiveTransition.h"
+#import "ZFPresentTransition.h"
 
-@interface ZFPortraitViewController ()<UIViewControllerTransitioningDelegate,ZFOrientationObserverDelegate>
+@interface ZFPortraitViewController ()<UIViewControllerTransitioningDelegate,ZFPortraitOrientationDelegate>
 
-@property (nonatomic, strong) ZFPlayerPresentTransition *transition;
-@property (nonatomic, strong) ZFPlayerPersentInteractiveTransition *interactiveTransition;
+@property (nonatomic, strong) ZFPresentTransition *transition;
+@property (nonatomic, strong) ZFPersentInteractiveTransition *interactiveTransition;
 @property (nonatomic, assign, getter=isFullScreen) BOOL fullScreen;
-//@property (nonatomic, assign) CGSize fullScreenScaleSize;
 
 @end
 
@@ -54,17 +53,49 @@
     self.view.backgroundColor = [UIColor blackColor];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    if (!self.fullScreenAnimation) {
+        if (self.orientationWillChange) {
+            self.orientationWillChange(YES);
+        }
+    }
+}
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    if (!self.fullScreenAnimation) {
+        self.view.alpha = 1;
+        [self.view addSubview:self.contentView];
+        self.contentView.frame = [self contentFullScreenRect];
+        if (self.orientationDidChanged) {
+            self.orientationDidChanged(YES);
+        }
+    }
     self.fullScreen = YES;
     [self.interactiveTransition addPanGestureForViewController:self
                                                    contentView:self.contentView
                                                  containerView:self.containerView];
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    if (!self.fullScreenAnimation) {
+        if (self.orientationWillChange) {
+            self.orientationWillChange(NO);
+        }
+    }
+}
+
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     self.fullScreen = NO;
+    if (!self.fullScreenAnimation) {
+        [self.containerView addSubview:self.contentView];
+        self.contentView.frame = self.containerView.bounds;
+        if (self.orientationDidChanged) {
+            self.orientationDidChanged(NO);
+        }
+    }
 }
 
 #pragma mark - transition delegate
@@ -103,7 +134,7 @@
     return UIInterfaceOrientationMaskPortrait;
 }
 
-#pragma mark - ZFOrientationObserverDelegate
+#pragma mark - ZFPortraitOrientationDelegate
 
 - (void)zf_orientationWillChange:(BOOL)isFullScreen {
     if (self.orientationWillChange) {
@@ -117,21 +148,25 @@
     }
 }
 
+- (void)zf_interationState:(BOOL)isDragging {
+    self.transition.interation = isDragging;
+}
+
 #pragma mark - getter
 
-- (ZFPlayerPresentTransition *)transition {
+- (ZFPresentTransition *)transition {
     if (!_transition) {
-        _transition = [[ZFPlayerPresentTransition alloc] init];
-        _transition.contentFullScreenRect = [self contentFullScreenRect:self.presentationSize];
+        _transition = [[ZFPresentTransition alloc] init];
+        _transition.contentFullScreenRect = [self contentFullScreenRect];
         _transition.delagate = self;
     }
     return _transition;
 }
 
-- (ZFPlayerPersentInteractiveTransition *)interactiveTransition {
+- (ZFPersentInteractiveTransition *)interactiveTransition {
     if (!_interactiveTransition) {
-        _interactiveTransition = [[ZFPlayerPersentInteractiveTransition alloc] init];
-        _interactiveTransition.contentFullScreenRect = [self contentFullScreenRect:self.presentationSize];
+        _interactiveTransition = [[ZFPersentInteractiveTransition alloc] init];
+        _interactiveTransition.contentFullScreenRect = [self contentFullScreenRect];
         _interactiveTransition.delagate = self;
     }
     return _interactiveTransition;;
@@ -144,8 +179,11 @@
 
 - (void)setPresentationSize:(CGSize)presentationSize {
     _presentationSize = presentationSize;
-    self.transition.contentFullScreenRect = [self contentFullScreenRect:presentationSize];
-    self.interactiveTransition.contentFullScreenRect = [self contentFullScreenRect:presentationSize];
+    self.transition.contentFullScreenRect = [self contentFullScreenRect];
+    self.interactiveTransition.contentFullScreenRect = [self contentFullScreenRect];
+    if (!self.fullScreenAnimation && self.isFullScreen) {
+        self.contentView.frame = [self contentFullScreenRect];
+    }
 }
 
 - (void)setFullScreen:(BOOL)fullScreen {
@@ -153,9 +191,14 @@
     self.transition.fullScreen = fullScreen;
 }
 
-- (CGRect)contentFullScreenRect:(CGSize)presentationSize {
-    CGFloat videoWidth = presentationSize.width;
-    CGFloat videoHeight = presentationSize.height;
+- (void)setFullScreenAnimation:(BOOL)fullScreenAnimation {
+    _fullScreenAnimation = fullScreenAnimation;
+    self.interactiveTransition.fullScreenAnimation = fullScreenAnimation;
+}
+
+- (CGRect)contentFullScreenRect {
+    CGFloat videoWidth = self.presentationSize.width;
+    CGFloat videoHeight = self.presentationSize.height;
     if (videoHeight == 0) {
         return CGRectZero;
     }

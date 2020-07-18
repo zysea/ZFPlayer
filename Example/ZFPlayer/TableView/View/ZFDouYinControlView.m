@@ -15,8 +15,7 @@
 #import <ZFPlayer/ZFPlayerController.h>
 
 @interface ZFDouYinControlView ()
-/// 封面图
-@property (nonatomic, strong) UIImageView *coverImageView;
+
 @property (nonatomic, strong) UIButton *playBtn;
 @property (nonatomic, strong) ZFSliderView *sliderView;
 
@@ -37,8 +36,6 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.coverImageView.frame = self.player.currentPlayerManager.view.bounds;
-    
     CGFloat min_x = 0;
     CGFloat min_y = 0;
     CGFloat min_w = 0;
@@ -62,16 +59,10 @@
     self.playBtn.hidden = YES;
     self.sliderView.value = 0;
     self.sliderView.bufferValue = 0;
-    self.coverImageView.contentMode = UIViewContentModeScaleAspectFit;
 }
 
 /// 加载状态改变
 - (void)videoPlayer:(ZFPlayerController *)videoPlayer loadStateChanged:(ZFPlayerLoadState)state {
-    if (state == ZFPlayerLoadStatePrepare) {
-        self.coverImageView.hidden = NO;
-    } else if (state == ZFPlayerLoadStatePlaythroughOK || state == ZFPlayerLoadStatePlayable) {
-        self.coverImageView.hidden = YES;
-    }
     if ((state == ZFPlayerLoadStateStalled || state == ZFPlayerLoadStatePrepare) && videoPlayer.currentPlayerManager.isPlaying) {
         [self.sliderView startAnimating];
     } else {
@@ -101,11 +92,10 @@
 
 - (void)setPlayer:(ZFPlayerController *)player {
     _player = player;
-    [player.currentPlayerManager.view insertSubview:self.coverImageView atIndex:0];
 }
 
 - (void)showCoverViewWithUrl:(NSString *)coverUrl {
-    [self.coverImageView setImageWithURLString:coverUrl placeholder:[UIImage imageNamed:@"img_video_loading"]];
+    [self.player.currentPlayerManager.view.coverImageView setImageWithURLString:coverUrl placeholder:[UIImage imageNamed:@"img_video_loading"]];
 }
 
 #pragma mark - getter
@@ -129,15 +119,6 @@
         _sliderView.isHideSliderBlock = NO;
     }
     return _sliderView;
-}
-
-- (UIImageView *)coverImageView {
-    if (!_coverImageView) {
-        _coverImageView = [[UIImageView alloc] init];
-        _coverImageView.userInteractionEnabled = YES;
-        _coverImageView.clipsToBounds = YES;
-    }
-    return _coverImageView;
 }
 
 @end

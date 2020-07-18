@@ -23,7 +23,8 @@
 // THE SOFTWARE.
 
 #import <UIKit/UIKit.h>
-@class ZFPlayerView;
+//@class ZFPlayerView;
+#import "ZFPlayerView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -33,6 +34,13 @@ typedef NS_ENUM(NSUInteger, ZFFullScreenMode) {
     ZFFullScreenModeLandscape,  // Landscape full screen mode
     ZFFullScreenModePortrait    // Portrait full screen Model
 };
+
+/// Full screen mode
+typedef NS_ENUM(NSUInteger, ZFPortraitFullScreenMode) {
+    ZFPortraitFullScreenModeFull,  //
+    ZFPortraitFullScreenModeAutomic  //
+};
+
 
 /// Full screen mode on the view
 typedef NS_ENUM(NSUInteger, ZFRotateType) {
@@ -54,11 +62,13 @@ typedef NS_OPTIONS(NSUInteger, ZFInterfaceOrientationMask) {
     ZFInterfaceOrientationMaskAllButUpsideDown = (ZFInterfaceOrientationMaskPortrait | ZFInterfaceOrientationMaskLandscape),
 };
 
-@protocol ZFOrientationObserverDelegate <NSObject>
+@protocol ZFPortraitOrientationDelegate <NSObject>
 
 - (void)zf_orientationWillChange:(BOOL)isFullScreen;
 
 - (void)zf_orientationDidChanged:(BOOL)isFullScreen;
+
+- (void)zf_interationState:(BOOL)isDragging;
 
 @end
 
@@ -94,6 +104,8 @@ typedef NS_OPTIONS(NSUInteger, ZFInterfaceOrientationMask) {
 
 /// Full screen mode, the default landscape into full screen
 @property (nonatomic) ZFFullScreenMode fullScreenMode;
+
+@property (nonatomic, assign) ZFPortraitFullScreenMode portraitFullScreenMode;
 
 /// rotate duration, default is 0.30
 @property (nonatomic) float duration;

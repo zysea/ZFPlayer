@@ -60,6 +60,7 @@ static NSString *kIdentifier = @"kIdentifier";
     self.player.disableGestureTypes = ZFPlayerDisableGestureTypesPan;
     self.player.orientationObserver.fullScreenMode = ZFFullScreenModePortrait;
     self.player.statusBarHidden = YES;
+    self.player.portraitFullScreenMode = ZFPortraitFullScreenModeAutomic;
     
     @weakify(self)
     self.player.playerDidToEnd = ^(id  _Nonnull asset) {

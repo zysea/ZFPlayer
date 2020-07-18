@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface ZFLandscapeViewController : UIViewController
 
-@property (nonatomic, weak) UIView *rotateView;
+@property (nonatomic, weak) UIView *contentView;
 
 @property (nonatomic, weak) UIView *containerView;
 

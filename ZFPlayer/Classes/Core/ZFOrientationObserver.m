@@ -216,7 +216,7 @@
             }
             CGRect targetRect = [self.view convertRect:self.view.frame toView:containerView.window];
             self.window.landscapeViewController.targetRect = targetRect;
-            self.window.landscapeViewController.rotateView = self.view;
+            self.window.landscapeViewController.contentView = self.view;
             self.window.landscapeViewController.containerView = self.containerView;
             self.fullScreen = YES;
         }
@@ -224,8 +224,8 @@
     } else {
         self.fullScreen = NO;
     }
-    [UIDevice.currentDevice setValue:@(UIDeviceOrientationUnknown) forKey:@"orientation"];
-    [UIDevice.currentDevice setValue:@(orientation) forKey:@"orientation"];
+    [self interfaceOrientation:UIInterfaceOrientationUnknown];
+    [self interfaceOrientation:orientation];
 }
 
 - (void)enterPortraitFullScreen:(BOOL)fullScreen animated:(BOOL)animated {
@@ -233,9 +233,15 @@
     if (fullScreen) {
         self.portraitViewController.contentView = self.view;
         self.portraitViewController.containerView = self.containerView;
-        self.portraitViewController.presentationSize = self.presentationSize;
+        if (self.portraitFullScreenMode == ZFPortraitFullScreenModeAutomic) {
+            self.portraitViewController.presentationSize = self.presentationSize;
+        } else if (self.portraitFullScreenMode == ZFPortraitFullScreenModeFull) {
+            self.portraitViewController.presentationSize = CGSizeMake(ZFPlayerScreenWidth, ZFPlayerScreenHeight);
+        }
+        self.portraitViewController.fullScreenAnimation = animated;
         [[UIWindow zf_currentViewController] presentViewController:self.portraitViewController animated:animated completion:nil];
     } else {
+        self.portraitViewController.fullScreenAnimation = animated;
         [self.portraitViewController dismissViewControllerAnimated:animated completion:nil];
     }
 }
@@ -431,7 +437,7 @@
 
 - (void)setPresentationSize:(CGSize)presentationSize {
     _presentationSize = presentationSize;
-    if (self.fullScreenMode == ZFFullScreenModePortrait) {
+    if (self.fullScreenMode == ZFFullScreenModePortrait && self.portraitFullScreenMode == ZFPortraitFullScreenModeAutomic) {
         self.portraitViewController.presentationSize = presentationSize;
     }
 }
