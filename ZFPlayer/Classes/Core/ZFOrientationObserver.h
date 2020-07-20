@@ -23,7 +23,6 @@
 // THE SOFTWARE.
 
 #import <UIKit/UIKit.h>
-//@class ZFPlayerView;
 #import "ZFPlayerView.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -35,10 +34,10 @@ typedef NS_ENUM(NSUInteger, ZFFullScreenMode) {
     ZFFullScreenModePortrait    // Portrait full screen Model
 };
 
-/// Full screen mode
+/// Portrait full screen mode.
 typedef NS_ENUM(NSUInteger, ZFPortraitFullScreenMode) {
-    ZFPortraitFullScreenModeFull,  //
-    ZFPortraitFullScreenModeAutomic  //
+    ZFPortraitFullScreenModeScaleToFill,    // Full fill
+    ZFPortraitFullScreenModeScaleAspectFit  // contents scaled to fit with fixed aspect. remainder is transparent
 };
 
 
@@ -60,6 +59,14 @@ typedef NS_OPTIONS(NSUInteger, ZFInterfaceOrientationMask) {
     ZFInterfaceOrientationMaskLandscape = (ZFInterfaceOrientationMaskLandscapeLeft | ZFInterfaceOrientationMaskLandscapeRight),
     ZFInterfaceOrientationMaskAll = (ZFInterfaceOrientationMaskPortrait | ZFInterfaceOrientationMaskLandscape | ZFInterfaceOrientationMaskPortraitUpsideDown),
     ZFInterfaceOrientationMaskAllButUpsideDown = (ZFInterfaceOrientationMaskPortrait | ZFInterfaceOrientationMaskLandscape),
+};
+
+/// This enumeration lists some of the gesture types that the player has by default.
+typedef NS_OPTIONS(NSUInteger, ZFDisablePortraitGestureTypes) {
+    ZFDisablePortraitGestureTypesNone         = 0,
+    ZFDisablePortraitGestureTypesTap          = 1 << 0,
+    ZFDisablePortraitGestureTypesPan          = 1 << 1,
+    ZFDisablePortraitGestureTypesAll          = (ZFDisablePortraitGestureTypesTap | ZFDisablePortraitGestureTypesPan)
 };
 
 @protocol ZFPortraitOrientationDelegate <NSObject>
@@ -93,7 +100,7 @@ typedef NS_OPTIONS(NSUInteger, ZFInterfaceOrientationMask) {
 /// Container view of a small screen state player.
 @property (nonatomic, weak) UIView *containerView;
 
-/// Use device orientation, default NO.
+/// Use device orientation, default YES.
 @property (nonatomic, assign) BOOL forceDeviceOrientation;
 
 /// The block invoked When player will rotate.
@@ -126,8 +133,8 @@ typedef NS_OPTIONS(NSUInteger, ZFInterfaceOrientationMask) {
 
 @property (nonatomic, assign) CGSize presentationSize;
 
-/// default is YES.
-@property (nonatomic, assign) BOOL enablePortraitGesture;
+/// default is ZFDisablePortraitGestureTypesAll.
+@property (nonatomic, assign) ZFDisablePortraitGestureTypes disablePortraitGestureTypes;
 
 /// The current orientation of the player.
 /// Default is UIInterfaceOrientationPortrait.
@@ -147,10 +154,19 @@ typedef NS_OPTIONS(NSUInteger, ZFInterfaceOrientationMask) {
 - (void)removeDeviceOrientationObserver;
 
 /// Enter the fullScreen while the ZFFullScreenMode is ZFFullScreenModeLandscape.
+- (void)enterLandscapeFullScreen:(UIInterfaceOrientation)orientation animated:(BOOL)animated completion:(void(^ __nullable)(void))completion;
+
+/// Enter the fullScreen while the ZFFullScreenMode is ZFFullScreenModeLandscape.
 - (void)enterLandscapeFullScreen:(UIInterfaceOrientation)orientation animated:(BOOL)animated;
 
 /// Enter the fullScreen while the ZFFullScreenMode is ZFFullScreenModePortrait.
+- (void)enterPortraitFullScreen:(BOOL)fullScreen animated:(BOOL)animated completion:(void(^ __nullable)(void))completion;
+
+/// Enter the fullScreen while the ZFFullScreenMode is ZFFullScreenModePortrait.
 - (void)enterPortraitFullScreen:(BOOL)fullScreen animated:(BOOL)animated;
+
+/// Exit the fullScreen.
+- (void)exitFullScreenWithAnimated:(BOOL)animated completion:(void(^ __nullable)(void))completion;
 
 /// Exit the fullScreen.
 - (void)exitFullScreenWithAnimated:(BOOL)animated;

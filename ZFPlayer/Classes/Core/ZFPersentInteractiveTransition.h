@@ -32,14 +32,16 @@
 
 @property (nonatomic, assign) BOOL interation;
 
-@property (nonatomic, assign) BOOL enablePortraitGesture;
+/// default is ZFDisablePortraitGestureTypesNone.
+@property (nonatomic, assign) ZFDisablePortraitGestureTypes disablePortraitGestureTypes;
 
 @property (nonatomic, assign) BOOL fullScreenAnimation;
 
 @property (nonatomic, assign) CGRect contentFullScreenRect;
 
-- (void)addPanGestureForViewController:(UIViewController *)viewController
-                           contentView:(UIView *)contenView
-                         containerView:(UIView *)containerView;
+@property (nonatomic, weak) UIViewController *viewController;
+
+- (void)updateContentView:(UIView *)contenView
+            containerView:(UIView *)containerView;
 
 @end

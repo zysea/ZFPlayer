@@ -18,10 +18,9 @@
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, weak) id<ZFTableViewCellDelegate> delegate;
 @property (nonatomic, strong) NSIndexPath *indexPath;
-
 @property (nonatomic, strong) UIImageView *bgImgView;
-
 @property (nonatomic, strong) UIView *effectView;
+@property (nonatomic, strong) UITapGestureRecognizer *tapGesture;
 
 @end
 
@@ -40,8 +39,7 @@
         [self.contentView addSubview:self.fullMaskView];
         self.contentView.backgroundColor = [UIColor blackColor];
         self.selectionStyle = UITableViewCellSelectionStyleNone;
-        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(playClick)];
-        [self.coverImageView addGestureRecognizer:tapGesture];
+        [self.coverImageView addGestureRecognizer:self.tapGesture];
     }
     return self;
 }
@@ -172,6 +170,13 @@
         }
     }
     return _effectView;
+}
+
+- (UITapGestureRecognizer *)tapGesture {
+    if (!_tapGesture) {
+        _tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(playClick)];
+    }
+    return _tapGesture;
 }
 
 @end

@@ -298,6 +298,13 @@
     }];
 }
 
+#pragma mark - setter
+
+- (void)setFullScreenMode:(ZFFullScreenMode)fullScreenMode {
+    _fullScreenMode = fullScreenMode;
+    self.player.orientationObserver.fullScreenMode = fullScreenMode;
+}
+
 #pragma mark - getter
 
 - (UIView *)topToolView {

@@ -18,6 +18,7 @@
 
 @property (nonatomic, strong) UIButton *playBtn;
 @property (nonatomic, strong) ZFSliderView *sliderView;
+@property (nonatomic, strong) UIButton *rotation;
 
 @end
 
@@ -29,6 +30,7 @@
     if (self) {
         [self addSubview:self.playBtn];
         [self addSubview:self.sliderView];
+        [self addSubview:self.rotation];
         [self resetControlView];
     }
     return self;
@@ -53,12 +55,29 @@
     min_w = min_view_w;
     min_h = 1;
     self.sliderView.frame = CGRectMake(min_x, min_y, min_w, min_h);
+    
+    
+    min_x = 20;
+    min_w = 50;
+    min_h = 30;
+    min_y = (min_view_h - min_h) / 2;
+    self.rotation.frame = CGRectMake(min_x, min_y, min_w, min_h);
 }
 
 - (void)resetControlView {
     self.playBtn.hidden = YES;
     self.sliderView.value = 0;
     self.sliderView.bufferValue = 0;
+}
+
+- (void)rotationClick {
+    UIInterfaceOrientation orientation = UIInterfaceOrientationUnknown;
+    if (self.player.isFullScreen) {
+        orientation = UIInterfaceOrientationPortrait;
+    } else {
+        orientation = UIInterfaceOrientationLandscapeRight;
+    }
+    [self.player enterLandscapeFullScreen:orientation animated:YES completion:nil];
 }
 
 /// 加载状态改变
@@ -119,6 +138,15 @@
         _sliderView.isHideSliderBlock = NO;
     }
     return _sliderView;
+}
+
+- (UIButton *)rotation {
+    if (!_rotation) {
+        _rotation = [UIButton buttonWithType:UIButtonTypeSystem];
+        [_rotation setTitle:@"旋转" forState:UIControlStateNormal];
+        [_rotation addTarget:self action:@selector(rotationClick) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _rotation;
 }
 
 @end

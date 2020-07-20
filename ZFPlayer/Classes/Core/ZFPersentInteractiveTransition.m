@@ -27,7 +27,6 @@
 @interface ZFPersentInteractiveTransition () <UIGestureRecognizerDelegate>
 
 @property (nonatomic, weak) id<UIViewControllerContextTransitioning> transitionContext;
-@property (nonatomic, weak) UIViewController *vc;
 @property (nonatomic, strong) UIView *bgView;
 @property (nonatomic, assign) CGPoint transitionImgViewCenter;
 @property (nonatomic, strong) UIView *contentView;
@@ -43,26 +42,15 @@
 
 @implementation ZFPersentInteractiveTransition
 
-
-- (void)addPanGestureForViewController:(UIViewController *)viewController
-                           contentView:(UIView *)contenView
-                         containerView:(UIView *)containerView {
-    self.panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(gestureRecognizeDidUpdate:)];
-    self.panGesture.delegate = self;
-    self.vc = viewController;
+- (void)updateContentView:(UIView *)contenView
+            containerView:(UIView *)containerView {
     self.contentView = contenView;
     self.containerView = containerView;
-    [viewController.view addGestureRecognizer:self.panGesture];
-    self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureAction)];
-    [viewController.view addGestureRecognizer:self.tapGesture];
-    self.tapGesture.enabled = self.enablePortraitGesture;
-    self.panGesture.enabled = self.enablePortraitGesture;
 }
 
-- (void)setEnablePortraitGesture:(BOOL)enablePortraitGesture {
-    _enablePortraitGesture = enablePortraitGesture;
-    self.tapGesture.enabled = enablePortraitGesture;
-    self.panGesture.enabled = enablePortraitGesture;
+- (void)removeGestureToView:(UIView *)view {
+    [view removeGestureRecognizer:self.tapGesture];
+    [view removeGestureRecognizer:self.panGesture];
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
@@ -75,14 +63,36 @@
             return YES;
         }
     }
-    return NO;
+    return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    ZFDisablePortraitGestureTypes type = ZFDisablePortraitGestureTypesNone;
+    if (gestureRecognizer == self.tapGesture) type = ZFDisablePortraitGestureTypesTap;
+    else if (gestureRecognizer == self.panGesture) type = ZFDisablePortraitGestureTypesPan;
+    else return NO;
+
+    switch (type) {
+        case ZFDisablePortraitGestureTypesTap: {
+            if (self.disablePortraitGestureTypes & ZFDisablePortraitGestureTypesTap) {
+                return NO;
+            }
+        }
+            break;
+        case ZFDisablePortraitGestureTypesPan: {
+            if (self.disablePortraitGestureTypes & ZFDisablePortraitGestureTypesPan) {
+                return NO;
+            }
+        }
+            break;
+        default:
+            break;
+    }
+    return YES;
 }
 
 - (void)tapGestureAction {
-    [self.vc dismissViewControllerAnimated:self.fullScreenAnimation completion:nil];
-    self.interation = NO;
-    [self cancelInteractiveTransition];
-    [self interPercentFinish];
+    [self.viewController dismissViewControllerAnimated:self.fullScreenAnimation completion:nil];
 }
 
 - (void)gestureRecognizeDidUpdate:(UIPanGestureRecognizer *)gestureRecognizer {
@@ -95,13 +105,9 @@
     }
     switch (gestureRecognizer.state) {
         case UIGestureRecognizerStateBegan: {
-            if (scale < 0) {
-                [self.vc.view removeGestureRecognizer:self.panGesture];
-                [self.vc.view addGestureRecognizer:self.panGesture];
-                return;
-            }
+            if (scale < 0) return;
             self.interation = YES;
-            [self.vc dismissViewControllerAnimated:self.fullScreenAnimation completion:nil];
+            [self.viewController dismissViewControllerAnimated:self.fullScreenAnimation completion:nil];
         }
             break;
         case UIGestureRecognizerStateChanged: {
@@ -126,7 +132,7 @@
                     scale = 0.f;
                 }
                 self.interation = NO;
-                if (scale < 0.15f){
+                if (scale < 0.15f) {
                     [self cancelInteractiveTransition];
                     [self interPercentCancel];
                 } else {
@@ -200,7 +206,7 @@
         if (self.scrollViewContentOffset.y < 0) {
             self.scrollViewContentOffset = CGPointMake(self.scrollViewContentOffset.x, 0);
         }
-        [self.vc.view addSubview:self.contentView];
+        [self.viewController.view addSubview:self.contentView];
         [self.bgView removeFromSuperview];
         self.bgView = nil;
         [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
@@ -257,6 +263,31 @@
     if ([self.delagate respondsToSelector:@selector(zf_interationState:)]) {
         [self.delagate zf_interationState:interation];
     }
+}
+
+- (void)setViewController:(UIViewController *)viewController {
+    _viewController = viewController;
+    [self removeGestureToView:viewController.view];
+    [viewController.view addGestureRecognizer:self.panGesture];
+    [viewController.view addGestureRecognizer:self.tapGesture];
+}
+
+#pragma mark - getter
+
+- (UIPanGestureRecognizer *)panGesture {
+    if (!_panGesture) {
+        _panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(gestureRecognizeDidUpdate:)];
+        _panGesture.delegate = self;
+    }
+    return _panGesture;
+}
+
+- (UITapGestureRecognizer *)tapGesture {
+    if (!_tapGesture) {
+        _tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureAction)];
+        _tapGesture.delegate = self;
+    }
+    return _tapGesture;
 }
 
 @end

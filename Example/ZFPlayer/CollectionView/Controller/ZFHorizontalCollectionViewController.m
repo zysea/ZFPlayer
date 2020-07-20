@@ -52,8 +52,6 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
     @weakify(self)
     self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
         @strongify(self)
-        [self setNeedsStatusBarAppearanceUpdate];
-        self.collectionView.scrollsToTop = !isFullScreen;
         if (isFullScreen) {
             self.player.disablePanMovingDirection = ZFPlayerDisablePanMovingDirectionNone;
         } else {

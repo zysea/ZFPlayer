@@ -31,36 +31,28 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     @weakify(self)
     self.controlView.backBtnClickCallback = ^{
         @strongify(self)
-        [self.player enterFullScreen:NO animated:NO];
+        [self.player enterLandscapeFullScreen:UIInterfaceOrientationPortrait animated:NO completion:nil];
         [self.player stop];
-        [self.navigationController popViewControllerAnimated:NO];
+        [self dismissViewControllerAnimated:NO completion:nil];
     };
     
     ZFAVPlayerManager *playerManager = [[ZFAVPlayerManager alloc] init];
     /// 播放器相关
-    self.player = [[ZFPlayerController alloc] initWithPlayerManager:playerManager containerView:[UIApplication sharedApplication].keyWindow];
+    self.player = [[ZFPlayerController alloc] initWithPlayerManager:playerManager containerView:self.view];
     self.player.controlView = self.controlView;
     self.player.orientationObserver.supportInterfaceOrientation = ZFInterfaceOrientationMaskLandscape;
-    [self.player enterFullScreen:YES animated:NO];
-    playerManager.assetURL = [NSURL URLWithString:@"https://www.apple.com/105/media/us/iphone-x/2017/01df5b43-28e4-4848-bf20-490c34a926a7/films/feature/iphone-x-feature-tpl-cc-us-20170912_1280x720h.mp4"];
-}
+    [self.player enterLandscapeFullScreen:UIInterfaceOrientationLandscapeRight animated:NO completion:nil];
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    self.player.viewControllerDisappear = NO;
+    playerManager.assetURL = [NSURL URLWithString:@"https://www.apple.com/105/media/us/iphone-x/2017/01df5b43-28e4-4848-bf20-490c34a926a7/films/feature/iphone-x-feature-tpl-cc-us-20170912_1280x720h.mp4"];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    self.player.viewControllerDisappear = YES;
     kAPPDelegate.allowOrentitaionRotation = NO;
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
-    if (self.player.isFullScreen) {
-        return UIStatusBarStyleLightContent;
-    }
-    return UIStatusBarStyleDefault;
+    return UIStatusBarStyleLightContent;
 }
 
 - (BOOL)prefersStatusBarHidden {
@@ -72,8 +64,16 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
 }
 
 - (BOOL)shouldAutorotate {
-    return self.player.shouldAutorotate;
+    return NO;
 }
+
+//- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+//    return UIInterfaceOrientationMaskPortrait;
+//}
+//
+//- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
+//    return UIInterfaceOrientationPortrait;
+//}
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskLandscape;

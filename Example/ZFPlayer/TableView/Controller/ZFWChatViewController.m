@@ -1,12 +1,12 @@
 //
-//  ZFWXViewController.m
+//  ZFWChatViewController.m
 //  ZFPlayer_Example
 //
 //  Created by 紫枫 on 2020/7/11.
 //  Copyright © 2020 紫枫. All rights reserved.
 //
 
-#import "ZFWXViewController.h"
+#import "ZFWChatViewController.h"
 #import <ZFPlayer/ZFPlayer.h>
 #import <ZFPlayer/ZFAVPlayerManager.h>
 #import <ZFPlayer/KSMediaPlayerManager.h>
@@ -20,7 +20,7 @@
 
 static NSString *kIdentifier = @"kIdentifier";
 
-@interface ZFWXViewController () <UITableViewDelegate,UITableViewDataSource,ZFTableViewCellDelegate>
+@interface ZFWChatViewController () <UITableViewDelegate,UITableViewDataSource,ZFTableViewCellDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) ZFPlayerController *player;
@@ -30,7 +30,7 @@ static NSString *kIdentifier = @"kIdentifier";
 
 @end
 
-@implementation ZFWXViewController
+@implementation ZFWChatViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -57,11 +57,17 @@ static NSString *kIdentifier = @"kIdentifier";
     self.player.WWANAutoPlay = YES;
     /// 续播
     self.player.resumePlayRecord = YES;
+    /// 禁止掉滑动手势
     self.player.disableGestureTypes = ZFPlayerDisableGestureTypesPan;
+    /// 竖屏的全屏
     self.player.orientationObserver.fullScreenMode = ZFFullScreenModePortrait;
+    /// 隐藏全屏的状态栏
     self.player.statusBarHidden = YES;
-    self.player.portraitFullScreenMode = ZFPortraitFullScreenModeAutomic;
-    
+    /// 全屏的填充模式（全屏填充、按视频大小填充）
+    self.player.orientationObserver.portraitFullScreenMode = ZFPortraitFullScreenModeScaleAspectFit;
+    /// 禁用竖屏全屏的手势（点击、拖动手势）
+    self.player.orientationObserver.disablePortraitGestureTypes = ZFDisablePortraitGestureTypesNone;
+
     @weakify(self)
     self.player.playerDidToEnd = ^(id  _Nonnull asset) {
         @strongify(self)
@@ -69,9 +75,6 @@ static NSString *kIdentifier = @"kIdentifier";
     };
     
     self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
-        @strongify(self)
-        [self setNeedsStatusBarAppearanceUpdate];
-        self.tableView.scrollsToTop = !isFullScreen;
         kAPPDelegate.allowOrentitaionRotation = isFullScreen;
     };
     

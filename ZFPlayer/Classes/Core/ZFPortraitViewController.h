@@ -23,6 +23,7 @@
 // THE SOFTWARE.
 
 #import <UIKit/UIKit.h>
+#import "ZFOrientationObserver.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -45,8 +46,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// defalut is UIStatusBarAnimationSlide.
 @property (nonatomic, assign) UIStatusBarAnimation statusBarAnimation;
 
-/// default is NO.
-@property (nonatomic, assign) BOOL enablePortraitGesture;
+/// default is ZFDisablePortraitGestureTypesNone.
+@property (nonatomic, assign) ZFDisablePortraitGestureTypes disablePortraitGestureTypes;
 
 @property (nonatomic, assign) CGSize presentationSize;
 

@@ -41,7 +41,6 @@ static NSString *kIdentifier = @"kIdentifier";
     ZFAVPlayerManager *playerManager = [[ZFAVPlayerManager alloc] init];
 //    KSMediaPlayerManager *playerManager = [[KSMediaPlayerManager alloc] init];
 //    ZFIJKPlayerManager *playerManager = [[ZFIJKPlayerManager alloc] init];
-//    playerManager.scalingMode = ZFPlayerScalingModeFill;
     
     /// player的tag值必须在cell里设置
     self.player = [ZFPlayerController playerWithScrollView:self.tableView playerManager:playerManager containerViewTag:kPlayerViewTag];
@@ -50,18 +49,11 @@ static NSString *kIdentifier = @"kIdentifier";
     self.player.shouldAutoPlay = NO;
     /// 1.0是完全消失的时候
     self.player.playerDisapperaPercent = 1.0;
-    self.player.portraitFullScreenMode = YES;
 
     @weakify(self)
     self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
         @strongify(self)
         kAPPDelegate.allowOrentitaionRotation = isFullScreen;
-        [self setNeedsStatusBarAppearanceUpdate];
-        self.tableView.scrollsToTop = !isFullScreen;
-        if (!isFullScreen) {
-            /// 解决导航栏上移问题
-            self.navigationController.navigationBar.zf_height = KNavBarHeight;
-        }
     };
     
     self.player.playerDidToEnd = ^(id  _Nonnull asset) {

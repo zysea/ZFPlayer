@@ -110,6 +110,9 @@
 /// 是否自定义禁止pan手势，默认 NO.
 @property (nonatomic, assign) BOOL customDisablePanMovingDirection;
 
+/// 全屏模式
+@property (nonatomic, assign) ZFFullScreenMode fullScreenMode;
+
 /**
  设置标题、封面、全屏模式
 

@@ -303,9 +303,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// The statusbar hidden.
 @property (nonatomic, getter=isStatusBarHidden) BOOL statusBarHidden;
 
-/// Use device orientation, default NO.
-@property (nonatomic, assign) BOOL forceDeviceOrientation;
-
 /// The current orientation of the player.
 /// Default is UIInterfaceOrientationPortrait.
 @property (nonatomic, readonly) UIInterfaceOrientation currentOrientation;
@@ -320,8 +317,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) UIStatusBarStyle fullScreenStatusBarStyle;
 /// defalut is UIStatusBarAnimationSlide.
 @property (nonatomic, assign) UIStatusBarAnimation fullScreenStatusBarAnimation;
-
-@property (nonatomic, assign) ZFPortraitFullScreenMode portraitFullScreenMode;
 
 /**
  Add the device orientation observer.
@@ -338,8 +333,27 @@ NS_ASSUME_NONNULL_BEGIN
 
  @param orientation UIInterfaceOrientation
  @param animated is animated.
+ @param completion rotating completed callback.
+ */
+- (void)enterLandscapeFullScreen:(UIInterfaceOrientation)orientation animated:(BOOL)animated completion:(void(^ __nullable)(void))completion;
+
+/**
+ Enter the fullScreen while the ZFFullScreenMode is ZFFullScreenModeLandscape.
+
+ @param orientation UIInterfaceOrientation
+ @param animated is animated.
  */
 - (void)enterLandscapeFullScreen:(UIInterfaceOrientation)orientation animated:(BOOL)animated;
+
+
+/**
+ Enter the fullScreen while the ZFFullScreenMode is ZFFullScreenModePortrait.
+
+ @param fullScreen is fullscreen.
+ @param animated is animated.
+ @param completion rotating completed callback.
+ */
+- (void)enterPortraitFullScreen:(BOOL)fullScreen animated:(BOOL)animated completion:(void(^ __nullable)(void))completion;
 
 /**
  Enter the fullScreen while the ZFFullScreenMode is ZFFullScreenModePortrait.
@@ -348,6 +362,15 @@ NS_ASSUME_NONNULL_BEGIN
  @param animated is animated.
  */
 - (void)enterPortraitFullScreen:(BOOL)fullScreen animated:(BOOL)animated;
+
+/**
+ FullScreen mode is determined by ZFFullScreenMode.
+
+ @param fullScreen is fullscreen.
+ @param animated is animated.
+ @param completion rotating completed callback.
+ */
+- (void)enterFullScreen:(BOOL)fullScreen animated:(BOOL)animated completion:(void(^ __nullable)(void))completion;
 
 /**
  FullScreen mode is determined by ZFFullScreenMode.

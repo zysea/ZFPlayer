@@ -73,7 +73,20 @@
 }
 
 - (void)gestureSingleTapped:(ZFPlayerGestureControl *)gestureControl {
-    [self.player enterPortraitFullScreen:!self.player.isFullScreen animated:YES];
+    if (!self.player.isFullScreen) {
+        [self.player enterPortraitFullScreen:YES animated:YES];
+    }
+}
+
+/// 手势筛选，返回NO不响应该手势
+- (BOOL)gestureTriggerCondition:(ZFPlayerGestureControl *)gestureControl gestureType:(ZFPlayerGestureType)gestureType gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer touch:(nonnull UITouch *)touch {
+    if ([gestureRecognizer isKindOfClass:[UITapGestureRecognizer class]]) {
+        if (gestureRecognizer == gestureControl.singleTap) {
+            return YES;
+        }
+        return NO;
+    }
+    return YES;
 }
 
 - (void)setPlayer:(ZFPlayerController *)player {

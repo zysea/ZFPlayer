@@ -72,9 +72,8 @@
         }
     }
     self.fullScreen = YES;
-    [self.interactiveTransition addPanGestureForViewController:self
-                                                   contentView:self.contentView
-                                                 containerView:self.containerView];
+    [self.interactiveTransition updateContentView:self.contentView
+                                    containerView:self.containerView];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -167,14 +166,15 @@
     if (!_interactiveTransition) {
         _interactiveTransition = [[ZFPersentInteractiveTransition alloc] init];
         _interactiveTransition.contentFullScreenRect = [self contentFullScreenRect];
+        _interactiveTransition.viewController = self;
         _interactiveTransition.delagate = self;
     }
     return _interactiveTransition;;
 }
 
-- (void)setEnablePortraitGesture:(BOOL)enablePortraitGesture {
-    _enablePortraitGesture = enablePortraitGesture;
-    self.interactiveTransition.enablePortraitGesture = enablePortraitGesture;
+- (void)setDisablePortraitGestureTypes:(ZFDisablePortraitGestureTypes)disablePortraitGestureTypes {
+    _disablePortraitGestureTypes = disablePortraitGestureTypes;
+    self.interactiveTransition.disablePortraitGestureTypes = disablePortraitGestureTypes;
 }
 
 - (void)setPresentationSize:(CGSize)presentationSize {

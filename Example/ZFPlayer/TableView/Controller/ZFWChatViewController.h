@@ -1,5 +1,5 @@
 //
-//  ZFWXViewController.h
+//  ZFWChatViewController.h
 //  ZFPlayer_Example
 //
 //  Created by 紫枫 on 2020/7/11.
@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ZFWXViewController : UIViewController
+@interface ZFWChatViewController : UIViewController
 
 @end
 

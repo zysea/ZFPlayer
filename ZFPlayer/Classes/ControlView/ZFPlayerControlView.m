@@ -647,6 +647,13 @@
     }
 }
 
+- (void)setFullScreenMode:(ZFFullScreenMode)fullScreenMode {
+    _fullScreenMode = fullScreenMode;
+    self.portraitControlView.fullScreenMode = fullScreenMode;
+    self.landScapeControlView.fullScreenMode = fullScreenMode;
+    self.player.orientationObserver.fullScreenMode = fullScreenMode;
+}
+
 #pragma mark - getter
 
 - (UIImageView *)bgImgView {

@@ -64,14 +64,9 @@ static NSString *kIdentifier = @"kIdentifier";
         @strongify(self)
         [self.player.currentPlayerManager replay];
     };
-    
-    self.player.presentationSizeChanged = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, CGSize size) {
-        @strongify(self)
-//        if (size.width >= size.height) {
-//            self.player.currentPlayerManager.scalingMode = ZFPlayerScalingModeAspectFit;
-//        } else {
-//            self.player.currentPlayerManager.scalingMode = ZFPlayerScalingModeAspectFill;
-//        }
+
+    self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
+        kAPPDelegate.allowOrentitaionRotation = isFullScreen;
     };
     
     /// 停止的时候找出最合适的播放
@@ -155,11 +150,7 @@ static NSString *kIdentifier = @"kIdentifier";
 }
 
 - (BOOL)prefersStatusBarHidden {
-    return self.player.isStatusBarHidden;
-}
-
-- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
-    return UIStatusBarAnimationSlide;
+    return NO;
 }
 
 #pragma mark - UIScrollViewDelegate  列表播放必须实现

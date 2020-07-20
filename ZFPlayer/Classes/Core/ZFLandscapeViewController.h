@@ -55,6 +55,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// defalut is UIStatusBarAnimationSlide.
 @property (nonatomic, assign) UIStatusBarAnimation statusBarAnimation;
 
+@property (nonatomic, copy) void(^rotatingCompleted)(void);
+
 @end
 
 NS_ASSUME_NONNULL_END

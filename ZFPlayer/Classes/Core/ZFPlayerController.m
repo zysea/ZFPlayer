@@ -408,10 +408,14 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
     [self.notification removeNotification];
     [self.orientationObserver removeDeviceOrientationObserver];
     if (self.isFullScreen && self.exitFullScreenWhenStop) {
-        [self.orientationObserver exitFullScreenWithAnimated:NO];
+        [self.orientationObserver exitFullScreenWithAnimated:NO completion:^{
+            [self.currentPlayerManager stop];
+            [self.currentPlayerManager.view removeFromSuperview];
+        }];
+    } else {
+        [self.currentPlayerManager stop];
+        [self.currentPlayerManager.view removeFromSuperview];
     }
-    [self.currentPlayerManager stop];
-    [self.currentPlayerManager.view removeFromSuperview];
     if (self.scrollView) {
         self.scrollView.zf_stopPlay = YES;
     }
@@ -719,28 +723,36 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
     [self.orientationObserver removeDeviceOrientationObserver];
 }
 
-- (void)enterLandscapeFullScreen:(UIInterfaceOrientation)orientation animated:(BOOL)animated {
+- (void)enterLandscapeFullScreen:(UIInterfaceOrientation)orientation animated:(BOOL)animated completion:(void (^ _Nullable)(void))completion {
     self.orientationObserver.fullScreenMode = ZFFullScreenModeLandscape;
-    [self.orientationObserver enterLandscapeFullScreen:orientation animated:animated];
+    [self.orientationObserver enterLandscapeFullScreen:orientation animated:animated completion:completion];
+}
+
+- (void)enterLandscapeFullScreen:(UIInterfaceOrientation)orientation animated:(BOOL)animated {
+    [self enterLandscapeFullScreen:orientation animated:animated completion:nil];
+}
+
+- (void)enterPortraitFullScreen:(BOOL)fullScreen animated:(BOOL)animated completion:(void (^ _Nullable)(void))completion {
+    self.orientationObserver.fullScreenMode = ZFFullScreenModePortrait;
+    [self.orientationObserver enterPortraitFullScreen:fullScreen animated:animated completion:completion];
 }
 
 - (void)enterPortraitFullScreen:(BOOL)fullScreen animated:(BOOL)animated {
-    self.orientationObserver.fullScreenMode = ZFFullScreenModePortrait;
-    [self.orientationObserver enterPortraitFullScreen:fullScreen animated:animated];
+    [self enterPortraitFullScreen:fullScreen animated:animated completion:nil];
 }
 
-- (void)enterFullScreen:(BOOL)fullScreen animated:(BOOL)animated {
+- (void)enterFullScreen:(BOOL)fullScreen animated:(BOOL)animated completion:(void (^ _Nullable)(void))completion {
     if (self.orientationObserver.fullScreenMode == ZFFullScreenModePortrait) {
-        [self.orientationObserver enterPortraitFullScreen:fullScreen animated:animated];
+        [self.orientationObserver enterPortraitFullScreen:fullScreen animated:animated completion:completion];
     } else {
         UIInterfaceOrientation orientation = UIInterfaceOrientationUnknown;
         orientation = fullScreen? UIInterfaceOrientationLandscapeRight : UIInterfaceOrientationPortrait;
-        [self.orientationObserver enterLandscapeFullScreen:orientation animated:animated];
+        [self.orientationObserver enterLandscapeFullScreen:orientation animated:animated completion:completion];
     }
 }
 
-- (BOOL)shouldForceDeviceOrientation {
-    return self.forceDeviceOrientation;
+- (void)enterFullScreen:(BOOL)fullScreen animated:(BOOL)animated {
+    [self enterFullScreen:fullScreen animated:animated completion:nil];
 }
 
 #pragma mark - getter
@@ -803,7 +815,7 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
 }
 
 - (BOOL)shouldAutorotate {
-    return [self shouldForceDeviceOrientation];
+    return NO;
 }
 
 - (BOOL)allowOrentitaionRotation {
@@ -811,10 +823,6 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
     if (number) return number.boolValue;
     self.allowOrentitaionRotation = YES;
     return YES;
-}
-
-- (BOOL)forceDeviceOrientation {
-    return [objc_getAssociatedObject(self, _cmd) boolValue];
 }
 
 - (UIStatusBarStyle)fullScreenStatusBarStyle {
@@ -829,10 +837,6 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
     if (number) return number.integerValue;
     self.fullScreenStatusBarAnimation = UIStatusBarAnimationSlide;
     return UIStatusBarAnimationSlide;
-}
-
-- (ZFPortraitFullScreenMode)portraitFullScreenMode {
-    return [objc_getAssociatedObject(self, _cmd) integerValue];;
 }
 
 #pragma mark - setter
@@ -867,11 +871,6 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
     objc_setAssociatedObject(self, @selector(exitFullScreenWhenStop), @(exitFullScreenWhenStop), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (void)setForceDeviceOrientation:(BOOL)forceDeviceOrientation {
-    objc_setAssociatedObject(self, @selector(forceDeviceOrientation), @(forceDeviceOrientation), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    self.orientationObserver.forceDeviceOrientation = forceDeviceOrientation;
-}
-
 - (void)setFullScreenStatusBarStyle:(UIStatusBarStyle)fullScreenStatusBarStyle {
     objc_setAssociatedObject(self, @selector(fullScreenStatusBarStyle), @(fullScreenStatusBarStyle), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     self.orientationObserver.fullScreenStatusBarStyle = fullScreenStatusBarStyle;
@@ -880,11 +879,6 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
 - (void)setFullScreenStatusBarAnimation:(UIStatusBarAnimation)fullScreenStatusBarAnimation {
     objc_setAssociatedObject(self, @selector(fullScreenStatusBarAnimation), @(fullScreenStatusBarAnimation), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     self.orientationObserver.fullScreenStatusBarAnimation = fullScreenStatusBarAnimation;
-}
-
-- (void)setPortraitFullScreenMode:(ZFPortraitFullScreenMode)portraitFullScreenMode {
-    objc_setAssociatedObject(self, @selector(portraitFullScreenMode), @(portraitFullScreenMode), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    self.orientationObserver.portraitFullScreenMode = portraitFullScreenMode;
 }
 
 @end

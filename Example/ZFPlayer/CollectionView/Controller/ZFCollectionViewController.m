@@ -48,14 +48,7 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
     
     @weakify(self)
     self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
-        @strongify(self)
         kAPPDelegate.allowOrentitaionRotation = isFullScreen;
-        [self setNeedsStatusBarAppearanceUpdate];
-        if (!isFullScreen) {
-            /// 解决导航栏上移问题
-            self.navigationController.navigationBar.zf_height = KNavBarHeight;
-        }
-        self.collectionView.scrollsToTop = !isFullScreen;
     };
     
     self.player.playerDidToEnd = ^(id  _Nonnull asset) {

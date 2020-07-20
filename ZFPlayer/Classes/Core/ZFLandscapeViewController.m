@@ -27,7 +27,7 @@
 @interface ZFLandscapeViewController ()
 
 @property (nonatomic, assign) UIInterfaceOrientation currentOrientation;
-@property (nonatomic, readonly, getter=isRotating) BOOL rotating;
+@property (nonatomic, getter=isRotating) BOOL rotating;
 
 @end
 
@@ -44,21 +44,25 @@
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
-    _rotating = YES;
+    self.rotating = YES;
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
-    if (UIDeviceOrientationIsValidInterfaceOrientation([UIDevice currentDevice].orientation)) {
-        self.currentOrientation = (UIInterfaceOrientation)[UIDevice currentDevice].orientation;
-    } else {
+    if (!UIDeviceOrientationIsValidInterfaceOrientation([UIDevice currentDevice].orientation)) {
         return;
     }
-    
-    if (UIInterfaceOrientationIsLandscape(self.currentOrientation)) {
+    UIInterfaceOrientation newOrientation = (UIInterfaceOrientation)[UIDevice currentDevice].orientation;
+    UIInterfaceOrientation oldOrientation = _currentOrientation;
+    if (UIInterfaceOrientationIsLandscape(newOrientation)) {
         if (self.contentView.superview != self.view) {
             [self.view addSubview:self.contentView];
-            self.contentView.frame = self.targetRect;
-            [self.contentView layoutIfNeeded];
         }
     }
+    
+    if (oldOrientation == UIInterfaceOrientationPortrait) {
+        self.contentView.frame = self.targetRect;
+        [self.contentView layoutIfNeeded];
+    }
+    self.currentOrientation = newOrientation;
+    
     [self.delegate ls_willRotateToOrientation:self.currentOrientation];
     BOOL isFullscreen = size.width > size.height;
     [CATransaction begin];
@@ -72,7 +76,8 @@
         [self.contentView layoutIfNeeded];
     } completion:^(id<UIViewControllerTransitionCoordinatorContext> _Nonnull context) {
         [CATransaction commit];
-        self->_rotating = NO;
+        self.rotating = NO;
+        self.disableAnimations = NO;
         [self.delegate ls_didRotateFromOrientation:self.currentOrientation];
     }];
 }
@@ -103,6 +108,13 @@
 
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
     return self.statusBarAnimation;
+}
+
+- (void)setRotating:(BOOL)rotating {
+    _rotating = rotating;
+    if (!rotating && self.rotatingCompleted) {
+        self.rotatingCompleted();
+    }
 }
 
 @end

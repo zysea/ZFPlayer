@@ -54,15 +54,8 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     CGFloat y = ZFPlayer_ScreenHeight - h - margin;
     self.player.smallFloatView.frame = CGRectMake(x, y, w, h);
     
-    @weakify(self)
     self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
-        @strongify(self)
         kAPPDelegate.allowOrentitaionRotation = isFullScreen;
-        [self setNeedsStatusBarAppearanceUpdate];
-        if (!isFullScreen) {
-            /// 解决导航栏上移问题
-            self.navigationController.navigationBar.zf_height = KNavBarHeight;
-        }
     };
     self.scrollView.contentSize = CGSizeMake(self.view.bounds.size.width, 3000);
 }

@@ -83,7 +83,6 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
 }
 
 - (void)setupPlayer {
-    
     ZFAVPlayerManager *playerManager = [[ZFAVPlayerManager alloc] init];
     playerManager.view.backgroundColor = [UIColor blackColor];
     
@@ -93,21 +92,12 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     /// 设置退到后台继续播放
     self.player.pauseWhenAppResignActive = NO;
     self.player.resumePlayRecord = YES;
-    self.player.disableGestureTypes = ZFPlayerDisableGestureTypesPan;
-//    self.player.fullScreenVideoSize = CGSizeMake(ZFPlayerScreenWidth, ZFPlayerScreenHeight);
-    self.player.orientationObserver.enablePortraitGesture = NO;
-    
+//    self.player.disableGestureTypes = ZFPlayerDisableGestureTypesPan;
+//    self.player.orientationObserver.enablePortraitGesture = NO;
     
     @weakify(self)
     self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
-        @strongify(self)
         kAPPDelegate.allowOrentitaionRotation = isFullScreen;
-        [self setNeedsStatusBarAppearanceUpdate];
-//        if (self.player.orientationObserver.fullScreenMode == ZFFullScreenModePortrait && isFullScreen) {
-//            self.controlView.hidden = YES;
-//        } else {
-//            self.controlView.hidden = NO;
-//        }
     };
     
     /// 播放完成
@@ -133,10 +123,12 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
 
 - (void)playClick:(UIButton *)sender {
     [self.player playTheIndex:0];
-    [self.controlView showTitle:@"视频标题" coverURLString:kVideoCover fullScreenMode:ZFFullScreenModePortrait];
+    [self.controlView showTitle:@"视频标题" coverURLString:kVideoCover fullScreenMode:ZFFullScreenModeAutomatic];
 }
 
 - (void)nextClick:(UIButton *)sender {
+    [self.player stop];
+    return;
     if (!self.player.isLastAssetURL) {
         [self.player playTheNext];
         NSString *title = [NSString stringWithFormat:@"视频标题%zd",self.player.currentPlayIndex];
@@ -144,10 +136,6 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     } else {
         NSLog(@"最后一个视频了");
     }
-}
-
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    self.player.orientationObserver.enablePortraitGesture = YES;
 }
 
 - (void)pushNewVC {
