@@ -18,16 +18,19 @@
 #import "ZFDouYinControlView.h"
 #import "UINavigationController+FDFullscreenPopGesture.h"
 #import <MJRefresh/MJRefresh.h>
+#import "ZFCustomControlView1.h"
 
 static NSString *kIdentifier = @"kIdentifier";
 
-@interface ZFDouYinViewController ()  <UITableViewDelegate,UITableViewDataSource>
+@interface ZFDouYinViewController ()  <UITableViewDelegate,UITableViewDataSource,ZFDouYinCellDelegate>
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) ZFPlayerController *player;
 @property (nonatomic, strong) ZFDouYinControlView *controlView;
+//@property (nonatomic, strong) ZFPlayerControlView *fullControlView;
 @property (nonatomic, strong) NSMutableArray *dataSource;
 @property (nonatomic, strong) NSMutableArray *urls;
 @property (nonatomic, strong) UIButton *backBtn;
+@property (nonatomic, strong) ZFCustomControlView1 *fullControlView;
 
 @end
 
@@ -54,6 +57,7 @@ static NSString *kIdentifier = @"kIdentifier";
     self.player.assetURLs = self.urls;
     self.player.disableGestureTypes = ZFPlayerDisableGestureTypesDoubleTap | ZFPlayerDisableGestureTypesPan | ZFPlayerDisableGestureTypesPinch;
     self.player.controlView = self.controlView;
+
     self.player.allowOrentitaionRotation = NO;
     self.player.WWANAutoPlay = YES;
     /// 1.0是完全消失时候
@@ -67,6 +71,18 @@ static NSString *kIdentifier = @"kIdentifier";
 
     self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
         kAPPDelegate.allowOrentitaionRotation = isFullScreen;
+        @strongify(self)
+        self.player.controlView.hidden = YES;
+    };
+    
+    self.player.orientationDidChanged = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
+        @strongify(self)
+        self.player.controlView.hidden = NO;
+        if (isFullScreen) {
+            self.player.controlView = self.fullControlView;
+        } else {
+            self.player.controlView = self.controlView;
+        }
     };
     
     /// 停止的时候找出最合适的播放
@@ -175,6 +191,18 @@ static NSString *kIdentifier = @"kIdentifier";
     [scrollView zf_scrollViewWillBeginDragging];
 }
 
+#pragma mark - ZFDouYinCellDelegate
+
+- (void)zf_douyinRotation {
+    UIInterfaceOrientation orientation = UIInterfaceOrientationUnknown;
+    if (self.player.isFullScreen) {
+        orientation = UIInterfaceOrientationPortrait;
+    } else {
+        orientation = UIInterfaceOrientationLandscapeRight;
+    }
+    [self.player enterLandscapeFullScreen:orientation animated:YES completion:nil];
+}
+
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -183,6 +211,7 @@ static NSString *kIdentifier = @"kIdentifier";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     ZFDouYinCell *cell = [tableView dequeueReusableCellWithIdentifier:kIdentifier];
+    cell.delegate = self;
     cell.data = self.dataSource[indexPath.row];
     return cell;
 }
@@ -209,6 +238,7 @@ static NSString *kIdentifier = @"kIdentifier";
     [self.controlView resetControlView];
     ZFTableData *data = self.dataSource[indexPath.row];
     [self.controlView showCoverViewWithUrl:data.thumbnail_url];
+    [self.fullControlView showTitle:@"11" coverURLString:data.thumbnail_url fullScreenMode:ZFFullScreenModeLandscape];
 }
 
 #pragma mark - getter
@@ -244,6 +274,13 @@ static NSString *kIdentifier = @"kIdentifier";
         _controlView = [ZFDouYinControlView new];
     }
     return _controlView;
+}
+
+- (ZFCustomControlView1 *)fullControlView {
+    if (!_fullControlView) {
+        _fullControlView = [[ZFCustomControlView1 alloc] init];
+    }
+    return _fullControlView;
 }
 
 - (NSMutableArray *)dataSource {

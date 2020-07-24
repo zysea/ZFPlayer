@@ -63,6 +63,9 @@
             return YES;
         }
     }
+    if ([otherGestureRecognizer isKindOfClass:[UITapGestureRecognizer class]] || [otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
+        return NO;
+    }
     return YES;
 }
 

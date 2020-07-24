@@ -40,10 +40,10 @@ static NSString *kIdentifier = @"kIdentifier";
     [self requestData];
     
     ZFAVPlayerManager *playerManager = [[ZFAVPlayerManager alloc] init];
-    playerManager.scalingMode = ZFPlayerScalingModeAspectFill;
-
 //    KSMediaPlayerManager *playerManager = [[KSMediaPlayerManager alloc] init];
 //    ZFIJKPlayerManager *playerManager = [[ZFIJKPlayerManager alloc] init];
+    playerManager.scalingMode = ZFPlayerScalingModeAspectFill;
+
     
     /// player的tag值必须在cell里设置
     self.player = [ZFPlayerController playerWithScrollView:self.tableView playerManager:playerManager containerViewTag:kPlayerViewTag];

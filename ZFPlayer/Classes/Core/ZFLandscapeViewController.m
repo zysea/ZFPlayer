@@ -58,7 +58,7 @@
     }
     
     if (oldOrientation == UIInterfaceOrientationPortrait) {
-        self.contentView.frame = self.targetRect;
+        self.contentView.frame = [self.delegate ls_targetRect];
         [self.contentView layoutIfNeeded];
     }
     self.currentOrientation = newOrientation;
@@ -71,7 +71,7 @@
         if (isFullscreen) {
             self.contentView.frame = CGRectMake(0, 0, size.width, size.height);
         } else {
-            self.contentView.frame = self.targetRect;
+            self.contentView.frame = [self.delegate ls_targetRect];
         }
         [self.contentView layoutIfNeeded];
     } completion:^(id<UIViewControllerTransitionCoordinatorContext> _Nonnull context) {

@@ -141,6 +141,8 @@
  */
 - (void)showTitle:(NSString *)title coverImage:(UIImage *)image fullScreenMode:(ZFFullScreenMode)fullScreenMode;
 
+//- (void)showFullScreen
+
 /**
  重置控制层
  */

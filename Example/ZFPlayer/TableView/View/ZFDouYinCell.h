@@ -9,8 +9,16 @@
 #import <UIKit/UIKit.h>
 #import "ZFTableData.h"
 
+@protocol ZFDouYinCellDelegate <NSObject>
+
+- (void)zf_douyinRotation;
+
+@end
+
 @interface ZFDouYinCell : UITableViewCell 
 
 @property (nonatomic, strong) ZFTableData *data;
+
+@property (nonatomic, weak) id<ZFDouYinCellDelegate> delegate;
 
 @end

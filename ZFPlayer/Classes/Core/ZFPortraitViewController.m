@@ -196,6 +196,11 @@
     self.interactiveTransition.fullScreenAnimation = fullScreenAnimation;
 }
 
+- (void)setDuration:(NSTimeInterval)duration {
+    _duration = duration;
+    self.transition.duration = duration;
+}
+
 - (CGRect)contentFullScreenRect {
     CGFloat videoWidth = self.presentationSize.width;
     CGFloat videoHeight = self.presentationSize.height;

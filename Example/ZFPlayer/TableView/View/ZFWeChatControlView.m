@@ -81,7 +81,7 @@
 /// 手势筛选，返回NO不响应该手势
 - (BOOL)gestureTriggerCondition:(ZFPlayerGestureControl *)gestureControl gestureType:(ZFPlayerGestureType)gestureType gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer touch:(nonnull UITouch *)touch {
     if ([gestureRecognizer isKindOfClass:[UITapGestureRecognizer class]]) {
-        if (gestureRecognizer == gestureControl.singleTap) {
+        if (gestureRecognizer == gestureControl.singleTap && !self.player.isFullScreen) {
             return YES;
         }
         return NO;

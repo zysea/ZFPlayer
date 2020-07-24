@@ -53,6 +53,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) BOOL fullScreenAnimation;
 
+@property (nonatomic, assign) NSTimeInterval duration;
+
 @end
 
 NS_ASSUME_NONNULL_END

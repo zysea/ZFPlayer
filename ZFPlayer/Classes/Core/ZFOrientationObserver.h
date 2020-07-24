@@ -44,8 +44,7 @@ typedef NS_ENUM(NSUInteger, ZFPortraitFullScreenMode) {
 /// Full screen mode on the view
 typedef NS_ENUM(NSUInteger, ZFRotateType) {
     ZFRotateTypeNormal,         // Normal
-    ZFRotateTypeCell,           // Cell
-    ZFRotateTypeCellOther       // Cell mode add to other view
+    ZFRotateTypeCell            // Cell
 };
 
 /**
@@ -86,13 +85,9 @@ typedef NS_OPTIONS(NSUInteger, ZFDisablePortraitGestureTypes) {
            containerView:(UIView *)containerView;
 
 /// list play
-- (void)cellModelRotateView:(ZFPlayerView *)rotateView
-           rotateViewAtCell:(UIView *)cell
-              playerViewTag:(NSInteger)playerViewTag;
-
-/// cell other view rotation
-- (void)cellOtherModelRotateView:(ZFPlayerView *)rotateView
-                   containerView:(UIView *)containerView;
+- (void)updateRotateView:(ZFPlayerView *)rotateView
+        rotateViewAtCell:(UIView *)cell
+           playerViewTag:(NSInteger)playerViewTag;
 
 /// Container view of a full screen state player.
 @property (nonatomic, strong) UIView *fullScreenContainerView;
@@ -115,7 +110,7 @@ typedef NS_OPTIONS(NSUInteger, ZFDisablePortraitGestureTypes) {
 @property (nonatomic, assign) ZFPortraitFullScreenMode portraitFullScreenMode;
 
 /// rotate duration, default is 0.30
-@property (nonatomic) float duration;
+@property (nonatomic) NSTimeInterval duration;
 
 /// If the full screen.
 @property (nonatomic, readonly, getter=isFullScreen) BOOL fullScreen;
@@ -123,8 +118,8 @@ typedef NS_OPTIONS(NSUInteger, ZFDisablePortraitGestureTypes) {
 /// Lock screen orientation
 @property (nonatomic, getter=isLockedScreen) BOOL lockedScreen;
 
-/// The statusbar hidden.
-@property (nonatomic, getter=isStatusBarHidden) BOOL statusBarHidden;
+/// The fullscreen statusbar hidden.
+@property (nonatomic, assign) BOOL fullScreenStatusBarHidden;
 
 /// default is  UIStatusBarStyleLightContent.
 @property (nonatomic, assign) UIStatusBarStyle fullScreenStatusBarStyle;

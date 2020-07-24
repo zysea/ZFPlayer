@@ -32,6 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)ls_shouldAutorotate;
 - (void)ls_willRotateToOrientation:(UIInterfaceOrientation)orientation;
 - (void)ls_didRotateFromOrientation:(UIInterfaceOrientation)orientation;
+- (CGRect)ls_targetRect;
 
 @end
 

@@ -135,7 +135,6 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
             NSTimeInterval seekTime = [_zfPlayRecords valueForKey:assetURL.absoluteString].doubleValue;
             self.currentPlayerManager.seekTime = seekTime;
         }
-        self.currentPlayerManager.view.hidden = NO;
         [self.notification addNotification];
         [self addDeviceOrientationObserver];
         if (self.scrollView) {
@@ -304,17 +303,16 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
     if (_currentPlayerManager.isPreparedToPlay) {
         [_currentPlayerManager stop];
         [_currentPlayerManager.view removeFromSuperview];
-        [self.orientationObserver removeDeviceOrientationObserver];
+        [self removeDeviceOrientationObserver];
         [self.gestureControl removeGestureToView:self.currentPlayerManager.view];
     }
     _currentPlayerManager = currentPlayerManager;
-    _currentPlayerManager.view.hidden = YES;
     self.gestureControl.disableTypes = self.disableGestureTypes;
     [self.gestureControl addGestureToView:currentPlayerManager.view];
     [self playerManagerCallbcak];
-    [self.orientationObserver updateRotateView:currentPlayerManager.view containerView:self.containerView];
     self.controlView.player = self;
     [self layoutPlayerSubViews];
+    [self.orientationObserver updateRotateView:currentPlayerManager.view containerView:self.containerView];
 }
 
 - (void)setContainerView:(UIView *)containerView {
@@ -325,9 +323,13 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
     if (!containerView) return;
     containerView.userInteractionEnabled = YES;
     [self layoutPlayerSubViews];
+    [self.orientationObserver updateRotateView:self.currentPlayerManager.view containerView:containerView];
 }
 
 - (void)setControlView:(UIView<ZFPlayerMediaControl> *)controlView {
+    if (controlView && controlView != _controlView) {
+        [_controlView removeFromSuperview];
+    }
     _controlView = controlView;
     if (!controlView) return;
     controlView.player = self;
@@ -434,7 +436,7 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
     [self.containerView addSubview:self.currentPlayerManager.view];
     self.currentPlayerManager.view.frame = self.containerView.bounds;
     self.currentPlayerManager.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    [self.orientationObserver cellModelRotateView:self.currentPlayerManager.view rotateViewAtCell:cell playerViewTag:self.containerViewTag];
+    [self.orientationObserver updateRotateView:self.currentPlayerManager.view rotateViewAtCell:cell playerViewTag:self.containerViewTag];
     if ([self.controlView respondsToSelector:@selector(videoPlayer:floatViewShow:)]) {
         [self.controlView videoPlayer:self floatViewShow:NO];
     }
@@ -448,7 +450,7 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
     [self.containerView addSubview:self.currentPlayerManager.view];
     self.currentPlayerManager.view.frame = self.containerView.bounds;
     self.currentPlayerManager.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    [self.orientationObserver cellOtherModelRotateView:self.currentPlayerManager.view containerView:self.containerView];
+    [self.orientationObserver updateRotateView:self.currentPlayerManager.view containerView:self.containerView];
     if ([self.controlView respondsToSelector:@selector(videoPlayer:floatViewShow:)]) {
         [self.controlView videoPlayer:self floatViewShow:NO];
     }
@@ -461,7 +463,7 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
     [self.smallFloatView addSubview:self.currentPlayerManager.view];
     self.currentPlayerManager.view.frame = self.smallFloatView.bounds;
     self.currentPlayerManager.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    [self.orientationObserver cellOtherModelRotateView:self.currentPlayerManager.view containerView:self.smallFloatView];
+    [self.orientationObserver updateRotateView:self.currentPlayerManager.view containerView:self.smallFloatView];
     if ([self.controlView respondsToSelector:@selector(videoPlayer:floatViewShow:)]) {
         [self.controlView videoPlayer:self floatViewShow:YES];
     }
@@ -851,7 +853,7 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
 
 - (void)setStatusBarHidden:(BOOL)statusBarHidden {
     objc_setAssociatedObject(self, @selector(isStatusBarHidden), @(statusBarHidden), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    self.orientationObserver.statusBarHidden = statusBarHidden;
+    self.orientationObserver.fullScreenStatusBarHidden = statusBarHidden;
 }
 
 - (void)setLockedScreen:(BOOL)lockedScreen {
@@ -1122,7 +1124,7 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
         
         UIView *cell = [self.scrollView zf_getCellForIndexPath:playingIndexPath];
         self.containerView = [cell viewWithTag:self.containerViewTag];
-        [self.orientationObserver cellModelRotateView:self.currentPlayerManager.view rotateViewAtCell:cell playerViewTag:self.containerViewTag];
+        [self.orientationObserver updateRotateView:self.currentPlayerManager.view rotateViewAtCell:cell playerViewTag:self.containerViewTag];
         [self addDeviceOrientationObserver];
         self.scrollView.zf_playingIndexPath = playingIndexPath;
         [self layoutPlayerSubViews];
@@ -1349,7 +1351,7 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
     if (self.currentPlayerManager.view && self.playingIndexPath && self.containerViewTag) {
         UIView *cell = [self.scrollView zf_getCellForIndexPath:self.playingIndexPath];
         self.containerView = [cell viewWithTag:self.containerViewTag];
-        [self.orientationObserver cellModelRotateView:self.currentPlayerManager.view rotateViewAtCell:cell playerViewTag:self.containerViewTag];
+        [self.orientationObserver updateRotateView:self.currentPlayerManager.view rotateViewAtCell:cell playerViewTag:self.containerViewTag];
         [self layoutPlayerSubViews];
     }
 }
@@ -1357,7 +1359,7 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
 - (void)updateNoramlPlayerWithContainerView:(UIView *)containerView {
     if (self.currentPlayerManager.view && self.containerView) {
         self.containerView = containerView;
-        [self.orientationObserver cellOtherModelRotateView:self.currentPlayerManager.view containerView:self.containerView];
+        [self.orientationObserver updateRotateView:self.currentPlayerManager.view containerView:self.containerView];
         [self layoutPlayerSubViews];
     }
 }

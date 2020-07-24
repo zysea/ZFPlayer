@@ -344,8 +344,9 @@
     [self setNeedsDisplay];
     self.titleLabel.text = title;
     self.player.orientationObserver.fullScreenMode = fullScreenMode;
-    [self.coverImageView setImageWithURLString:coverUrl placeholder:placeholder];
-    [self.bgImgView setImageWithURLString:coverUrl placeholder:placeholder];
+//    [self.coverImageView setImageWithURLString:coverUrl placeholder:placeholder];
+//    [self.bgImgView setImageWithURLString:coverUrl placeholder:placeholder];
+    [self.player.currentPlayerManager.view.coverImageView setImageWithURLString:coverUrl placeholder:placeholder];
 }
 
 /// 调节播放进度slider和当前时间更新
@@ -506,13 +507,13 @@
 - (void)setPlayer:(ZFPlayerController *)player {
     _player = player;
     /// 解决播放时候黑屏闪一下问题
-    [player.currentPlayerManager.view insertSubview:self.bgImgView atIndex:0];
-    [player.currentPlayerManager.view insertSubview:self.coverImageView atIndex:1];
-    self.coverImageView.frame = player.currentPlayerManager.view.bounds;
-    self.coverImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.bgImgView.frame = player.currentPlayerManager.view.bounds;
-    self.bgImgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.coverImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//    [player.currentPlayerManager.view insertSubview:self.bgImgView atIndex:0];
+//    [player.currentPlayerManager.view insertSubview:self.coverImageView atIndex:1];
+//    self.coverImageView.frame = player.currentPlayerManager.view.bounds;
+//    self.coverImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//    self.bgImgView.frame = player.currentPlayerManager.view.bounds;
+//    self.bgImgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//    self.coverImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 }
 
 #pragma mark - getter

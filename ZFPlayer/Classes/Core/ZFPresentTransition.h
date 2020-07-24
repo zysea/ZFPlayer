@@ -40,6 +40,8 @@ typedef NS_ENUM(NSUInteger, ZFPresentTransitionType) {
 
 @property (nonatomic, assign) BOOL interation;
 
+@property (nonatomic, assign) NSTimeInterval duration;
+
 - (void)transitionWithTransitionType:(ZFPresentTransitionType)type
                          contentView:(UIView *)contentView
                        containerView:(UIView *)containerView;

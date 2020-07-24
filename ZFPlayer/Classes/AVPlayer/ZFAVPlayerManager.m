@@ -201,6 +201,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
 
 - (void)seekToTime:(NSTimeInterval)time completionHandler:(void (^ __nullable)(BOOL finished))completionHandler {
     if (self.totalTime > 0) {
+        [_player.currentItem cancelPendingSeeks];
         CMTime seekTime = CMTimeMake(time, 1);
         [_player seekToTime:seekTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:completionHandler];
     } else {
@@ -279,7 +280,6 @@ static NSString *const kPresentationSize         = @"presentationSize";
     }
     if (@available(iOS 10.0, *)) {
         _playerItem.preferredForwardBufferDuration = 5;
-        _player.automaticallyWaitsToMinimizeStalling = NO;
     }
     [self itemObserving];
 }
@@ -373,7 +373,9 @@ static NSString *const kPresentationSize         = @"presentationSize";
                 }
                 if (self.seekTime) {
                     if (self.shouldAutoPlay) [self.player pause];
+                    @weakify(self)
                     [self seekToTime:self.seekTime completionHandler:^(BOOL finished) {
+                        @strongify(self)
                         if (finished) {
                             if (self.shouldAutoPlay) [self play];
                         }

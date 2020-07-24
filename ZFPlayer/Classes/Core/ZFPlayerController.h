@@ -282,7 +282,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) ZFOrientationObserver *orientationObserver;
 
 /// Whether automatic screen rotation is supported.
-/// iOS8.1~iOS8.3 the value is YES, other iOS version the value is NO.
+/// The value is NO.
 /// This property is used for the return value of UIViewController `shouldAutorotate` method.
 @property (nonatomic, readonly) BOOL shouldAutorotate;
 
@@ -300,9 +300,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// Lock the screen orientation.
 @property (nonatomic, getter=isLockedScreen) BOOL lockedScreen;
 
-/// The statusbar hidden.
-@property (nonatomic, getter=isStatusBarHidden) BOOL statusBarHidden;
-
 /// The current orientation of the player.
 /// Default is UIInterfaceOrientationPortrait.
 @property (nonatomic, readonly) UIInterfaceOrientation currentOrientation;
@@ -315,8 +312,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// default is  UIStatusBarStyleLightContent.
 @property (nonatomic, assign) UIStatusBarStyle fullScreenStatusBarStyle;
+
 /// defalut is UIStatusBarAnimationSlide.
 @property (nonatomic, assign) UIStatusBarAnimation fullScreenStatusBarAnimation;
+
+/// The fullscreen statusbar hidden.
+@property (nonatomic, getter=isStatusBarHidden) BOOL statusBarHidden;
 
 /**
  Add the device orientation observer.

@@ -84,16 +84,14 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
 
 - (void)setupPlayer {
     ZFAVPlayerManager *playerManager = [[ZFAVPlayerManager alloc] init];
-    playerManager.view.backgroundColor = [UIColor blackColor];
+    playerManager.shouldAutoPlay = YES;
     
     /// 播放器相关
     self.player = [ZFPlayerController playerWithPlayerManager:playerManager containerView:self.containerView];
     self.player.controlView = self.controlView;
     /// 设置退到后台继续播放
     self.player.pauseWhenAppResignActive = NO;
-    self.player.resumePlayRecord = YES;
-//    self.player.disableGestureTypes = ZFPlayerDisableGestureTypesPan;
-//    self.player.orientationObserver.enablePortraitGesture = NO;
+//    self.player.resumePlayRecord = YES;
     
     @weakify(self)
     self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
@@ -113,6 +111,8 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     };
     
     self.player.assetURLs = self.assetURLs;
+    [self.player playTheIndex:0];
+    [self.controlView showTitle:@"iPhone X" coverURLString:kVideoCover fullScreenMode:ZFFullScreenModeAutomatic];
 }
 
 - (void)changeVideo:(UIButton *)sender {
@@ -127,8 +127,6 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
 }
 
 - (void)nextClick:(UIButton *)sender {
-    [self.player stop];
-    return;
     if (!self.player.isLastAssetURL) {
         [self.player playTheNext];
         NSString *title = [NSString stringWithFormat:@"视频标题%zd",self.player.currentPlayIndex];
@@ -170,7 +168,7 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
         _controlView.autoHiddenTimeInterval = 5;
         _controlView.autoFadeTimeInterval = 0.5;
         _controlView.prepareShowLoading = YES;
-        _controlView.prepareShowControlView = YES;
+        _controlView.prepareShowControlView = NO;
     }
     return _controlView;
 }
