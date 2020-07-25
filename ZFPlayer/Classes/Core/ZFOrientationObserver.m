@@ -122,6 +122,7 @@
 
 - (void)updateRotateView:(ZFPlayerView *)rotateView
            containerView:(UIView *)containerView {
+    self.rotateType = ZFRotateTypeNormal;
     self.view = rotateView;
     self.containerView = containerView;
 }
@@ -163,6 +164,7 @@
     // Determine that if the current direction is the same as the direction you want to rotate, do nothing
     if (currentOrientation == _currentOrientation) return;
     _currentOrientation = currentOrientation;
+    if (_currentOrientation == UIInterfaceOrientationPortraitUpsideDown) return;
     
     switch (currentOrientation) {
         case UIInterfaceOrientationPortrait: {

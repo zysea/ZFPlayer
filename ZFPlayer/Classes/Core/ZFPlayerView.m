@@ -32,7 +32,6 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        self.clipsToBounds = YES;
         self.backgroundColor = [UIColor blackColor];
         [self addSubview:self.coverImageView];
     }

@@ -55,7 +55,7 @@ static NSString *kIdentifier = @"kIdentifier";
     /// player,tag值必须在cell里设置
     self.player = [ZFPlayerController playerWithScrollView:self.tableView playerManager:playerManager containerViewTag:kPlayerViewTag];
     self.player.assetURLs = self.urls;
-    self.player.disableGestureTypes = ZFPlayerDisableGestureTypesDoubleTap | ZFPlayerDisableGestureTypesPan | ZFPlayerDisableGestureTypesPinch;
+    self.player.disableGestureTypes = ZFPlayerDisableGestureTypesPan | ZFPlayerDisableGestureTypesPinch;
     self.player.controlView = self.controlView;
 
     self.player.allowOrentitaionRotation = NO;
@@ -238,7 +238,7 @@ static NSString *kIdentifier = @"kIdentifier";
     [self.controlView resetControlView];
     ZFTableData *data = self.dataSource[indexPath.row];
     [self.controlView showCoverViewWithUrl:data.thumbnail_url];
-    [self.fullControlView showTitle:@"11" coverURLString:data.thumbnail_url fullScreenMode:ZFFullScreenModeLandscape];
+    [self.fullControlView showTitle:@"custom landscape controlView" coverURLString:data.thumbnail_url fullScreenMode:ZFFullScreenModeLandscape];
 }
 
 #pragma mark - getter

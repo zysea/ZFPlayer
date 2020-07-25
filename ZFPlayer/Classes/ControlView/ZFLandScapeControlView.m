@@ -161,7 +161,9 @@
     if (!self.isShow) {
         self.topToolView.zf_y = -self.topToolView.zf_height;
         self.bottomToolView.zf_y = self.zf_height;
+        self.lockBtn.zf_left = iPhoneX ? -82: -47;
     } else {
+        self.lockBtn.zf_left = iPhoneX ? 50: 18;
         if (self.player.isLockedScreen) {
             self.topToolView.zf_y = -self.topToolView.zf_height;
             self.bottomToolView.zf_y = self.zf_height;

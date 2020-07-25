@@ -344,8 +344,6 @@
     [self setNeedsDisplay];
     self.titleLabel.text = title;
     self.player.orientationObserver.fullScreenMode = fullScreenMode;
-//    [self.coverImageView setImageWithURLString:coverUrl placeholder:placeholder];
-//    [self.bgImgView setImageWithURLString:coverUrl placeholder:placeholder];
     [self.player.currentPlayerManager.view.coverImageView setImageWithURLString:coverUrl placeholder:placeholder];
 }
 
