@@ -39,7 +39,7 @@
 		D23F3DA322A7589A00BC4E19 /* ZFScrollViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D23F3DA222A7589A00BC4E19 /* ZFScrollViewViewController.m */; };
 		D23F3DA722A7618100BC4E19 /* ZFCustomControlViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D23F3DA622A7618100BC4E19 /* ZFCustomControlViewViewController.m */; };
 		D23F3DAB22A761C500BC4E19 /* ZFADViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D23F3DAA22A761C500BC4E19 /* ZFADViewController.m */; };
-		D23F3DAF22A764E400BC4E19 /* ZFCustomControlView1.m in Sources */ = {isa = PBXBuildFile; fileRef = D23F3DAE22A764E400BC4E19 /* ZFCustomControlView1.m */; };
+		D23F3DAF22A764E400BC4E19 /* ZFCustomControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = D23F3DAE22A764E400BC4E19 /* ZFCustomControlView.m */; };
 		D243FCA020C53F950014F533 /* ZFDouYinViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D243FC9F20C53F950014F533 /* ZFDouYinViewController.m */; };
 		D243FCA320C543D30014F533 /* ZFDouYinCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D243FCA220C543D30014F533 /* ZFDouYinCell.m */; };
 		D260A00E228BE402009FC79C /* ZFADControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = D260A00D228BE402009FC79C /* ZFADControlView.m */; };
@@ -104,6 +104,7 @@
 		CC112E9C20DBD6600051EE60 /* ZFOtherCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZFOtherCell.m; sourceTree = "<group>"; };
 		CC47EB6920C969EC0040419D /* ZFViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZFViewController.h; sourceTree = "<group>"; };
 		CC47EB6A20C969EC0040419D /* ZFViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZFViewController.m; sourceTree = "<group>"; };
+		CC4BF51724D0748300CB57CA /* ZFDouYinCellDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZFDouYinCellDelegate.h; sourceTree = "<group>"; };
 		CCF66D7220C57BE5001B6121 /* ZFDouYinControlView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZFDouYinControlView.h; sourceTree = "<group>"; };
 		CCF66D7320C57BE5001B6121 /* ZFDouYinControlView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZFDouYinControlView.m; sourceTree = "<group>"; };
 		D20935F020B658AE0002C956 /* ZFTableViewCellLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZFTableViewCellLayout.m; sourceTree = "<group>"; };
@@ -130,8 +131,8 @@
 		D23F3DA622A7618100BC4E19 /* ZFCustomControlViewViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZFCustomControlViewViewController.m; sourceTree = "<group>"; };
 		D23F3DA922A761C500BC4E19 /* ZFADViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZFADViewController.h; sourceTree = "<group>"; };
 		D23F3DAA22A761C500BC4E19 /* ZFADViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZFADViewController.m; sourceTree = "<group>"; };
-		D23F3DAD22A764E400BC4E19 /* ZFCustomControlView1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZFCustomControlView1.h; sourceTree = "<group>"; };
-		D23F3DAE22A764E400BC4E19 /* ZFCustomControlView1.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZFCustomControlView1.m; sourceTree = "<group>"; };
+		D23F3DAD22A764E400BC4E19 /* ZFCustomControlView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZFCustomControlView.h; sourceTree = "<group>"; };
+		D23F3DAE22A764E400BC4E19 /* ZFCustomControlView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZFCustomControlView.m; sourceTree = "<group>"; };
 		D243FC9E20C53F950014F533 /* ZFDouYinViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZFDouYinViewController.h; sourceTree = "<group>"; };
 		D243FC9F20C53F950014F533 /* ZFDouYinViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZFDouYinViewController.m; sourceTree = "<group>"; };
 		D243FCA120C543D30014F533 /* ZFDouYinCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZFDouYinCell.h; sourceTree = "<group>"; };
@@ -372,6 +373,7 @@
 		CCF66D7120C57B97001B6121 /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				CC4BF51724D0748300CB57CA /* ZFDouYinCellDelegate.h */,
 				D20935F920B658AE0002C956 /* ZFTableViewCellLayout.h */,
 				D20935F020B658AE0002C956 /* ZFTableViewCellLayout.m */,
 				D20935F420B658AE0002C956 /* NSString+Size.h */,
@@ -430,8 +432,8 @@
 		D23F3DAC22A764AA00BC4E19 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				D23F3DAD22A764E400BC4E19 /* ZFCustomControlView1.h */,
-				D23F3DAE22A764E400BC4E19 /* ZFCustomControlView1.m */,
+				D23F3DAD22A764E400BC4E19 /* ZFCustomControlView.h */,
+				D23F3DAE22A764E400BC4E19 /* ZFCustomControlView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -691,7 +693,7 @@
 				D273160924B9F8260033AED1 /* ZFWeChatControlView.m in Sources */,
 				D2F268B622A67489008C1F6D /* ZFCollectionViewCell.m in Sources */,
 				D2F268C722A67C62008C1F6D /* ZFRotationViewController.m in Sources */,
-				D23F3DAF22A764E400BC4E19 /* ZFCustomControlView1.m in Sources */,
+				D23F3DAF22A764E400BC4E19 /* ZFCustomControlView.m in Sources */,
 				D260A00E228BE402009FC79C /* ZFADControlView.m in Sources */,
 				D2F268C222A67B86008C1F6D /* ZFKeyboardViewController.m in Sources */,
 				CCF66D7420C57BE5001B6121 /* ZFDouYinControlView.m in Sources */,

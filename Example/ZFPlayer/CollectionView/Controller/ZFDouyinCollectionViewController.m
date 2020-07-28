@@ -16,17 +16,19 @@
 #import <ZFPlayer/ZFPlayerConst.h>
 #import "UINavigationController+FDFullscreenPopGesture.h"
 #import "ZFDouYinControlView.h"
+#import "ZFDouYinCellDelegate.h"
+#import "ZFCustomControlView.h"
 
 static NSString * const reuseIdentifier = @"collectionViewCell";
 
-@interface ZFDouyinCollectionViewController () <UICollectionViewDelegate,UICollectionViewDataSource>
+@interface ZFDouyinCollectionViewController () <UICollectionViewDelegate,UICollectionViewDataSource,ZFDouYinCellDelegate>
 
 @property (nonatomic, strong) NSMutableArray <ZFTableData *>*dataSource;
 @property (nonatomic, strong) UICollectionView *collectionView;
-@property (nonatomic, strong) NSMutableArray *urls;
 @property (nonatomic, strong) ZFPlayerController *player;
 @property (nonatomic, strong) ZFDouYinControlView *controlView;
 @property (nonatomic, strong) UIButton *backBtn;
+@property (nonatomic, strong) ZFCustomControlView *fullControlView;
 
 @end
 
@@ -45,7 +47,6 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
     /// player的tag值必须在cell里设置
     self.player = [ZFPlayerController playerWithScrollView:self.collectionView playerManager:playerManager containerViewTag:kPlayerViewTag];
     self.player.controlView = self.controlView;
-    self.player.assetURLs = self.urls;
     self.player.shouldAutoPlay = YES;
     self.player.allowOrentitaionRotation = NO;
     self.player.disablePanMovingDirection = ZFPlayerDisablePanMovingDirectionAll;
@@ -60,6 +61,17 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
             self.player.disablePanMovingDirection = ZFPlayerDisablePanMovingDirectionNone;
         } else {
             self.player.disablePanMovingDirection = ZFPlayerDisablePanMovingDirectionAll;
+        }
+        self.player.controlView.hidden = YES;
+    };
+    
+    self.player.orientationDidChanged = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
+        @strongify(self)
+        self.player.controlView.hidden = NO;
+        if (isFullScreen) {
+            self.player.controlView = self.fullControlView;
+        } else {
+            self.player.controlView = self.controlView;
         }
     };
     
@@ -106,7 +118,6 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
 #pragma mark - private method
 
 - (void)requestData {
-    self.urls = @[].mutableCopy;
     NSString *path = [[NSBundle mainBundle] pathForResource:@"data" ofType:@"json"];
     NSData *data = [NSData dataWithContentsOfFile:path];
     NSDictionary *rootDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
@@ -117,8 +128,6 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
         ZFTableData *data = [[ZFTableData alloc] init];
         [data setValuesForKeysWithDictionary:dataDic];
         [self.dataSource addObject:data];
-        NSURL *url = [NSURL URLWithString:data.video_url];
-        [self.urls addObject:url];
     }
 }
 
@@ -135,17 +144,17 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
     if (index == self.dataSource.count-1) {
         /// 加载下一页数据
         [self requestData];
-        self.player.assetURLs = self.urls;
         [self.collectionView reloadData];
     }
 }
 
 /// play the video
 - (void)playTheVideoAtIndexPath:(NSIndexPath *)indexPath {
-    [self.player playTheIndexPath:indexPath];
-    [self.controlView resetControlView];
     ZFTableData *data = self.dataSource[indexPath.row];
+    [self.player playTheIndexPath:indexPath assetURL:[NSURL URLWithString:data.video_url]];
+    [self.controlView resetControlView];
     [self.controlView showCoverViewWithUrl:data.thumbnail_url];
+    [self.fullControlView showTitle:@"custom landscape controlView" coverURLString:data.thumbnail_url fullScreenMode:ZFFullScreenModeLandscape];
 }
 
 - (void)backClick:(UIButton *)sender {
@@ -174,6 +183,18 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
     [scrollView zf_scrollViewWillBeginDragging];
 }
 
+#pragma mark - ZFDouYinCellDelegate
+
+- (void)zf_douyinRotation {
+    UIInterfaceOrientation orientation = UIInterfaceOrientationUnknown;
+    if (self.player.isFullScreen) {
+        orientation = UIInterfaceOrientationPortrait;
+    } else {
+        orientation = UIInterfaceOrientationLandscapeRight;
+    }
+    [self.player enterLandscapeFullScreen:orientation animated:YES completion:nil];
+}
+
 #pragma mark UICollectionViewDataSource
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
@@ -183,6 +204,7 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     ZFDouyinCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
     cell.data = self.dataSource[indexPath.row];
+    cell.delegate = self;
     return cell;
 }
 
@@ -229,6 +251,13 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
         _controlView = [ZFDouYinControlView new];
     }
     return _controlView;
+}
+
+- (ZFCustomControlView *)fullControlView {
+    if (!_fullControlView) {
+        _fullControlView = [[ZFCustomControlView alloc] init];
+    }
+    return _fullControlView;
 }
 
 - (UIButton *)backBtn {

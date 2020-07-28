@@ -7,7 +7,7 @@
 //
 
 #import "ZFCustomControlViewViewController.h"
-#import "ZFCustomControlView1.h"
+#import "ZFCustomControlView.h"
 #import <ZFPlayer/ZFAVPlayerManager.h>
 #import <ZFPlayer/ZFIJKPlayerManager.h>
 #import <ZFPlayer/KSMediaPlayerManager.h>
@@ -23,7 +23,7 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
 
 @property (nonatomic, strong) ZFPlayerController *player;
 @property (nonatomic, strong) UIImageView *containerView;
-@property (nonatomic, strong) ZFCustomControlView1 *controlView;
+@property (nonatomic, strong) ZFCustomControlView *controlView;
 
 @end
 
@@ -102,9 +102,9 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     return UIInterfaceOrientationMaskPortrait;
 }
 
-- (ZFCustomControlView1 *)controlView {
+- (ZFCustomControlView *)controlView {
     if (!_controlView) {
-        _controlView = [ZFCustomControlView1 new];
+        _controlView = [ZFCustomControlView new];
     }
     return _controlView;
 }

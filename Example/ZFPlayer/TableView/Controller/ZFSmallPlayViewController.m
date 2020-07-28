@@ -27,7 +27,6 @@ static NSString *kIdentifier = @"kIdentifier";
 @property (nonatomic, strong) ZFPlayerController *player;
 @property (nonatomic, strong) ZFPlayerControlView *controlView;
 @property (nonatomic, strong) NSMutableArray *dataSource;
-@property (nonatomic, strong) NSMutableArray *urls;
 @property (nonatomic, strong) UIActivityIndicatorView *activity;
 
 @end
@@ -114,7 +113,6 @@ static NSString *kIdentifier = @"kIdentifier";
 }
 
 - (void)requestData {
-    self.urls = @[].mutableCopy;
     [self.activity startAnimating];
     @weakify(self)
     /// 模拟网络请求
@@ -131,11 +129,7 @@ static NSString *kIdentifier = @"kIdentifier";
             [data setValuesForKeysWithDictionary:dataDic];
             ZFTableViewCellLayout *layout = [[ZFTableViewCellLayout alloc] initWithData:data];
             [self.dataSource addObject:layout];
-            NSString *URLString = [data.video_url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
-            NSURL *url = [NSURL URLWithString:URLString];
-            [self.urls addObject:url];
         }
-        self.player.assetURLs = self.urls;
         [self.tableView reloadData];
         
         /// 找到可播放的cell
@@ -244,8 +238,8 @@ static NSString *kIdentifier = @"kIdentifier";
 
 /// play the video
 - (void)playTheVideoAtIndexPath:(NSIndexPath *)indexPath {
-    [self.player playTheIndexPath:indexPath];
     ZFTableViewCellLayout *layout = self.dataSource[indexPath.row];
+    [self.player playTheIndexPath:indexPath assetURL:[NSURL URLWithString:layout.data.video_url]];
     [self.controlView showTitle:layout.data.title
                  coverURLString:layout.data.thumbnail_url
                  fullScreenMode:layout.isVerticalVideo?ZFFullScreenModePortrait:ZFFullScreenModeLandscape];

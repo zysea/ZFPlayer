@@ -27,9 +27,6 @@
 
 @property (nonatomic, strong) UIImage *placeholderImage;
 
-@property (nonatomic, strong) UIImageView *bgImgView;
-
-@property (nonatomic, strong) UIView *effectView;
 @property (nonatomic, strong) UIButton *rotation;
 
 @end
@@ -54,8 +51,6 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     self.coverImageView.frame = self.contentView.bounds;
-    self.bgImgView.frame = self.contentView.bounds;
-    self.effectView.frame = self.bgImgView.bounds;
     
     CGFloat min_x = 0;
     CGFloat min_y = 0;
@@ -150,7 +145,6 @@
 - (void)setData:(ZFTableData *)data {
     _data = data;
     [self.coverImageView setImageWithURLString:data.thumbnail_url placeholder:[UIImage imageNamed:@"loading_bgView"]];
-    [self.bgImgView setImageWithURLString:data.thumbnail_url placeholder:[UIImage imageNamed:@"loading_bgView"]];
     self.titleLabel.text = data.title;
     if (data.video_width > data.video_height) { /// 横屏视频才支持旋转
         self.rotation.hidden = NO;
@@ -167,28 +161,6 @@
         _coverImageView.contentMode = UIViewContentModeScaleAspectFit;
     }
     return _coverImageView;
-}
-
-- (UIImageView *)bgImgView {
-    if (!_bgImgView) {
-        _bgImgView = [[UIImageView alloc] init];
-        _bgImgView.userInteractionEnabled = YES;
-    }
-    return _bgImgView;
-}
-
-- (UIView *)effectView {
-    if (!_effectView) {
-        if (@available(iOS 8.0, *)) {
-            UIBlurEffect *effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
-            _effectView = [[UIVisualEffectView alloc] initWithEffect:effect];
-        } else {
-            UIToolbar *effectView = [[UIToolbar alloc] init];
-            effectView.barStyle = UIBarStyleBlackTranslucent;
-            _effectView = effectView;
-        }
-    }
-    return _effectView;
 }
 
 - (UIButton *)rotation {

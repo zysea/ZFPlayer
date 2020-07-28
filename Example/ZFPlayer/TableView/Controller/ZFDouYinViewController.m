@@ -18,7 +18,7 @@
 #import "ZFDouYinControlView.h"
 #import "UINavigationController+FDFullscreenPopGesture.h"
 #import <MJRefresh/MJRefresh.h>
-#import "ZFCustomControlView1.h"
+#import "ZFCustomControlView.h"
 
 static NSString *kIdentifier = @"kIdentifier";
 
@@ -26,11 +26,9 @@ static NSString *kIdentifier = @"kIdentifier";
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) ZFPlayerController *player;
 @property (nonatomic, strong) ZFDouYinControlView *controlView;
-//@property (nonatomic, strong) ZFPlayerControlView *fullControlView;
 @property (nonatomic, strong) NSMutableArray *dataSource;
-@property (nonatomic, strong) NSMutableArray *urls;
 @property (nonatomic, strong) UIButton *backBtn;
-@property (nonatomic, strong) ZFCustomControlView1 *fullControlView;
+@property (nonatomic, strong) ZFCustomControlView *fullControlView;
 
 @end
 
@@ -54,7 +52,6 @@ static NSString *kIdentifier = @"kIdentifier";
 
     /// player,tag值必须在cell里设置
     self.player = [ZFPlayerController playerWithScrollView:self.tableView playerManager:playerManager containerViewTag:kPlayerViewTag];
-    self.player.assetURLs = self.urls;
     self.player.disableGestureTypes = ZFPlayerDisableGestureTypesPan | ZFPlayerDisableGestureTypesPinch;
     self.player.controlView = self.controlView;
 
@@ -92,7 +89,6 @@ static NSString *kIdentifier = @"kIdentifier";
         if (indexPath.row == self.dataSource.count-1) {
             /// 加载下一页数据
             [self requestData];
-            self.player.assetURLs = self.urls;
             [self.tableView reloadData];
         }
         [self playTheVideoAtIndexPath:indexPath];
@@ -106,7 +102,6 @@ static NSString *kIdentifier = @"kIdentifier";
 
 - (void)loadNewData {
     [self.dataSource removeAllObjects];
-    [self.urls removeAllObjects];
     @weakify(self)
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         /// 下拉时候一定要停止当前播放，不然有新数据，播放位置会错位。
@@ -131,9 +126,6 @@ static NSString *kIdentifier = @"kIdentifier";
         ZFTableData *data = [[ZFTableData alloc] init];
         [data setValuesForKeysWithDictionary:dataDic];
         [self.dataSource addObject:data];
-        NSString *URLString = [data.video_url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
-        NSURL *url = [NSURL URLWithString:URLString];
-        [self.urls addObject:url];
     }
     [self.tableView.mj_header endRefreshing];
 }
@@ -151,7 +143,6 @@ static NSString *kIdentifier = @"kIdentifier";
     if (index == self.dataSource.count-1) {
         /// 加载下一页数据
         [self requestData];
-        self.player.assetURLs = self.urls;
         [self.tableView reloadData];
     }
 }
@@ -234,9 +225,9 @@ static NSString *kIdentifier = @"kIdentifier";
 
 /// play the video
 - (void)playTheVideoAtIndexPath:(NSIndexPath *)indexPath {
-    [self.player playTheIndexPath:indexPath];
-    [self.controlView resetControlView];
     ZFTableData *data = self.dataSource[indexPath.row];
+    [self.player playTheIndexPath:indexPath assetURL:[NSURL URLWithString:data.video_url]];
+    [self.controlView resetControlView];
     [self.controlView showCoverViewWithUrl:data.thumbnail_url];
     [self.fullControlView showTitle:@"custom landscape controlView" coverURLString:data.thumbnail_url fullScreenMode:ZFFullScreenModeLandscape];
 }
@@ -276,9 +267,9 @@ static NSString *kIdentifier = @"kIdentifier";
     return _controlView;
 }
 
-- (ZFCustomControlView1 *)fullControlView {
+- (ZFCustomControlView *)fullControlView {
     if (!_fullControlView) {
-        _fullControlView = [[ZFCustomControlView1 alloc] init];
+        _fullControlView = [[ZFCustomControlView alloc] init];
     }
     return _fullControlView;
 }
@@ -288,13 +279,6 @@ static NSString *kIdentifier = @"kIdentifier";
         _dataSource = @[].mutableCopy;
     }
     return _dataSource;
-}
-
-- (NSMutableArray *)urls {
-    if (!_urls) {
-        _urls = @[].mutableCopy;
-    }
-    return _urls;
 }
 
 - (UIButton *)backBtn {

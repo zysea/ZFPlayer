@@ -21,7 +21,6 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
 
 @property (nonatomic, strong) NSMutableArray <ZFTableData *>*dataSource;
 @property (nonatomic, strong) UICollectionView *collectionView;
-@property (nonatomic, strong) NSMutableArray *urls;
 @property (nonatomic, strong) ZFPlayerController *player;
 @property (nonatomic, strong) ZFPlayerControlView *controlView;
 
@@ -43,7 +42,6 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
     /// player的tag值必须在cell里设置
     self.player = [ZFPlayerController playerWithScrollView:self.collectionView playerManager:playerManager containerViewTag:kPlayerViewTag];
     self.player.controlView = self.controlView;
-    self.player.assetURLs = self.urls;
     self.player.shouldAutoPlay = YES;
     
     @weakify(self)
@@ -53,7 +51,7 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
     
     self.player.playerDidToEnd = ^(id  _Nonnull asset) {
         @strongify(self)
-        if (self.player.playingIndexPath.row < self.urls.count - 1 && !self.player.isFullScreen) {
+        if (self.player.playingIndexPath.row < self.dataSource.count - 1 && !self.player.isFullScreen) {
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.player.playingIndexPath.row+1 inSection:0];
             [self playTheVideoAtIndexPath:indexPath scrollAnimated:YES];
         } else if (self.player.isFullScreen) {
@@ -116,7 +114,6 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
 #pragma mark - private method
 
 - (void)requestData {
-    self.urls = @[].mutableCopy;
     NSString *path = [[NSBundle mainBundle] pathForResource:@"data" ofType:@"json"];
     NSData *data = [NSData dataWithContentsOfFile:path];
     NSDictionary *rootDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
@@ -127,19 +124,17 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
         ZFTableData *data = [[ZFTableData alloc] init];
         [data setValuesForKeysWithDictionary:dataDic];
         [self.dataSource addObject:data];
-        NSURL *url = [NSURL URLWithString:data.video_url];
-        [self.urls addObject:url];
     }
 }
 
 /// play the video
 - (void)playTheVideoAtIndexPath:(NSIndexPath *)indexPath scrollAnimated:(BOOL)animated {
-    if (animated) {
-        [self.player playTheIndexPath:indexPath scrollPosition:ZFPlayerScrollViewScrollPositionCenteredVertically animated:YES];
-    } else {
-        [self.player playTheIndexPath:indexPath];
-    }
     ZFTableData *data = self.dataSource[indexPath.row];
+    if (animated) {
+        [self.player playTheIndexPath:indexPath assetURL:[NSURL URLWithString:data.video_url] scrollPosition:ZFPlayerScrollViewScrollPositionCenteredVertically animated:YES];
+    } else {
+        [self.player playTheIndexPath:indexPath assetURL:[NSURL URLWithString:data.video_url]];
+    }
     [self.controlView showTitle:data.title
                  coverURLString:data.thumbnail_url
                  fullScreenMode:ZFFullScreenModeLandscape];

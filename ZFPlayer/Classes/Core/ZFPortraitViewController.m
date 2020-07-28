@@ -129,6 +129,7 @@
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
     return self.statusBarAnimation;
 }
+
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskPortrait;
 }
