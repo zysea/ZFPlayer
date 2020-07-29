@@ -139,7 +139,7 @@ static NSString *kIdentifier = @"kIdentifier";
     [self.controlView showTitle:data.title coverURLString:data.thumbnail_url fullScreenMode:ZFFullScreenModeLandscape];
     
     if (self.tableView.contentOffset.y > self.headerView.frame.size.height) {
-        [self.player addPlayerViewToKeyWindow];
+        [self.player addPlayerViewToSmallFloatView];
     } else {
         [self.player addPlayerViewToContainerView:self.headerView.coverImageView];
     }

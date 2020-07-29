@@ -40,8 +40,7 @@ typedef NS_ENUM(NSUInteger, ZFPortraitFullScreenMode) {
     ZFPortraitFullScreenModeScaleAspectFit  // contents scaled to fit with fixed aspect. remainder is transparent
 };
 
-
-/// Full screen mode on the view
+/// Player view mode
 typedef NS_ENUM(NSUInteger, ZFRotateType) {
     ZFRotateTypeNormal,         // Normal
     ZFRotateTypeCell            // Cell
@@ -123,6 +122,7 @@ typedef NS_OPTIONS(NSUInteger, ZFDisablePortraitGestureTypes) {
 
 /// default is  UIStatusBarStyleLightContent.
 @property (nonatomic, assign) UIStatusBarStyle fullScreenStatusBarStyle;
+
 /// defalut is UIStatusBarAnimationSlide.
 @property (nonatomic, assign) UIStatusBarAnimation fullScreenStatusBarAnimation;
 
@@ -137,7 +137,7 @@ typedef NS_OPTIONS(NSUInteger, ZFDisablePortraitGestureTypes) {
 
 /// Whether allow the video orientation rotate.
 /// default is YES.
-@property (nonatomic) BOOL allowOrientationRotation;
+@property (nonatomic, assign) BOOL allowOrientationRotation;
 
 /// The support Interface Orientation,default is ZFInterfaceOrientationMaskAllButUpsideDown
 @property (nonatomic, assign) ZFInterfaceOrientationMask supportInterfaceOrientation;
@@ -149,22 +149,22 @@ typedef NS_OPTIONS(NSUInteger, ZFDisablePortraitGestureTypes) {
 - (void)removeDeviceOrientationObserver;
 
 /// Enter the fullScreen while the ZFFullScreenMode is ZFFullScreenModeLandscape.
-- (void)enterLandscapeFullScreen:(UIInterfaceOrientation)orientation animated:(BOOL)animated completion:(void(^ __nullable)(void))completion;
+- (void)rotateToOrientation:(UIInterfaceOrientation)orientation animated:(BOOL)animated;
 
 /// Enter the fullScreen while the ZFFullScreenMode is ZFFullScreenModeLandscape.
-- (void)enterLandscapeFullScreen:(UIInterfaceOrientation)orientation animated:(BOOL)animated;
-
-/// Enter the fullScreen while the ZFFullScreenMode is ZFFullScreenModePortrait.
-- (void)enterPortraitFullScreen:(BOOL)fullScreen animated:(BOOL)animated completion:(void(^ __nullable)(void))completion;
+- (void)rotateToOrientation:(UIInterfaceOrientation)orientation animated:(BOOL)animated completion:(void(^ __nullable)(void))completion;
 
 /// Enter the fullScreen while the ZFFullScreenMode is ZFFullScreenModePortrait.
 - (void)enterPortraitFullScreen:(BOOL)fullScreen animated:(BOOL)animated;
 
-/// Exit the fullScreen.
-- (void)exitFullScreenWithAnimated:(BOOL)animated completion:(void(^ __nullable)(void))completion;
+/// Enter the fullScreen while the ZFFullScreenMode is ZFFullScreenModePortrait.
+- (void)enterPortraitFullScreen:(BOOL)fullScreen animated:(BOOL)animated completion:(void(^ __nullable)(void))completion;
 
-/// Exit the fullScreen.
-- (void)exitFullScreenWithAnimated:(BOOL)animated;
+/// FullScreen mode is determined by ZFFullScreenMode.
+- (void)enterFullScreen:(BOOL)fullScreen animated:(BOOL)animated;
+
+/// FullScreen mode is determined by ZFFullScreenMode.
+- (void)enterFullScreen:(BOOL)fullScreen animated:(BOOL)animated completion:(void (^ _Nullable)(void))completion;
 
 @end
 

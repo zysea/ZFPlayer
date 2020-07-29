@@ -50,7 +50,6 @@ static NSString *kIdentifier = @"kIdentifier";
 
     @weakify(self)
     self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
-        @strongify(self)
         kAPPDelegate.allowOrentitaionRotation = isFullScreen;
     };
     

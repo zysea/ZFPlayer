@@ -410,7 +410,7 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
     [self.notification removeNotification];
     [self.orientationObserver removeDeviceOrientationObserver];
     if (self.isFullScreen && self.exitFullScreenWhenStop) {
-        [self.orientationObserver exitFullScreenWithAnimated:NO completion:^{
+        [self.orientationObserver enterFullScreen:NO animated:NO completion:^{
             [self.currentPlayerManager stop];
             [self.currentPlayerManager.view removeFromSuperview];
         }];
@@ -456,8 +456,7 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
     }
 }
 
-/// Add to the keyWindow
-- (void)addPlayerViewToKeyWindow {
+- (void)addPlayerViewToSmallFloatView {
     self.isSmallFloatViewShow = YES;
     self.smallFloatView.hidden = NO;
     [self.smallFloatView addSubview:self.currentPlayerManager.view];
@@ -725,13 +724,15 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
     [self.orientationObserver removeDeviceOrientationObserver];
 }
 
-- (void)enterLandscapeFullScreen:(UIInterfaceOrientation)orientation animated:(BOOL)animated completion:(void (^ _Nullable)(void))completion {
-    self.orientationObserver.fullScreenMode = ZFFullScreenModeLandscape;
-    [self.orientationObserver enterLandscapeFullScreen:orientation animated:animated completion:completion];
+/// Enter the fullScreen while the ZFFullScreenMode is ZFFullScreenModeLandscape.
+- (void)rotateToOrientation:(UIInterfaceOrientation)orientation animated:(BOOL)animated {
+    [self rotateToOrientation:orientation animated:animated completion:nil];
 }
 
-- (void)enterLandscapeFullScreen:(UIInterfaceOrientation)orientation animated:(BOOL)animated {
-    [self enterLandscapeFullScreen:orientation animated:animated completion:nil];
+/// Enter the fullScreen while the ZFFullScreenMode is ZFFullScreenModeLandscape.
+- (void)rotateToOrientation:(UIInterfaceOrientation)orientation animated:(BOOL)animated completion:(void(^ __nullable)(void))completion {
+    self.orientationObserver.fullScreenMode = ZFFullScreenModeLandscape;
+    [self.orientationObserver rotateToOrientation:orientation animated:animated completion:nil];
 }
 
 - (void)enterPortraitFullScreen:(BOOL)fullScreen animated:(BOOL)animated completion:(void (^ _Nullable)(void))completion {
@@ -749,7 +750,7 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
     } else {
         UIInterfaceOrientation orientation = UIInterfaceOrientationUnknown;
         orientation = fullScreen? UIInterfaceOrientationLandscapeRight : UIInterfaceOrientationPortrait;
-        [self.orientationObserver enterLandscapeFullScreen:orientation animated:animated completion:completion];
+        [self.orientationObserver rotateToOrientation:orientation animated:animated completion:completion];
     }
 }
 
@@ -1048,7 +1049,7 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
                 [self stopCurrentPlayingCell];
             }
         } else { /// add to window
-            [self addPlayerViewToKeyWindow];
+            [self addPlayerViewToSmallFloatView];
         }
     };
     
@@ -1083,7 +1084,7 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
                     [self stopCurrentPlayingCell];
                 }
             } else {  /// add to window
-                [self addPlayerViewToKeyWindow];
+                [self addPlayerViewToSmallFloatView];
             }
         }
     };
@@ -1345,6 +1346,9 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
 
 @end
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 @implementation ZFPlayerController (ZFPlayerDeprecated)
 
 - (void)updateScrollViewPlayerToCell {
@@ -1408,4 +1412,20 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
     }
 }
 
+- (void)enterLandscapeFullScreen:(UIInterfaceOrientation)orientation animated:(BOOL)animated completion:(void (^ _Nullable)(void))completion {
+    self.orientationObserver.fullScreenMode = ZFFullScreenModeLandscape;
+    [self.orientationObserver rotateToOrientation:orientation animated:animated completion:completion];
+}
+
+- (void)enterLandscapeFullScreen:(UIInterfaceOrientation)orientation animated:(BOOL)animated {
+    [self enterLandscapeFullScreen:orientation animated:animated completion:nil];
+}
+
+/// Add to the keyWindow
+- (void)addPlayerViewToKeyWindow {
+    [self addPlayerViewToSmallFloatView];
+}
+
 @end
+
+#pragma clang diagnostic pop

@@ -251,19 +251,19 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)replaceCurrentPlayerManager:(id<ZFPlayerMediaPlayback>)manager;
 
 /**
- Add video to the cell.
+ Add video to cell.
  */
 - (void)addPlayerViewToCell;
 
 /**
- Add video to the container view.
+ Add video to container view.
  */
 - (void)addPlayerViewToContainerView:(UIView *)containerView;
 
 /**
- Add to the keyWindow.
+ Add to small float view.
  */
-- (void)addPlayerViewToKeyWindow;
+- (void)addPlayerViewToSmallFloatView;
 
 /**
  Stop the current playing video and remove the playerView.
@@ -332,20 +332,19 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Enter the fullScreen while the ZFFullScreenMode is ZFFullScreenModeLandscape.
 
- @param orientation UIInterfaceOrientation
+ @param orientation is UIInterfaceOrientation.
  @param animated is animated.
- @param completion rotating completed callback.
- */
-- (void)enterLandscapeFullScreen:(UIInterfaceOrientation)orientation animated:(BOOL)animated completion:(void(^ __nullable)(void))completion;
+*/
+- (void)rotateToOrientation:(UIInterfaceOrientation)orientation animated:(BOOL)animated;
 
 /**
  Enter the fullScreen while the ZFFullScreenMode is ZFFullScreenModeLandscape.
 
- @param orientation UIInterfaceOrientation
+ @param orientation is UIInterfaceOrientation.
  @param animated is animated.
- */
-- (void)enterLandscapeFullScreen:(UIInterfaceOrientation)orientation animated:(BOOL)animated;
-
+ @param completion rotating completed callback.
+*/
+- (void)rotateToOrientation:(UIInterfaceOrientation)orientation animated:(BOOL)animated completion:(void(^ __nullable)(void))completion;
 
 /**
  Enter the fullScreen while the ZFFullScreenMode is ZFFullScreenModePortrait.
@@ -581,6 +580,28 @@ NS_ASSUME_NONNULL_BEGIN
  @param completionHandler Scroll completion callback.
  */
 - (void)playTheIndexPath:(NSIndexPath *)indexPath scrollToTop:(BOOL)scrollToTop completionHandler:(void (^ __nullable)(void))completionHandler  __attribute__((deprecated("use `playTheIndexPath:scrollPosition:animated:completionHandler:` instead.")));
+
+/**
+ Enter the fullScreen while the ZFFullScreenMode is ZFFullScreenModeLandscape.
+
+ @param orientation UIInterfaceOrientation
+ @param animated is animated.
+ @param completion rotating completed callback.
+ */
+- (void)enterLandscapeFullScreen:(UIInterfaceOrientation)orientation animated:(BOOL)animated completion:(void(^ __nullable)(void))completion __attribute__((deprecated("use `rotateToOrientation:animated:completion:` instead.")));
+
+/**
+ Enter the fullScreen while the ZFFullScreenMode is ZFFullScreenModeLandscape.
+
+ @param orientation UIInterfaceOrientation
+ @param animated is animated.
+ */
+- (void)enterLandscapeFullScreen:(UIInterfaceOrientation)orientation animated:(BOOL)animated __attribute__((deprecated("use `rotateToOrientation:animated:` instead.")));
+
+/**
+ Add to the keyWindow.
+ */
+- (void)addPlayerViewToKeyWindow __attribute__((deprecated("use `addPlayerViewToSmallFloatView` instead.")));;
 
 @end
 

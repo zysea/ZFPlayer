@@ -192,7 +192,7 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
     } else {
         orientation = UIInterfaceOrientationLandscapeRight;
     }
-    [self.player enterLandscapeFullScreen:orientation animated:YES completion:nil];
+    [self.player rotateToOrientation:orientation animated:YES completion:nil];
 }
 
 #pragma mark UICollectionViewDataSource

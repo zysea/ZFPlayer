@@ -65,7 +65,7 @@
 
 - (IBAction)landscapeClick {
     self.controlView.fullScreenMode = ZFFullScreenModeLandscape;
-    [self.player enterLandscapeFullScreen:UIInterfaceOrientationLandscapeRight animated:YES completion:nil];
+    [self.player rotateToOrientation:UIInterfaceOrientationLandscapeRight animated:YES completion:nil];
 }
 
 - (IBAction)portraitClick {

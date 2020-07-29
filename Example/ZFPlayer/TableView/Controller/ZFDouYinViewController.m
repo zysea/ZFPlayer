@@ -191,7 +191,7 @@ static NSString *kIdentifier = @"kIdentifier";
     } else {
         orientation = UIInterfaceOrientationLandscapeRight;
     }
-    [self.player enterLandscapeFullScreen:orientation animated:YES completion:nil];
+    [self.player rotateToOrientation:orientation animated:YES completion:nil];
 }
 
 #pragma mark - UITableViewDataSource

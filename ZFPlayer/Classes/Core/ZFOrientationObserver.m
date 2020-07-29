@@ -169,19 +169,19 @@
     switch (currentOrientation) {
         case UIInterfaceOrientationPortrait: {
             if ([self _isSupportedPortrait]) {
-                [self enterLandscapeFullScreen:UIInterfaceOrientationPortrait animated:YES];
+                [self rotateToOrientation:UIInterfaceOrientationPortrait animated:YES];
             }
         }
             break;
         case UIInterfaceOrientationLandscapeLeft: {
             if ([self _isSupportedLandscapeLeft]) {
-                [self enterLandscapeFullScreen:UIInterfaceOrientationLandscapeLeft animated:YES];
+                [self rotateToOrientation:UIInterfaceOrientationLandscapeLeft animated:YES];
             }
         }
             break;
         case UIInterfaceOrientationLandscapeRight: {
             if ([self _isSupportedLandscapeRight]) {
-                [self enterLandscapeFullScreen:UIInterfaceOrientationLandscapeRight animated:YES];
+                [self rotateToOrientation:UIInterfaceOrientationLandscapeRight animated:YES];
             }
         }
             break;
@@ -203,7 +203,11 @@
 
 #pragma mark - public
 
-- (void)enterLandscapeFullScreen:(UIInterfaceOrientation)orientation animated:(BOOL)animated completion:(void(^ __nullable)(void))completion {
+- (void)rotateToOrientation:(UIInterfaceOrientation)orientation animated:(BOOL)animated {
+    [self rotateToOrientation:orientation animated:animated completion:nil];
+}
+
+- (void)rotateToOrientation:(UIInterfaceOrientation)orientation animated:(BOOL)animated completion:(void(^ __nullable)(void))completion {
     if (self.fullScreenMode == ZFFullScreenModePortrait) return;
     if (UIInterfaceOrientationIsLandscape(orientation)) {
         if (!self.fullScreen) {
@@ -232,8 +236,8 @@
     [self interfaceOrientation:orientation];
 }
 
-- (void)enterLandscapeFullScreen:(UIInterfaceOrientation)orientation animated:(BOOL)animated {
-    [self enterLandscapeFullScreen:orientation animated:animated completion:nil];
+- (void)enterPortraitFullScreen:(BOOL)fullScreen animated:(BOOL)animated {
+    [self enterPortraitFullScreen:fullScreen animated:animated completion:nil];
 }
 
 - (void)enterPortraitFullScreen:(BOOL)fullScreen animated:(BOOL)animated completion:(void(^ __nullable)(void))completion {
@@ -259,20 +263,18 @@
     }
 }
 
-- (void)enterPortraitFullScreen:(BOOL)fullScreen animated:(BOOL)animated {
-    [self enterPortraitFullScreen:fullScreen animated:animated completion:nil];
+- (void)enterFullScreen:(BOOL)fullScreen animated:(BOOL)animated {
+    [self enterFullScreen:fullScreen animated:animated];
 }
 
-- (void)exitFullScreenWithAnimated:(BOOL)animated completion:(void(^ __nullable)(void))completion {
-    if (self.fullScreenMode == ZFFullScreenModeLandscape) {
-        [self enterLandscapeFullScreen:UIInterfaceOrientationPortrait animated:animated completion:completion];
-    } else if (self.fullScreenMode == ZFFullScreenModePortrait) {
-        [self enterPortraitFullScreen:NO animated:animated completion:completion];
+- (void)enterFullScreen:(BOOL)fullScreen animated:(BOOL)animated completion:(void (^ _Nullable)(void))completion {
+    if (self.fullScreenMode == ZFFullScreenModePortrait) {
+        [self enterPortraitFullScreen:fullScreen animated:animated completion:completion];
+    } else {
+        UIInterfaceOrientation orientation = UIInterfaceOrientationUnknown;
+        orientation = fullScreen? UIInterfaceOrientationLandscapeRight : UIInterfaceOrientationPortrait;
+        [self rotateToOrientation:orientation animated:animated completion:completion];
     }
-}
-
-- (void)exitFullScreenWithAnimated:(BOOL)animated {
-    [self exitFullScreenWithAnimated:animated completion:nil];
 }
 
 #pragma mark - private

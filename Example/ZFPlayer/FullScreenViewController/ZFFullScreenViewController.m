@@ -31,7 +31,7 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     @weakify(self)
     self.controlView.backBtnClickCallback = ^{
         @strongify(self)
-        [self.player enterLandscapeFullScreen:UIInterfaceOrientationPortrait animated:NO completion:nil];
+        [self.player rotateToOrientation:UIInterfaceOrientationPortrait animated:NO completion:nil];
         [self.player stop];
         [self dismissViewControllerAnimated:NO completion:nil];
     };
@@ -41,7 +41,7 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     self.player = [[ZFPlayerController alloc] initWithPlayerManager:playerManager containerView:self.view];
     self.player.controlView = self.controlView;
     self.player.orientationObserver.supportInterfaceOrientation = ZFInterfaceOrientationMaskLandscape;
-    [self.player enterLandscapeFullScreen:UIInterfaceOrientationLandscapeRight animated:NO completion:nil];
+    [self.player rotateToOrientation:UIInterfaceOrientationLandscapeRight animated:NO completion:nil];
 
     playerManager.assetURL = [NSURL URLWithString:@"https://www.apple.com/105/media/us/iphone-x/2017/01df5b43-28e4-4848-bf20-490c34a926a7/films/feature/iphone-x-feature-tpl-cc-us-20170912_1280x720h.mp4"];
 }
