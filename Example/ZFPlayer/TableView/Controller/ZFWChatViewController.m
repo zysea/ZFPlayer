@@ -60,7 +60,9 @@ static NSString *kIdentifier = @"kIdentifier";
     /// 竖屏的全屏
     self.player.orientationObserver.fullScreenMode = ZFFullScreenModePortrait;
     /// 隐藏全屏的状态栏
-    self.player.statusBarHidden = YES;
+    self.player.orientationObserver.fullScreenStatusBarHidden = YES;
+    self.player.orientationObserver.fullScreenStatusBarAnimation = UIStatusBarAnimationNone;
+
     /// 全屏的填充模式（全屏填充、按视频大小填充）
     self.player.orientationObserver.portraitFullScreenMode = ZFPortraitFullScreenModeScaleAspectFit;
     /// 禁用竖屏全屏的手势（点击、拖动手势）

@@ -209,6 +209,7 @@
 
 - (void)rotateToOrientation:(UIInterfaceOrientation)orientation animated:(BOOL)animated completion:(void(^ __nullable)(void))completion {
     if (self.fullScreenMode == ZFFullScreenModePortrait) return;
+    _currentOrientation = orientation;
     if (UIInterfaceOrientationIsLandscape(orientation)) {
         if (!self.fullScreen) {
             UIView *containerView = nil;
@@ -500,16 +501,26 @@
 }
 
 - (void)setView:(ZFPlayerView *)view {
+    if (view == _view) {
+        return;
+    }
     _view = view;
     if (self.fullScreenMode == ZFFullScreenModeLandscape) {
         self.window.landscapeViewController.contentView = view;
+    } else if (self.fullScreenMode == ZFFullScreenModePortrait) {
+        self.portraitViewController.contentView = view;
     }
 }
 
 - (void)setContainerView:(UIView *)containerView {
+    if (containerView == _containerView) {
+          return;
+      }
     _containerView = containerView;
     if (self.fullScreenMode == ZFFullScreenModeLandscape) {
         self.window.landscapeViewController.containerView = containerView;
+    } else if (self.fullScreenMode == ZFFullScreenModePortrait) {
+        self.portraitViewController.containerView = containerView;
     }
 }
 

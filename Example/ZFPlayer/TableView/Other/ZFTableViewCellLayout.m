@@ -114,7 +114,7 @@
         
         min_x = margin;
         min_y = CGRectGetMaxY(self.videoRect) + margin;
-        min_w = CGRectGetWidth(self.videoRect) - 2*margin;
+        min_w = min_view_w - 2*margin;
         min_h = [data.title textSizeWithFont:[UIFont systemFontOfSize:15] numberOfLines:0 constrainedWidth:min_w].height;
         self.titleLabelRect = CGRectMake(min_x, min_y, min_w, min_h);
         

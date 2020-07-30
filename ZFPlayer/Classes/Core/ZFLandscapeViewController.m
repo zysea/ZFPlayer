@@ -76,9 +76,9 @@
         [self.contentView layoutIfNeeded];
     } completion:^(id<UIViewControllerTransitionCoordinatorContext> _Nonnull context) {
         [CATransaction commit];
-        self.rotating = NO;
         self.disableAnimations = NO;
         [self.delegate ls_didRotateFromOrientation:self.currentOrientation];
+        self.rotating = NO;
     }];
 }
 

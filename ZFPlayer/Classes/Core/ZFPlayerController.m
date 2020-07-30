@@ -410,7 +410,9 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
     [self.notification removeNotification];
     [self.orientationObserver removeDeviceOrientationObserver];
     if (self.isFullScreen && self.exitFullScreenWhenStop) {
+        @weakify(self)
         [self.orientationObserver enterFullScreen:NO animated:NO completion:^{
+            @strongify(self)
             [self.currentPlayerManager stop];
             [self.currentPlayerManager.view removeFromSuperview];
         }];
@@ -702,9 +704,11 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
     if (viewControllerDisappear) {
         [self removeDeviceOrientationObserver];
         if (self.currentPlayerManager.isPlaying) self.pauseByEvent = YES;
+        if (self.isSmallFloatViewShow) self.smallFloatView.hidden = YES;
     } else {
-        if (self.isPauseByEvent) self.pauseByEvent = NO;
         [self addDeviceOrientationObserver];
+        if (self.isPauseByEvent) self.pauseByEvent = NO;
+        if (self.isSmallFloatViewShow) self.smallFloatView.hidden = NO;
     }
 }
 
@@ -1049,7 +1053,9 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
                 [self stopCurrentPlayingCell];
             }
         } else { /// add to window
-            [self addPlayerViewToSmallFloatView];
+            if (!self.isSmallFloatViewShow) {
+                [self addPlayerViewToSmallFloatView];
+            }
         }
     };
     
@@ -1062,9 +1068,13 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
         }
         if (!self.stopWhileNotVisible && playerApperaPercent >= self.playerApperaPercent) {
             if (self.containerType == ZFPlayerContainerTypeView) {
-                [self addPlayerViewToContainerView:self.containerView];
+                if (self.isSmallFloatViewShow) {
+                    [self addPlayerViewToContainerView:self.containerView];
+                }
             } else if (self.containerType == ZFPlayerContainerTypeCell) {
-                [self addPlayerViewToCell];
+                if (self.isSmallFloatViewShow) {
+                    [self addPlayerViewToCell];
+                }
             }
         }
     };
@@ -1118,8 +1128,6 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
 - (void)setPlayingIndexPath:(NSIndexPath *)playingIndexPath {
     objc_setAssociatedObject(self, @selector(playingIndexPath), playingIndexPath, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     if (playingIndexPath) {
-        // Stop the current playing cell video.
-        [self stop];
         self.isSmallFloatViewShow = NO;
         if (self.smallFloatView) self.smallFloatView.hidden = YES;
         

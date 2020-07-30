@@ -145,10 +145,8 @@ static NSString *kIdentifier = @"kIdentifier";
     /// 到详情页
     ZFPlayerDetailViewController *detailVC = [ZFPlayerDetailViewController new];
     detailVC.player = self.player;
-    @weakify(self)
     /// 详情页返回的回调
     detailVC.detailVCPopCallback = ^{
-        @strongify(self)
         if (self.player.currentPlayerManager.playState == ZFPlayerPlayStatePlayStopped) {
             [self.player stopCurrentPlayingCell];
         } else {
@@ -157,7 +155,6 @@ static NSString *kIdentifier = @"kIdentifier";
     };
     /// 详情页点击播放的回调
     detailVC.detailVCPlayCallback = ^{
-        @strongify(self)
         [self zf_playTheVideoAtIndexPath:indexPath];
     };
     [self.navigationController pushViewController:detailVC animated:YES];

@@ -51,14 +51,11 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
     
     self.player.playerDidToEnd = ^(id  _Nonnull asset) {
         @strongify(self)
-        if (self.player.playingIndexPath.row < self.dataSource.count - 1 && !self.player.isFullScreen) {
+        if (self.player.playingIndexPath.row < self.dataSource.count - 1) {
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.player.playingIndexPath.row+1 inSection:0];
             [self playTheVideoAtIndexPath:indexPath scrollAnimated:YES];
-        } else if (self.player.isFullScreen) {
-            [self.player enterFullScreen:NO animated:YES];
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.player.orientationObserver.duration * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self.player stopCurrentPlayingCell];
-            });
+        } else {
+            [self.player.currentPlayerManager replay];
         }
     };
     
