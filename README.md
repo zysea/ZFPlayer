@@ -14,7 +14,6 @@
 
 [中文说明](https://www.jianshu.com/p/90e55deb4d51)
 
-[ZFPlayer 4.0](https://github.com/renzifeng/ZFPlayer/tree/zf_rotation) pre-release version, interested partners can test and feedback the bug to me.
 
 Before this, you used ZFPlayer, are you worried about encapsulating avplayer instead of using or modifying the source code to support other players, the control layer is not easy to customize, and so on? In order to solve these problems, I have wrote this player template, for player SDK you can conform the `ZFPlayerMediaPlayback` protocol, for control view you can conform the `ZFPlayerMediaControl` protocol, can custom the player and control view.
 
@@ -111,9 +110,6 @@ player.controlView = controlView;
 - QQ群: 123449304
 
 ![](https://upload-images.jianshu.io/upload_images/635942-a9fbbb2710de8eff.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-## 👨🏼‍💻 寻求靠谱iOS岗
-作者6年iOS开发经验，想寻求一个不错岗位，有合适的岗位可以[发邮件](zifeng1300@gmail.com)给我，base北京。
 
 ## ❤️ Contributors
 
