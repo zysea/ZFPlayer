@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
     s.author           = { 'renzifeng' => 'zifeng1300@gmail.com' }
     s.source           = { :git => 'https://github.com/renzifeng/ZFPlayer.git', :tag => s.version.to_s }
     s.social_media_url = 'http://weibo.com/zifeng1300'
-    s.ios.deployment_target = '7.0'
+    s.ios.deployment_target = '8.0'
     s.requires_arc = true
     s.static_framework = true
     s.default_subspec = 'Core'
@@ -44,7 +44,6 @@ Pod::Spec.new do |s|
         ijkplayer.public_header_files = 'ZFPlayer/Classes/ijkplayer/*.h'
         ijkplayer.dependency 'ZFPlayer/Core'
         ijkplayer.dependency 'IJKMediaFramework'
-        ijkplayer.ios.deployment_target = '8.0'
     end
     
     s.subspec 'KSYMediaPlayer' do |ksyMediaPlayer|

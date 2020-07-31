@@ -420,9 +420,7 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
         [self.currentPlayerManager stop];
         [self.currentPlayerManager.view removeFromSuperview];
     }
-    if (self.scrollView) {
-        self.scrollView.zf_stopPlay = YES;
-    }
+    if (self.scrollView) self.scrollView.zf_stopPlay = YES;
 }
 
 - (void)replaceCurrentPlayerManager:(id<ZFPlayerMediaPlayback>)playerManager {
