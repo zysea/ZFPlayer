@@ -7,12 +7,12 @@
 //
 
 #import "ZFMixViewController.h"
-#import <ZFPlayer/ZFPlayer.h>
 #import <ZFPlayer/ZFAVPlayerManager.h>
 #import <ZFPlayer/ZFIJKPlayerManager.h>
 #import <ZFPlayer/KSMediaPlayerManager.h>
 #import <ZFPlayer/ZFPlayerControlView.h>
 #import <ZFPlayer/UIView+ZFFrame.h>
+#import <ZFPlayer/ZFPlayerConst.h>
 #import "ZFPlayerDetailViewController.h"
 #import "ZFTableViewCell.h"
 #import "ZFTableData.h"
@@ -57,14 +57,7 @@ static NSString *kDouYinIdentifier = @"douYinIdentifier";
     };
     
     self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
-        @strongify(self)
         kAPPDelegate.allowOrentitaionRotation = isFullScreen;
-        [self setNeedsStatusBarAppearanceUpdate];
-        if (!isFullScreen) {
-            /// 解决导航栏上移问题
-            self.navigationController.navigationBar.zf_height = KNavBarHeight;
-        }
-        self.tableView.scrollsToTop = !isFullScreen;
     };
     
     /// 停止的时候找出最合适的播放(只能找到设置了tag值cell)
@@ -120,29 +113,19 @@ static NSString *kDouYinIdentifier = @"douYinIdentifier";
 }
 
 - (BOOL)shouldAutorotate {
-    return self.player.shouldAutorotate;
+    return NO;
 }
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    if (self.player.isFullScreen && self.player.orientationObserver.fullScreenMode == ZFFullScreenModeLandscape) {
-        return UIInterfaceOrientationMaskLandscape;
-    }
     return UIInterfaceOrientationMaskPortrait;
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
-    if (self.player.isFullScreen) {
-        return UIStatusBarStyleLightContent;
-    }
     return UIStatusBarStyleDefault;
 }
 
 - (BOOL)prefersStatusBarHidden {
-    return self.player.isStatusBarHidden;
-}
-
-- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
-    return UIStatusBarAnimationSlide;
+    return NO;
 }
 
 #pragma mark - UIScrollViewDelegate   列表播放必须实现
@@ -199,15 +182,12 @@ static NSString *kDouYinIdentifier = @"douYinIdentifier";
     /// 到详情页
     ZFPlayerDetailViewController *detailVC = [ZFPlayerDetailViewController new];
     detailVC.player = self.player;
-    @weakify(self)
     /// 详情页返回的回调
     detailVC.detailVCPopCallback = ^{
-        @strongify(self)
         [self.player addPlayerViewToCell];
     };
     /// 详情页点击播放的回调
     detailVC.detailVCPlayCallback = ^{
-        @strongify(self)
         [self zf_playTheVideoAtIndexPath:indexPath];
     };
     [self.navigationController pushViewController:detailVC animated:YES];

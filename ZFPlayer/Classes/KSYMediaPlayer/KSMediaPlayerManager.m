@@ -25,10 +25,10 @@
 #import "KSMediaPlayerManager.h"
 #if __has_include(<ZFPlayer/ZFPlayer.h>)
 #import <ZFPlayer/ZFPlayer.h>
-#import <ZFPlayer/ZFPlayerView.h>
+#import <ZFPlayer/ZFPlayerConst.h>
 #else
 #import "ZFPlayer.h"
-#import "ZFPlayerView.h"
+#import "ZFPlayerConst.h"
 #endif
 #if __has_include(<KSYMediaPlayer/KSYMediaPlayer.h>)
 
@@ -163,10 +163,13 @@
     [self.player prepareToPlay];
     [self addPlayerNotification];
     
-    [self.view insertSubview:self.player.view atIndex:2];
-    self.player.view.backgroundColor = [UIColor clearColor];
-    self.player.view.frame = self.view.bounds;
-    self.player.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//    [self.view insertSubview:self.player.view atIndex:2];
+//    self.player.view.backgroundColor = [UIColor clearColor];
+//    self.player.view.frame = self.view.bounds;
+//    self.player.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
+    self.view.playerView = self.player.view;
+
     self.scalingMode = _scalingMode;
     self.player.controlStyle = MPMovieControlStyleNone;
 }
@@ -277,7 +280,8 @@
 
 /// 视频的尺寸变化了
 - (void)sizeAvailableChange:(NSNotification *)notify {
-    self->_presentationSize = self.player.naturalSize;
+    self.presentationSize = self.player.naturalSize;
+    self.view.presentationSize = self.presentationSize;
     if (self.presentationSizeChanged) {
         self.presentationSizeChanged(self, self->_presentationSize);
     }
@@ -374,6 +378,7 @@
 
 - (void)setScalingMode:(ZFPlayerScalingMode)scalingMode {
     _scalingMode = scalingMode;
+    self.view.scalingMode = scalingMode;
     switch (scalingMode) {
         case ZFPlayerScalingModeNone:
             self.player.scalingMode = MPMovieScalingModeNone;
@@ -389,6 +394,14 @@
             break;
         default:
             break;
+    }
+}
+
+- (void)setPresentationSize:(CGSize)presentationSize {
+    _presentationSize = presentationSize;
+    self.view.presentationSize = presentationSize;
+    if (self.presentationSizeChanged) {
+        self.presentationSizeChanged(self, self.presentationSize);
     }
 }
 

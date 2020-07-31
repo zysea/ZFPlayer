@@ -9,11 +9,11 @@
 #import "ZFHorizontalCollectionViewController.h"
 #import "ZFCollectionViewCell.h"
 #import "ZFTableData.h"
-#import <ZFPlayer/ZFPlayer.h>
 #import <ZFPlayer/ZFAVPlayerManager.h>
 #import <ZFPlayer/ZFPlayerControlView.h>
 #import <ZFPlayer/KSMediaPlayerManager.h>
 #import <ZFPlayer/UIView+ZFFrame.h>
+#import <ZFPlayer/ZFPlayerConst.h>
 
 static NSString * const reuseIdentifier = @"collectionViewCell";
 
@@ -21,7 +21,6 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
 
 @property (nonatomic, strong) NSMutableArray <ZFTableData *>*dataSource;
 @property (nonatomic, strong) UICollectionView *collectionView;
-@property (nonatomic, strong) NSMutableArray *urls;
 @property (nonatomic, strong) ZFPlayerController *player;
 @property (nonatomic, strong) ZFPlayerControlView *controlView;
 @property (nonatomic, strong) UILabel *markLabel;
@@ -43,7 +42,6 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
     /// player的tag值必须在cell里设置
     self.player = [ZFPlayerController playerWithScrollView:self.collectionView playerManager:playerManager containerViewTag:kPlayerViewTag];
     self.player.controlView = self.controlView;
-    self.player.assetURLs = self.urls;
     self.player.shouldAutoPlay = YES;
     self.player.disablePanMovingDirection = ZFPlayerDisablePanMovingDirectionAll;
     /// 1.0是消失100%时候
@@ -52,8 +50,7 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
     @weakify(self)
     self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
         @strongify(self)
-        [self setNeedsStatusBarAppearanceUpdate];
-        self.collectionView.scrollsToTop = !isFullScreen;
+        kAPPDelegate.allowOrentitaionRotation = isFullScreen;
         if (isFullScreen) {
             self.player.disablePanMovingDirection = ZFPlayerDisablePanMovingDirectionNone;
         } else {
@@ -101,25 +98,16 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
-    if (self.player.isFullScreen) {
-        return UIStatusBarStyleLightContent;
-    }
     return UIStatusBarStyleDefault;
 }
 
 - (BOOL)prefersStatusBarHidden {
-    /// 如果只是支持iOS9+ 那直接return NO即可，这里为了适配iOS8
-    return self.player.isStatusBarHidden;
-}
-
-- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
-    return UIStatusBarAnimationSlide;
+    return NO;
 }
 
 #pragma mark - private method
 
 - (void)requestData {
-    self.urls = @[].mutableCopy;
     NSString *path = [[NSBundle mainBundle] pathForResource:@"data" ofType:@"json"];
     NSData *data = [NSData dataWithContentsOfFile:path];
     NSDictionary *rootDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
@@ -130,15 +118,13 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
         ZFTableData *data = [[ZFTableData alloc] init];
         [data setValuesForKeysWithDictionary:dataDic];
         [self.dataSource addObject:data];
-        NSURL *url = [NSURL URLWithString:data.video_url];
-        [self.urls addObject:url];
     }
 }
 
 /// play the video
 - (void)playTheVideoAtIndexPath:(NSIndexPath *)indexPath {
-    [self.player playTheIndexPath:indexPath];
     ZFTableData *data = self.dataSource[indexPath.row];
+    [self.player playTheIndexPath:indexPath assetURL:[NSURL URLWithString:data.video_url]];
     [self.controlView showTitle:data.title
                  coverURLString:data.thumbnail_url
                  fullScreenMode:ZFFullScreenModeLandscape];

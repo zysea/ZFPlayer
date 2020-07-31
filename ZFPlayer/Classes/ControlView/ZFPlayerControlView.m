@@ -32,10 +32,11 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import "ZFVolumeBrightnessView.h"
 #if __has_include(<ZFPlayer/ZFPlayer.h>)
-#import <ZFPlayer/ZFPlayer.h>
+#import <ZFPlayer/ZFPlayerConst.h>
 #else
-#import "ZFPlayer.h"
+#import "ZFPlayerConst.h"
 #endif
+
 
 @interface ZFPlayerControlView () <ZFSliderViewDelegate>
 /// 竖屏控制层的View
@@ -56,8 +57,6 @@
 @property (nonatomic, strong) UIButton *failBtn;
 /// 底部播放进度
 @property (nonatomic, strong) ZFSliderView *bottomPgrogress;
-/// 封面图
-@property (nonatomic, strong) UIImageView *coverImageView;
 /// 是否显示了控制层
 @property (nonatomic, assign, getter=isShowing) BOOL showing;
 /// 是否播放结束
@@ -109,7 +108,7 @@
     CGFloat min_h = 0;
     CGFloat min_view_w = self.zf_width;
     CGFloat min_view_h = self.zf_height;
-    
+
     self.portraitControlView.frame = self.bounds;
     self.landScapeControlView.frame = self.bounds;
     self.floatControlView.frame = self.bounds;
@@ -291,7 +290,8 @@
     [self setNeedsDisplay];
     [self.portraitControlView showTitle:title fullScreenMode:fullScreenMode];
     [self.landScapeControlView showTitle:title fullScreenMode:fullScreenMode];
-    [self.coverImageView setImageWithURLString:coverUrl placeholder:placeholder];
+    /// 这里直接设置播放器视图里的coverImageView
+    [self.player.currentPlayerManager.view.coverImageView setImageWithURLString:coverUrl placeholder:placeholder];
     [self.bgImgView setImageWithURLString:coverUrl placeholder:placeholder];
     if (self.prepareShowControlView) {
         [self showControlViewWithAnimated:NO];
@@ -627,13 +627,9 @@
     /// 解决播放时候黑屏闪一下问题
     [player.currentPlayerManager.view insertSubview:self.bgImgView atIndex:0];
     [self.bgImgView addSubview:self.effectView];
-    [player.currentPlayerManager.view insertSubview:self.coverImageView atIndex:1];
-    self.coverImageView.frame = player.currentPlayerManager.view.bounds;
-    self.coverImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.bgImgView.frame = player.currentPlayerManager.view.bounds;
     self.bgImgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.effectView.frame = self.bgImgView.bounds;
-    self.coverImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 }
 
 - (void)setSeekToPlay:(BOOL)seekToPlay {
@@ -649,6 +645,13 @@
     } else {
         self.bgImgView.hidden = YES;
     }
+}
+
+- (void)setFullScreenMode:(ZFFullScreenMode)fullScreenMode {
+    _fullScreenMode = fullScreenMode;
+    self.portraitControlView.fullScreenMode = fullScreenMode;
+    self.landScapeControlView.fullScreenMode = fullScreenMode;
+    self.player.orientationObserver.fullScreenMode = fullScreenMode;
 }
 
 #pragma mark - getter
@@ -797,15 +800,6 @@
         _bottomPgrogress.isHideSliderBlock = NO;
     }
     return _bottomPgrogress;
-}
-
-- (UIImageView *)coverImageView {
-    if (!_coverImageView) {
-        _coverImageView = [[UIImageView alloc] init];
-        _coverImageView.userInteractionEnabled = YES;
-        _coverImageView.contentMode = UIViewContentModeScaleAspectFit;
-    }
-    return _coverImageView;
 }
 
 - (ZFSmallFloatControlView *)floatControlView {

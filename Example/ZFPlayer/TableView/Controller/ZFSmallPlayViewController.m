@@ -7,12 +7,12 @@
 //
 
 #import "ZFSmallPlayViewController.h"
-#import <ZFPlayer/ZFPlayer.h>
 #import <ZFPlayer/ZFAVPlayerManager.h>
 #import <ZFPlayer/ZFPlayerControlView.h>
 #import <ZFPlayer/ZFIJKPlayerManager.h>
 #import <ZFPlayer/KSMediaPlayerManager.h>
 #import <ZFPlayer/UIView+ZFFrame.h>
+#import <ZFPlayer/ZFPlayerConst.h>
 #import "ZFPlayerDetailViewController.h"
 #import "ZFUtilities.h"
 #import "ZFTableViewCell.h"
@@ -27,7 +27,6 @@ static NSString *kIdentifier = @"kIdentifier";
 @property (nonatomic, strong) ZFPlayerController *player;
 @property (nonatomic, strong) ZFPlayerControlView *controlView;
 @property (nonatomic, strong) NSMutableArray *dataSource;
-@property (nonatomic, strong) NSMutableArray *urls;
 @property (nonatomic, strong) UIActivityIndicatorView *activity;
 
 @end
@@ -44,6 +43,8 @@ static NSString *kIdentifier = @"kIdentifier";
     
     /// playerManager
     ZFAVPlayerManager *playerManager = [[ZFAVPlayerManager alloc] init];
+//    KSMediaPlayerManager *playerManager = [[KSMediaPlayerManager alloc] init];
+//    ZFIJKPlayerManager *playerManager = [[ZFIJKPlayerManager alloc] init];
     
     /// player的tag值必须在cell里设置
     self.player = [ZFPlayerController playerWithScrollView:self.tableView playerManager:playerManager containerViewTag:kPlayerViewTag];
@@ -58,14 +59,7 @@ static NSString *kIdentifier = @"kIdentifier";
 
     @weakify(self)
     self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
-        @strongify(self)
         kAPPDelegate.allowOrentitaionRotation = isFullScreen;
-        [self setNeedsStatusBarAppearanceUpdate];
-        if (!isFullScreen) {
-            /// 解决导航栏上移问题
-            self.navigationController.navigationBar.zf_height = KNavBarHeight;
-        }
-        self.tableView.scrollsToTop = !isFullScreen;
     };
     
     self.player.playerDidToEnd = ^(id  _Nonnull asset) {
@@ -100,8 +94,6 @@ static NSString *kIdentifier = @"kIdentifier";
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-//    self.tableView.delegate = nil;
-//    [self.player stopCurrentPlayingCell];
     self.player.viewControllerDisappear = YES;
 }
 
@@ -121,7 +113,6 @@ static NSString *kIdentifier = @"kIdentifier";
 }
 
 - (void)requestData {
-    self.urls = @[].mutableCopy;
     [self.activity startAnimating];
     @weakify(self)
     /// 模拟网络请求
@@ -138,11 +129,7 @@ static NSString *kIdentifier = @"kIdentifier";
             [data setValuesForKeysWithDictionary:dataDic];
             ZFTableViewCellLayout *layout = [[ZFTableViewCellLayout alloc] initWithData:data];
             [self.dataSource addObject:layout];
-            NSString *URLString = [data.video_url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
-            NSURL *url = [NSURL URLWithString:URLString];
-            [self.urls addObject:url];
         }
-        self.player.assetURLs = self.urls;
         [self.tableView reloadData];
         
         /// 找到可播放的cell
@@ -159,30 +146,19 @@ static NSString *kIdentifier = @"kIdentifier";
 }
 
 - (BOOL)shouldAutorotate {
-    return self.player.shouldAutorotate;
+    return NO;
 }
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    if (self.player.isFullScreen && self.player.orientationObserver.fullScreenMode == ZFFullScreenModeLandscape) {
-        return UIInterfaceOrientationMaskLandscape;
-    }
     return UIInterfaceOrientationMaskPortrait;
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
-    if (self.player.isFullScreen) {
-        return UIStatusBarStyleLightContent;
-    }
     return UIStatusBarStyleDefault;
 }
 
 - (BOOL)prefersStatusBarHidden {
-    /// 如果只是支持iOS9+ 那直接return NO即可，这里为了适配iOS8
-    return self.player.isStatusBarHidden;
-}
-
-- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
-    return UIStatusBarAnimationSlide;
+    return NO;
 }
 
 #pragma mark - UIScrollViewDelegate 列表播放必须实现
@@ -233,15 +209,12 @@ static NSString *kIdentifier = @"kIdentifier";
     /// 到详情页
     ZFPlayerDetailViewController *detailVC = [ZFPlayerDetailViewController new];
     detailVC.player = self.player;
-    @weakify(self)
     /// 详情页返回的回调
     detailVC.detailVCPopCallback = ^{
-        @strongify(self)
         [self.player addPlayerViewToCell];
     };
     /// 详情页点击播放的回调
     detailVC.detailVCPlayCallback = ^{
-        @strongify(self)
         [self zf_playTheVideoAtIndexPath:indexPath];
     };
     [self.navigationController pushViewController:detailVC animated:YES];
@@ -262,8 +235,8 @@ static NSString *kIdentifier = @"kIdentifier";
 
 /// play the video
 - (void)playTheVideoAtIndexPath:(NSIndexPath *)indexPath {
-    [self.player playTheIndexPath:indexPath];
     ZFTableViewCellLayout *layout = self.dataSource[indexPath.row];
+    [self.player playTheIndexPath:indexPath assetURL:[NSURL URLWithString:layout.data.video_url]];
     [self.controlView showTitle:layout.data.title
                  coverURLString:layout.data.thumbnail_url
                  fullScreenMode:layout.isVerticalVideo?ZFFullScreenModePortrait:ZFFullScreenModeLandscape];
