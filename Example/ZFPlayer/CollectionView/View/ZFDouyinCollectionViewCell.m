@@ -145,6 +145,11 @@
     _data = data;
     [self.coverImageView setImageWithURLString:data.thumbnail_url placeholder:[UIImage imageNamed:@"loading_bgView"]];
     self.titleLabel.text = data.title;
+    if (data.video_width > data.video_height) { /// 横屏视频才支持旋转
+        self.rotation.hidden = NO;
+    } else {
+        self.rotation.hidden = YES;
+    }
 }
 
 - (UIImageView *)coverImageView {
