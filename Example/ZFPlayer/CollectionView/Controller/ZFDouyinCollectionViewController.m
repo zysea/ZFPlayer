@@ -11,7 +11,6 @@
 #import "ZFTableData.h"
 #import <ZFPlayer/ZFAVPlayerManager.h>
 #import <ZFPlayer/ZFPlayerControlView.h>
-#import <ZFPlayer/KSMediaPlayerManager.h>
 #import <ZFPlayer/UIView+ZFFrame.h>
 #import <ZFPlayer/ZFPlayerConst.h>
 #import "UINavigationController+FDFullscreenPopGesture.h"

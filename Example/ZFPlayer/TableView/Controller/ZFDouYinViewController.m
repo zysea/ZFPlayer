@@ -9,7 +9,6 @@
 #import "ZFDouYinViewController.h"
 #import <ZFPlayer/ZFAVPlayerManager.h>
 #import <ZFPlayer/ZFIJKPlayerManager.h>
-#import <ZFPlayer/KSMediaPlayerManager.h>
 #import <ZFPlayer/ZFPlayerControlView.h>
 #import <ZFPlayer/ZFPlayerConst.h>
 #import "ZFTableViewCellLayout.h"
@@ -47,7 +46,6 @@ static NSString *kIdentifier = @"kIdentifier";
 
     /// playerManager
     ZFAVPlayerManager *playerManager = [[ZFAVPlayerManager alloc] init];
-//    KSMediaPlayerManager *playerManager = [[KSMediaPlayerManager alloc] init];
 //    ZFIJKPlayerManager *playerManager = [[ZFIJKPlayerManager alloc] init];
 
     /// player,tag值必须在cell里设置

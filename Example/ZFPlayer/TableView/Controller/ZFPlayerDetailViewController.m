@@ -9,7 +9,6 @@
 #import "ZFPlayerDetailViewController.h"
 #import <ZFPlayer/ZFAVPlayerManager.h>
 #import <ZFPlayer/ZFIJKPlayerManager.h>
-#import <ZFPlayer/KSMediaPlayerManager.h>
 #import <ZFPlayer/ZFPlayerControlView.h>
 #import "ZFSmallPlayViewController.h"
 #import "UIImageView+ZFCache.h"

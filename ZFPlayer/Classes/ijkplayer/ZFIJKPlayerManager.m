@@ -32,9 +32,8 @@
 #endif
 #if __has_include(<IJKMediaFramework/IJKMediaFramework.h>)
 
-
-
 @interface ZFIJKPlayerManager ()
+
 @property (nonatomic, strong) IJKFFMoviePlayerController *player;
 @property (nonatomic, strong) IJKFFOptions *options;
 @property (nonatomic, assign) CGFloat lastVolume;

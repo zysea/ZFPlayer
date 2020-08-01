@@ -16,7 +16,7 @@
   },
   "social_media_url": "http://weibo.com/zifeng1300",
   "platforms": {
-    "ios": "7.0"
+    "ios": "8.0"
   },
   "requires_arc": true,
   "static_framework": true,
@@ -60,22 +60,6 @@
         "ZFPlayer/Core": [
 
         ]
-      },
-      "platforms": {
-        "ios": "8.0"
-      }
-    },
-    {
-      "name": "KSYMediaPlayer",
-      "source_files": "ZFPlayer/Classes/KSYMediaPlayer/*.{h,m}",
-      "public_header_files": "ZFPlayer/Classes/KSYMediaPlayer/*.h",
-      "dependencies": {
-        "ZFPlayer/Core": [
-
-        ]
-      },
-      "pod_target_xcconfig": {
-        "ARCHS[sdk=iphonesimulator*]": "$(ARCHS_STANDARD_64_BIT)"
       }
     }
   ]
