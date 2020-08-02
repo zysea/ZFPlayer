@@ -95,6 +95,10 @@
 }
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+    UIInterfaceOrientation currentOrientation = (UIInterfaceOrientation)[UIDevice currentDevice].orientation;
+    if (UIInterfaceOrientationIsLandscape(currentOrientation)) {
+        return UIInterfaceOrientationMaskLandscape;
+    }
     return UIInterfaceOrientationMaskAll;
 }
 
