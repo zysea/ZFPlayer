@@ -14,7 +14,7 @@
 
 [中文说明](https://www.jianshu.com/p/90e55deb4d51)
 
-[ZFPlayer 4.x迁移指南] (https://github.com/renzifeng/ZFPlayer/wiki/ZFPlayer-4.x%E8%BF%81%E7%A7%BB%E6%8C%87%E5%8D%97)
+[ZFPlayer 4.x迁移指南](https://github.com/renzifeng/ZFPlayer/wiki/ZFPlayer-4.x%E8%BF%81%E7%A7%BB%E6%8C%87%E5%8D%97)
 
 
 Before this, you used ZFPlayer, are you worried about encapsulating avplayer instead of using or modifying the source code to support other players, the control layer is not easy to customize, and so on? In order to solve these problems, I have wrote this player template, for player SDK you can conform the `ZFPlayerMediaPlayback` protocol, for control view you can conform the `ZFPlayerMediaControl` protocol, can custom the player and control view.
