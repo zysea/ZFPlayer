@@ -114,7 +114,6 @@
         _rotateType = ZFRotateTypeNormal;
         _currentOrientation = UIInterfaceOrientationPortrait;
         _portraitFullScreenMode = ZFPortraitFullScreenModeScaleToFill;
-        _forceDeviceOrientation = YES;
         _disablePortraitGestureTypes = ZFDisablePortraitGestureTypesAll;
     }
     return self;
@@ -323,25 +322,8 @@
     return NO;
 }
 
-#pragma mark - ZFLandscapeViewControllerDelegate
-
-- (BOOL)ls_shouldAutorotate {
-    UIInterfaceOrientation currentOrientation = (UIInterfaceOrientation)[UIDevice currentDevice].orientation;
-    if (![self _isSupported:currentOrientation]) {
-        return NO;
-    }
-    
-    if (!self.forceDeviceOrientation) {
-        if (!self.allowOrientationRotation || !self.activeDeviceObserver) {
-            return NO;
-        }
-    }
-    
-    if (self.fullScreenMode == ZFFullScreenModePortrait) {
-        return NO;
-    }
-    
-    if (UIInterfaceOrientationIsLandscape(currentOrientation)) {
+- (void)_rotationToOrientation:(UIInterfaceOrientation)orientation {
+    if (UIInterfaceOrientationIsLandscape(orientation)) {
         UIWindow *keyWindow = UIApplication.sharedApplication.keyWindow;
         if (keyWindow != self.window && self.previousKeyWindow != keyWindow) {
             self.previousKeyWindow = UIApplication.sharedApplication.keyWindow;
@@ -351,6 +333,30 @@
             [self.window makeKeyAndVisible];
         }
     }
+}
+
+#pragma mark - ZFLandscapeViewControllerDelegate
+
+- (BOOL)ls_shouldAutorotate {
+    UIInterfaceOrientation currentOrientation = (UIInterfaceOrientation)[UIDevice currentDevice].orientation;
+    if (![self _isSupported:currentOrientation]) {
+        return NO;
+    }
+    
+    if (self.forceRotaion) {
+        [self _rotationToOrientation:currentOrientation];
+        return YES;
+    }
+    
+    if (!self.allowOrientationRotation || !self.activeDeviceObserver) {
+        return NO;
+    }
+    
+    if (self.fullScreenMode == ZFFullScreenModePortrait) {
+        return NO;
+    }
+    
+    [self _rotationToOrientation:currentOrientation];
     return YES;
 }
 

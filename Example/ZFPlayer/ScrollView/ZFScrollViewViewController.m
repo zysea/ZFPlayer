@@ -46,6 +46,8 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     self.player.playerApperaPercent = 0.0;
     /// 播放小窗相关
     self.player.stopWhileNotVisible = NO;
+    self.player.shouldAutoPlay = NO;
+    
     CGFloat margin = 20;
     CGFloat w = ZFPlayer_ScreenWidth/2;
     CGFloat h = w * 9/16;
@@ -90,24 +92,36 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
 #pragma mark - action
 
 - (void)playClick:(UIButton *)sender {
-    NSString *URLString = [@"http://flv3.bn.netease.com/tvmrepo/2018/6/H/9/EDJTRBEH9/SD/EDJTRBEH9-mobile.mp4" stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
-    self.player.currentPlayerManager.assetURL = [NSURL URLWithString:URLString];
+    self.player.currentPlayerManager.assetURL = [NSURL URLWithString:@"https://www.apple.com/105/media/cn/mac/family/2018/46c4b917_abfd_45a3_9b51_4e3054191797/films/bruce/mac-bruce-tpl-cn-2018_1280x720h.mp4"];
     [self.controlView showTitle:@"UIScrollView播放" coverURLString:@"https://upload-images.jianshu.io/upload_images/635942-14593722fe3f0695.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" fullScreenMode:ZFFullScreenModeAutomatic];
 }
 
 #pragma mark - UIScrollViewDelegate
 
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    [scrollView zf_scrollViewDidEndDecelerating];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    [scrollView zf_scrollViewDidEndDraggingWillDecelerate:decelerate];
+}
+
+- (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView {
+    [scrollView zf_scrollViewDidScrollToTop];
+}
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     [scrollView zf_scrollViewDidScroll];
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    [scrollView zf_scrollViewWillBeginDragging];
 }
 
 #pragma mark - about keyboard orientation
 
 /// 键盘支持横屏，这里必须设置支持多个方向
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    if (self.player.isFullScreen) {
-        return UIInterfaceOrientationMaskLandscape;
-    }
     return UIInterfaceOrientationMaskPortrait;
 }
 

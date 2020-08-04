@@ -57,6 +57,16 @@ static NSString *kIdentifier = @"kIdentifier";
     };
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.player.viewControllerDisappear = NO;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    self.player.viewControllerDisappear = YES;
+}
+
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
     CGFloat y = CGRectGetMaxY(self.navigationController.navigationBar.frame);

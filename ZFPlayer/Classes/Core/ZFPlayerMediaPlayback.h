@@ -34,7 +34,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// The view must inherited `ZFPlayerView`,this view deals with some gesture conflicts.
 @property (nonatomic) ZFPlayerView *view;
 
-@optional
 /// The player volume.
 /// Only affects audio volume for the player instance and not for the device.
 /// You can change device volume or player volume as needed,change the player volume you can follow the `ZFPlayerMediaPlayback` protocol.
@@ -145,14 +144,16 @@ NS_ASSUME_NONNULL_BEGIN
 /// Stop playback.
 - (void)stop;
 
+/// Use this method to seek to a specified time for the current player and to be notified when the seek operation is complete.
+- (void)seekToTime:(NSTimeInterval)time completionHandler:(void (^ __nullable)(BOOL finished))completionHandler;
+
+@optional
+
 /// Video UIImage at the current time.
 - (UIImage *)thumbnailImageAtCurrentTime;
 
-///
+/// Video UIImage at the current time.
 - (void)thumbnailImageAtCurrentTime:(void(^)(UIImage *))handler;
-
-/// Use this method to seek to a specified time for the current player and to be notified when the seek operation is complete.
-- (void)seekToTime:(NSTimeInterval)time completionHandler:(void (^ __nullable)(BOOL finished))completionHandler;
 
 @end
 

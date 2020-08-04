@@ -238,7 +238,7 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
 }
 
 - (void)layoutPlayerSubViews {
-    if (self.containerView && self.currentPlayerManager.view) {
+    if (self.containerView && self.currentPlayerManager.view && self.currentPlayerManager.isPreparedToPlay) {
         UIView *superview = nil;
         if (self.isFullScreen) {
             superview = self.orientationObserver.fullScreenContainerView;
@@ -316,6 +316,9 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
     [self playerManagerCallbcak];
     self.controlView.player = self;
     [self layoutPlayerSubViews];
+    if (currentPlayerManager.isPreparedToPlay) {
+        [self addDeviceOrientationObserver];
+    }
     [self.orientationObserver updateRotateView:currentPlayerManager.view containerView:self.containerView];
 }
 
@@ -411,8 +414,6 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
 }
 
 - (void)stop {
-    [self.notification removeNotification];
-    [self.orientationObserver removeDeviceOrientationObserver];
     if (self.isFullScreen && self.exitFullScreenWhenStop) {
         @weakify(self)
         [self.orientationObserver enterFullScreen:NO animated:NO completion:^{
@@ -425,6 +426,8 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
         [self.currentPlayerManager.view removeFromSuperview];
     }
     if (self.scrollView) self.scrollView.zf_stopPlay = YES;
+    [self.notification removeNotification];
+    [self.orientationObserver removeDeviceOrientationObserver];
 }
 
 - (void)replaceCurrentPlayerManager:(id<ZFPlayerMediaPlayback>)playerManager {
@@ -1096,7 +1099,9 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
                     [self stopCurrentPlayingCell];
                 }
             } else {  /// add to window
-                [self addPlayerViewToSmallFloatView];
+                if (!self.isSmallFloatViewShow) {
+                    [self addPlayerViewToSmallFloatView];
+                }
             }
         }
     };

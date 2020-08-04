@@ -788,7 +788,10 @@ Scroll to indexPath with position.
 }
 
 - (BOOL)zf_stopPlay {
-    return [objc_getAssociatedObject(self, _cmd) boolValue];
+    NSNumber *number = objc_getAssociatedObject(self, _cmd);
+    if (number) return number.boolValue;
+    self.zf_stopPlay = YES;
+    return YES;
 }
 
 - (BOOL)zf_stopWhileNotVisible {

@@ -36,7 +36,7 @@ static NSString *kIdentifier = @"kIdentifier";
 }
 
 - (NSArray <ZFTableItem *>*)createItemsByPlayerType {
-    return @[[ZFTableItem itemWithTitle:@"普通样式" subTitle:@"Normal style" viewControllerName:@"ZFNoramlViewController"],
+    return @[[ZFTableItem itemWithTitle:@"普通样式" subTitle:@"Normal style" viewControllerName:@"ZFNormalViewController"],
              [ZFTableItem itemWithTitle:@"UITableView样式" subTitle:@"UITableView style" viewControllerName:@"ZFAutoPlayerViewController"],
              [ZFTableItem itemWithTitle:@"UICollectionView样式" subTitle:@"UICollectionView style" viewControllerName:@"ZFCollectionViewController"],
              [ZFTableItem itemWithTitle:@"UIScrollView样式" subTitle:@"UIScrollView style" viewControllerName:@"ZFScrollViewViewController"]];
@@ -118,6 +118,7 @@ static NSString *kIdentifier = @"kIdentifier";
         [(ZFDouYinViewController *)viewController playTheIndex:0];
     }
     viewController.navigationItem.title = itme.title;
+    viewController.hidesBottomBarWhenPushed = YES;
     
     if ([vcString isEqualToString:@"ZFDouyinCollectionViewController"] && [itme.title isEqualToString:@"横向滚动抖音"]) {
         ZFDouyinCollectionViewController *douyinVC = (ZFDouyinCollectionViewController *)viewController;
