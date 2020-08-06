@@ -40,14 +40,14 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     /// 设置退到后台继续播放
     self.player.pauseWhenAppResignActive = NO;
     
-    @weakify(self)
+    @zf_weakify(self)
     self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
         kAPPDelegate.allowOrentitaionRotation = isFullScreen;
     };
     
     /// 播放完成
     self.player.playerDidToEnd = ^(id  _Nonnull asset) {
-        @strongify(self)
+        @zf_strongify(self)
         [self.player.currentPlayerManager replay];
         [self.player playTheNext];
         if (!self.player.isLastAssetURL) {

@@ -224,6 +224,17 @@
                 containerView = self.containerView;
             }
             CGRect targetRect = [self.view convertRect:self.view.frame toView:containerView.window];
+            
+            if (!self.window) {
+                self.window = [ZFLandscapeWindow new];
+                self.window.landscapeViewController.delegate = self;
+                if (@available(iOS 9.0, *)) {
+                    [self.window.rootViewController loadViewIfNeeded];
+                } else {
+                    [self.window.rootViewController view];
+                }
+            }
+            
             self.window.landscapeViewController.targetRect = targetRect;
             self.window.landscapeViewController.contentView = self.view;
             self.window.landscapeViewController.containerView = self.containerView;
@@ -234,9 +245,9 @@
         self.fullScreen = NO;
     }
     self.window.landscapeViewController.disableAnimations = !animated;
-    @weakify(self)
+    @zf_weakify(self)
     self.window.landscapeViewController.rotatingCompleted = ^{
-        @strongify(self)
+        @zf_strongify(self)
         self.forceRotaion = NO;
         if (completion) completion();
     };
@@ -408,22 +419,9 @@
 
 #pragma mark - getter
 
-- (ZFLandscapeWindow *)window {
-    if (!_window) {
-        _window = [ZFLandscapeWindow new];
-        _window.landscapeViewController.delegate = self;
-        if (@available(iOS 9.0, *)) {
-            [_window.rootViewController loadViewIfNeeded];
-        } else {
-            [_window.rootViewController view];
-        }
-    }
-    return _window;
-}
-
 - (ZFPortraitViewController *)portraitViewController {
     if (!_portraitViewController) {
-        @weakify(self)
+        @zf_weakify(self)
         _portraitViewController = [[ZFPortraitViewController alloc] init];
         if (@available(iOS 9.0, *)) {
             [_portraitViewController loadViewIfNeeded];
@@ -431,12 +429,12 @@
             [_portraitViewController view];
         }
         _portraitViewController.orientationWillChange = ^(BOOL isFullScreen) {
-            @strongify(self)
+            @zf_strongify(self)
             self.fullScreen = isFullScreen;
             if (self.orientationWillChange) self.orientationWillChange(self, isFullScreen);
         };
         _portraitViewController.orientationDidChanged = ^(BOOL isFullScreen) {
-            @strongify(self)
+            @zf_strongify(self)
             self.fullScreen = isFullScreen;
             if (self.orientationDidChanged) self.orientationDidChanged(self, isFullScreen);
         };

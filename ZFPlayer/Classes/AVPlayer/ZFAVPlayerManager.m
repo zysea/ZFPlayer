@@ -190,9 +190,9 @@ static NSString *const kPresentationSize         = @"presentationSize";
 }
 
 - (void)replay {
-    @weakify(self)
+    @zf_weakify(self)
     [self seekToTime:0 completionHandler:^(BOOL finished) {
-        @strongify(self)
+        @zf_strongify(self)
         if (finished) {
             [self play];
         }
@@ -343,9 +343,9 @@ static NSString *const kPresentationSize         = @"presentationSize";
                               context:nil];
     
     CMTime interval = CMTimeMakeWithSeconds(self.timeRefreshInterval > 0 ? self.timeRefreshInterval : 0.1, NSEC_PER_SEC);
-    @weakify(self)
+    @zf_weakify(self)
     _timeObserver = [self.player addPeriodicTimeObserverForInterval:interval queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
-        @strongify(self)
+        @zf_strongify(self)
         if (!self) return;
         NSArray *loadedRanges = self.playerItem.seekableTimeRanges;
         if (self.isPlaying && self.loadState == ZFPlayerLoadStateStalled) self.player.rate = self.rate;
@@ -355,7 +355,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
     }];
     
     _itemEndObserver = [[NSNotificationCenter defaultCenter] addObserverForName:AVPlayerItemDidPlayToEndTimeNotification object:self.playerItem queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
-        @strongify(self)
+        @zf_strongify(self)
         if (!self) return;
         self.playState = ZFPlayerPlayStatePlayStopped;
         if (self.playerDidToEnd) self.playerDidToEnd(self);
@@ -373,9 +373,9 @@ static NSString *const kPresentationSize         = @"presentationSize";
                 }
                 if (self.seekTime) {
                     if (self.shouldAutoPlay) [self.player pause];
-                    @weakify(self)
+                    @zf_weakify(self)
                     [self seekToTime:self.seekTime completionHandler:^(BOOL finished) {
-                        @strongify(self)
+                        @zf_strongify(self)
                         if (finished) {
                             if (self.shouldAutoPlay) [self play];
                         }

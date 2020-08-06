@@ -58,20 +58,20 @@ static NSString *kIdentifier = @"kIdentifier";
     /// 1.0是完全消失时候
     self.player.playerDisapperaPercent = 1.0;
     
-    @weakify(self)
+    @zf_weakify(self)
     self.player.playerDidToEnd = ^(id  _Nonnull asset) {
-        @strongify(self)
+        @zf_strongify(self)
         [self.player.currentPlayerManager replay];
     };
 
     self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
         kAPPDelegate.allowOrentitaionRotation = isFullScreen;
-        @strongify(self)
+        @zf_strongify(self)
         self.player.controlView.hidden = YES;
     };
     
     self.player.orientationDidChanged = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
-        @strongify(self)
+        @zf_strongify(self)
         self.player.controlView.hidden = NO;
         if (isFullScreen) {
             self.player.controlView = self.fullControlView;
@@ -82,7 +82,7 @@ static NSString *kIdentifier = @"kIdentifier";
     
     /// 停止的时候找出最合适的播放
     self.player.zf_scrollViewDidEndScrollingCallback = ^(NSIndexPath * _Nonnull indexPath) {
-        @strongify(self)
+        @zf_strongify(self)
         if (self.player.playingIndexPath) return;
         if (indexPath.row == self.dataSource.count-1) {
             /// 加载下一页数据
@@ -100,7 +100,7 @@ static NSString *kIdentifier = @"kIdentifier";
 
 - (void)loadNewData {
     [self.dataSource removeAllObjects];
-    @weakify(self)
+    @zf_weakify(self)
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         /// 下拉时候一定要停止当前播放，不然有新数据，播放位置会错位。
         [self.player stopCurrentPlayingCell];
@@ -108,7 +108,7 @@ static NSString *kIdentifier = @"kIdentifier";
         [self.tableView reloadData];
         /// 找到可以播放的视频并播放
         [self.player zf_filterShouldPlayCellWhileScrolled:^(NSIndexPath *indexPath) {
-            @strongify(self)
+            @zf_strongify(self)
             [self playTheVideoAtIndexPath:indexPath];
         }];
     });
@@ -129,12 +129,12 @@ static NSString *kIdentifier = @"kIdentifier";
 }
 
 - (void)playTheIndex:(NSInteger)index {
-    @weakify(self)
+    @zf_weakify(self)
     /// 指定到某一行播放
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionNone animated:NO];
     [self.player zf_filterShouldPlayCellWhileScrolled:^(NSIndexPath *indexPath) {
-        @strongify(self)
+        @zf_strongify(self)
         [self playTheVideoAtIndexPath:indexPath];
     }];
     /// 如果是最后一行，去请求新数据

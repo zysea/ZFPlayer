@@ -57,13 +57,13 @@ static NSString *kIdentifier = @"kIdentifier";
     self.player.smallFloatView.frame = CGRectMake(x, y, w, h);
     self.player.controlView = self.controlView;
     
-    @weakify(self)
+    @zf_weakify(self)
     self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
         kAPPDelegate.allowOrentitaionRotation = isFullScreen;
     };
     
     self.player.playerDidToEnd = ^(id  _Nonnull asset) {
-        @strongify(self)
+        @zf_strongify(self)
         [self.player stopCurrentPlayingCell];
     };
     
@@ -177,9 +177,9 @@ static NSString *kIdentifier = @"kIdentifier";
 - (ZFTableHeaderView *)headerView {
     if (!_headerView) {
         _headerView = [[ZFTableHeaderView alloc] init];
-        @weakify(self)
+        @zf_weakify(self)
         _headerView.playCallback = ^{
-            @strongify(self)
+            @zf_strongify(self)
             [self playTheIndex:0];
         };
     }

@@ -52,14 +52,14 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     /// 设置退到后台继续播放
     self.player.pauseWhenAppResignActive = NO;
 
-    @weakify(self)
+    @zf_weakify(self)
     self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
         kAPPDelegate.allowOrentitaionRotation = isFullScreen;
     };
 
     /// 播放完成
     self.player.playerDidToEnd = ^(id  _Nonnull asset) {
-        @strongify(self)
+        @zf_strongify(self)
         if (self.player.currentPlayerManager == self.adPlayerManager) {
             self.player.controlView = self.controlView;
             self.player.currentPlayerManager = self.playerManager;
@@ -119,9 +119,9 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
 - (ZFADControlView *)adControlView {
     if (!_adControlView) {
         _adControlView = [[ZFADControlView alloc] init];
-        @weakify(self)
+        @zf_weakify(self)
         _adControlView.skipCallback = ^{
-            @strongify(self)
+            @zf_strongify(self)
             self.player.controlView = self.controlView;
             self.player.currentPlayerManager = self.playerManager;
             self.playerManager.shouldAutoPlay = YES;
@@ -130,7 +130,7 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
         };
         
         _adControlView.fullScreenCallback = ^{
-            @strongify(self)
+            @zf_strongify(self)
             if (self.player.isFullScreen) {
                 [self.player enterFullScreen:NO animated:YES];
             } else {

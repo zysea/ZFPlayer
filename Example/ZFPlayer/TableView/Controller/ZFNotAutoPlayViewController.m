@@ -46,13 +46,13 @@ static NSString *kIdentifier = @"kIdentifier";
     /// 1.0是完全消失的时候
     self.player.playerDisapperaPercent = 1.0;
 
-    @weakify(self)
+    @zf_weakify(self)
     self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
         kAPPDelegate.allowOrentitaionRotation = isFullScreen;
     };
     
     self.player.playerDidToEnd = ^(id  _Nonnull asset) {
-        @strongify(self)
+        @zf_strongify(self)
         [self.player stopCurrentPlayingCell];
     };
 }

@@ -42,13 +42,13 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
     self.player.controlView = self.controlView;
     self.player.shouldAutoPlay = YES;
     
-    @weakify(self)
+    @zf_weakify(self)
     self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
         kAPPDelegate.allowOrentitaionRotation = isFullScreen;
     };
     
     self.player.playerDidToEnd = ^(id  _Nonnull asset) {
-        @strongify(self)
+        @zf_strongify(self)
         if (self.player.playingIndexPath.row < self.dataSource.count - 1) {
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.player.playingIndexPath.row+1 inSection:0];
             [self playTheVideoAtIndexPath:indexPath scrollAnimated:YES];
@@ -59,7 +59,7 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
     
     /// 停止的时候找出最合适的播放
     self.player.zf_scrollViewDidEndScrollingCallback = ^(NSIndexPath * _Nonnull indexPath) {
-        @strongify(self)
+        @zf_strongify(self)
         [self playTheVideoAtIndexPath:indexPath scrollAnimated:NO];
     };
     
@@ -69,7 +69,7 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
     /// 如果是停止后再寻找播放可以忽略这个回调
     /// 如果在滑动中就要寻找到播放的indexPath，并且开始播放，那就要这样写
     self.player.zf_playerShouldPlayInScrollView = ^(NSIndexPath * _Nonnull indexPath) {
-        @strongify(self)
+        @zf_strongify(self)
         if ([indexPath compare:self.player.playingIndexPath] != NSOrderedSame) {
             [self playTheVideoAtIndexPath:indexPath scrollAnimated:NO];
         }
@@ -85,9 +85,9 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    @weakify(self)
+    @zf_weakify(self)
     [self.player zf_filterShouldPlayCellWhileScrolled:^(NSIndexPath *indexPath) {
-        @strongify(self)
+        @zf_strongify(self)
         [self playTheVideoAtIndexPath:indexPath scrollAnimated:NO];
     }];
 }
@@ -166,9 +166,9 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     ZFCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
     cell.data = self.dataSource[indexPath.row];
-    @weakify(self)
+    @zf_weakify(self)
     cell.playBlock = ^(UIButton *sender) {
-        @strongify(self)
+        @zf_strongify(self)
         [self playTheVideoAtIndexPath:indexPath scrollAnimated:NO];
     };
     return cell;

@@ -83,6 +83,8 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
 
 - (void)setupPlayer {
     ZFAVPlayerManager *playerManager = [[ZFAVPlayerManager alloc] init];
+//    ZFIJKPlayerManager *playerManager = [[ZFIJKPlayerManager alloc] init];
+
     playerManager.shouldAutoPlay = YES;
     
     /// 播放器相关
@@ -92,14 +94,14 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     self.player.pauseWhenAppResignActive = NO;
 //    self.player.resumePlayRecord = YES;
     
-    @weakify(self)
+    @zf_weakify(self)
     self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
         kAPPDelegate.allowOrentitaionRotation = isFullScreen;
     };
     
     /// 播放完成
     self.player.playerDidToEnd = ^(id  _Nonnull asset) {
-        @strongify(self)
+        @zf_strongify(self)
         if (!self.player.isLastAssetURL) {
             [self.player playTheNext];
             NSString *title = [NSString stringWithFormat:@"视频标题%zd",self.player.currentPlayIndex];
@@ -145,7 +147,7 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
 }
 
 - (BOOL)prefersStatusBarHidden {
-    return self.player.isStatusBarHidden;
+    return NO;
 }
 
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {

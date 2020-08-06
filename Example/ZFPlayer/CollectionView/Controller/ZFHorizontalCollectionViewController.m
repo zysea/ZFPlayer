@@ -46,9 +46,9 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
     /// 1.0是消失100%时候
     self.player.playerDisapperaPercent = 1.0;
     
-    @weakify(self)
+    @zf_weakify(self)
     self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
-        @strongify(self)
+        @zf_strongify(self)
         kAPPDelegate.allowOrentitaionRotation = isFullScreen;
         if (isFullScreen) {
             self.player.disablePanMovingDirection = ZFPlayerDisablePanMovingDirectionNone;
@@ -58,13 +58,13 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
     };
     
     self.player.playerDidToEnd = ^(id  _Nonnull asset) {
-        @strongify(self)
+        @zf_strongify(self)
         [self.player.currentPlayerManager replay];
     };
     
     /// 停止的时候找出最合适的播放
     self.player.zf_scrollViewDidEndScrollingCallback = ^(NSIndexPath * _Nonnull indexPath) {
-        @strongify(self)
+        @zf_strongify(self)
         [self playTheVideoAtIndexPath:indexPath];
     };
 }
@@ -83,9 +83,9 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    @weakify(self)
+    @zf_weakify(self)
     [self.player zf_filterShouldPlayCellWhileScrolled:^(NSIndexPath *indexPath) {
-        @strongify(self)
+        @zf_strongify(self)
         [self playTheVideoAtIndexPath:indexPath];
     }];
 }
@@ -160,9 +160,9 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     ZFCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
     cell.data = self.dataSource[indexPath.row];
-    @weakify(self)
+    @zf_weakify(self)
     cell.playBlock = ^(UIButton *sender) {
-        @strongify(self)
+        @zf_strongify(self)
         [self playTheVideoAtIndexPath:indexPath];
     };
     return cell;
