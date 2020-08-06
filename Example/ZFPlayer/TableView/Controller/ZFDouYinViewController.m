@@ -183,8 +183,6 @@ static NSString *kIdentifier = @"kIdentifier";
 #pragma mark - ZFDouYinCellDelegate
 
 - (void)zf_douyinRotation {
-    /// 这里要强转方向
-    self.player.orientationObserver.forceRotaion = YES;
     UIInterfaceOrientation orientation = UIInterfaceOrientationUnknown;
     if (self.player.isFullScreen) {
         orientation = UIInterfaceOrientationPortrait;

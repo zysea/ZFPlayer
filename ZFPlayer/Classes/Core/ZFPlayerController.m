@@ -508,14 +508,14 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
 
 - (BOOL)isLastAssetURL {
     if (self.assetURLs.count > 0) {
-        return self.assetURL == self.assetURLs.lastObject;
+        return [self.assetURL isEqual:self.assetURLs.lastObject];
     }
     return NO;
 }
 
 - (BOOL)isFirstAssetURL {
     if (self.assetURLs.count > 0) {
-        return self.assetURL == self.assetURLs.firstObject;
+        return [self.assetURL isEqual:self.assetURLs.firstObject];
     }
     return NO;
 }
@@ -726,7 +726,9 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
 @implementation ZFPlayerController (ZFPlayerOrientationRotation)
 
 - (void)addDeviceOrientationObserver {
-    [self.orientationObserver addDeviceOrientationObserver];
+    if (self.allowOrentitaionRotation) {
+        [self.orientationObserver addDeviceOrientationObserver];
+    }
 }
 
 - (void)removeDeviceOrientationObserver {
