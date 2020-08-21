@@ -27,7 +27,6 @@
 @interface ZFLandscapeViewController ()
 
 @property (nonatomic, assign) UIInterfaceOrientation currentOrientation;
-@property (nonatomic, getter=isRotating) BOOL rotating;
 
 @end
 
@@ -76,8 +75,12 @@
         [self.contentView layoutIfNeeded];
     } completion:^(id<UIViewControllerTransitionCoordinatorContext> _Nonnull context) {
         [CATransaction commit];
-        self.disableAnimations = NO;
         [self.delegate ls_didRotateFromOrientation:self.currentOrientation];
+        if (!isFullscreen) {
+            self.contentView.frame = self.containerView.bounds;
+            [self.contentView layoutIfNeeded];
+        }
+        self.disableAnimations = NO;
         self.rotating = NO;
     }];
 }
@@ -100,6 +103,10 @@
         return UIInterfaceOrientationMaskLandscape;
     }
     return UIInterfaceOrientationMaskAll;
+}
+
+- (BOOL)prefersHomeIndicatorAutoHidden {
+    return YES;
 }
 
 - (BOOL)prefersStatusBarHidden {
