@@ -428,20 +428,7 @@ Scroll to indexPath with position.
         visiableCells = [tableView visibleCells];
         // First visible cell indexPath
         indexPath = tableView.indexPathsForVisibleRows.firstObject;
-        if (self.contentOffset.y <= 0 && (!self.zf_playingIndexPath || [indexPath compare:self.zf_playingIndexPath] == NSOrderedSame)) {
-            UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-            UIView *playerView = [cell viewWithTag:self.zf_containerViewTag];
-            if (playerView && !playerView.hidden && playerView.alpha > 0.01) {
-                if (self.zf_scrollViewDidScrollCallback) self.zf_scrollViewDidScrollCallback(indexPath);
-                if (handler) handler(indexPath);
-                self.zf_shouldPlayIndexPath = indexPath;
-                return;
-            }
-        }
-        
-        // Last visible cell indexPath
-        indexPath = tableView.indexPathsForVisibleRows.lastObject;
-        if (self.contentOffset.y + self.frame.size.height >= self.contentSize.height && (!self.zf_playingIndexPath || [indexPath compare:self.zf_playingIndexPath] == NSOrderedSame)) {
+        if ((self.contentOffset.y <= 0 || self.contentOffset.y + self.frame.size.height >= self.contentSize.height) && (!self.zf_playingIndexPath || [indexPath compare:self.zf_playingIndexPath] == NSOrderedSame)) {
             UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
             UIView *playerView = [cell viewWithTag:self.zf_containerViewTag];
             if (playerView && !playerView.hidden && playerView.alpha > 0.01) {
@@ -466,20 +453,7 @@ Scroll to indexPath with position.
         
         // First visible cell indexPath
         indexPath = sortedIndexPaths.firstObject;
-        if (self.contentOffset.y <= 0 && (!self.zf_playingIndexPath || [indexPath compare:self.zf_playingIndexPath] == NSOrderedSame)) {
-            UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-            UIView *playerView = [cell viewWithTag:self.zf_containerViewTag];
-            if (playerView && !playerView.hidden && playerView.alpha > 0.01) {
-                if (self.zf_scrollViewDidScrollCallback) self.zf_scrollViewDidScrollCallback(indexPath);
-                if (handler) handler(indexPath);
-                self.zf_shouldPlayIndexPath = indexPath;
-                return;
-            }
-        }
-        
-        // Last visible cell indexPath
-        indexPath = sortedIndexPaths.lastObject;
-        if (self.contentOffset.y + self.frame.size.height >= self.contentSize.height && (!self.zf_playingIndexPath || [indexPath compare:self.zf_playingIndexPath] == NSOrderedSame)) {
+        if ((self.contentOffset.y <= 0 || self.contentOffset.y + self.frame.size.height >= self.contentSize.height) && (!self.zf_playingIndexPath || [indexPath compare:self.zf_playingIndexPath] == NSOrderedSame)) {
             UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
             UIView *playerView = [cell viewWithTag:self.zf_containerViewTag];
             if (playerView && !playerView.hidden && playerView.alpha > 0.01) {
@@ -558,20 +532,7 @@ Scroll to indexPath with position.
         visiableCells = [tableView visibleCells];
         // First visible cell indexPath
         indexPath = tableView.indexPathsForVisibleRows.firstObject;
-        if (self.contentOffset.x <= 0 && (!self.zf_playingIndexPath || [indexPath compare:self.zf_playingIndexPath] == NSOrderedSame)) {
-            UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-            UIView *playerView = [cell viewWithTag:self.zf_containerViewTag];
-            if (playerView && !playerView.hidden && playerView.alpha > 0.01) {
-                if (self.zf_scrollViewDidScrollCallback) self.zf_scrollViewDidScrollCallback(indexPath);
-                if (handler) handler(indexPath);
-                self.zf_shouldPlayIndexPath = indexPath;
-                return;
-            }
-        }
-        
-        // Last visible cell indexPath
-        indexPath = tableView.indexPathsForVisibleRows.lastObject;
-        if (self.contentOffset.x + self.frame.size.width >= self.contentSize.width && (!self.zf_playingIndexPath || [indexPath compare:self.zf_playingIndexPath] == NSOrderedSame)) {
+        if ((self.contentOffset.x <= 0 || self.contentOffset.x + self.frame.size.width >= self.contentSize.width) && (!self.zf_playingIndexPath || [indexPath compare:self.zf_playingIndexPath] == NSOrderedSame)) {
             UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
             UIView *playerView = [cell viewWithTag:self.zf_containerViewTag];
             if (playerView && !playerView.hidden && playerView.alpha > 0.01) {
@@ -596,20 +557,7 @@ Scroll to indexPath with position.
         
         // First visible cell indexPath
         indexPath = sortedIndexPaths.firstObject;
-        if (self.contentOffset.x <= 0 && (!self.zf_playingIndexPath || [indexPath compare:self.zf_playingIndexPath] == NSOrderedSame)) {
-            UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-            UIView *playerView = [cell viewWithTag:self.zf_containerViewTag];
-            if (playerView && !playerView.hidden && playerView.alpha > 0.01) {
-                if (self.zf_scrollViewDidScrollCallback) self.zf_scrollViewDidScrollCallback(indexPath);
-                if (handler) handler(indexPath);
-                self.zf_shouldPlayIndexPath = indexPath;
-                return;
-            }
-        }
-        
-        // Last visible cell indexPath
-        indexPath = sortedIndexPaths.lastObject;
-        if (self.contentOffset.x + self.frame.size.width >= self.contentSize.width && (!self.zf_playingIndexPath || [indexPath compare:self.zf_playingIndexPath] == NSOrderedSame)) {
+        if ((self.contentOffset.x <= 0 || self.contentOffset.x + self.frame.size.width >= self.contentSize.width) && (!self.zf_playingIndexPath || [indexPath compare:self.zf_playingIndexPath] == NSOrderedSame)) {
             UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
             UIView *playerView = [cell viewWithTag:self.zf_containerViewTag];
             if (playerView && !playerView.hidden && playerView.alpha > 0.01) {

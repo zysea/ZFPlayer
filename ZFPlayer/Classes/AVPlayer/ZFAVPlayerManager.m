@@ -382,7 +382,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
                     }];
                     self.seekTime = 0;
                 } else {
-                    if (self.shouldAutoPlay) [self play];
+                    if (self.shouldAutoPlay && self.isPlaying) [self play];
                 }
                 self.player.muted = self.muted;
                 NSArray *loadedRanges = self.playerItem.seekableTimeRanges;

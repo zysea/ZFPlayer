@@ -80,6 +80,26 @@ static NSString *kIdentifier = @"kIdentifier";
         }
     };
     
+    /// 更新另一个控制层的时间
+    self.player.playerPlayTimeChanged = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, NSTimeInterval currentTime, NSTimeInterval duration) {
+        @zf_strongify(self)
+        if ([self.player.controlView isEqual:self.fullControlView]) {
+            [self.controlView videoPlayer:self.player currentTime:currentTime totalTime:duration];
+        } else if ([self.player.controlView isEqual:self.controlView]) {
+            [self.fullControlView videoPlayer:self.player currentTime:currentTime totalTime:duration];
+        }
+    };
+    
+    /// 更新另一个控制层的缓冲时间
+    self.player.playerBufferTimeChanged = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, NSTimeInterval bufferTime) {
+        @zf_strongify(self)
+        if ([self.player.controlView isEqual:self.fullControlView]) {
+            [self.controlView videoPlayer:self.player bufferTime:bufferTime];
+        } else if ([self.player.controlView isEqual:self.controlView]) {
+            [self.fullControlView videoPlayer:self.player bufferTime:bufferTime];
+        }
+    };
+    
     /// 停止的时候找出最合适的播放
     self.player.zf_scrollViewDidEndScrollingCallback = ^(NSIndexPath * _Nonnull indexPath) {
         @zf_strongify(self)
