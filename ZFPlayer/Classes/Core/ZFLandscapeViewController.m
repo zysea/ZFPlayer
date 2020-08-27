@@ -106,7 +106,11 @@
 }
 
 - (BOOL)prefersHomeIndicatorAutoHidden {
-    return YES;
+    UIInterfaceOrientation currentOrientation = (UIInterfaceOrientation)[UIDevice currentDevice].orientation;
+    if (UIInterfaceOrientationIsLandscape(currentOrientation)) {
+        return YES;
+    }
+    return NO;
 }
 
 - (BOOL)prefersStatusBarHidden {

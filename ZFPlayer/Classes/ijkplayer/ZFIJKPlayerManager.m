@@ -102,6 +102,7 @@
         [self prepareToPlay];
     } else {
         [self.player play];
+        if (self.timer) [self.timer setFireDate:[NSDate date]];
         self.player.playbackRate = self.rate;
         _isPlaying = YES;
         self.playState = ZFPlayerPlayStatePlaying;
@@ -109,6 +110,7 @@
 }
 
 - (void)pause {
+    if (self.timer) [self.timer setFireDate:[NSDate distantFuture]];
     [self.player pause];
     _isPlaying = NO;
     self.playState = ZFPlayerPlayStatePaused;

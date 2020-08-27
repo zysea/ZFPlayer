@@ -1,6 +1,6 @@
 {
   "name": "ZFPlayer",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "summary": "A good player made by renzifeng",
   "homepage": "https://github.com/renzifeng/ZFPlayer",
   "license": {
@@ -12,7 +12,7 @@
   },
   "source": {
     "git": "https://github.com/renzifeng/ZFPlayer.git",
-    "tag": "4.0.1"
+    "tag": "4.0.2"
   },
   "social_media_url": "http://weibo.com/zifeng1300",
   "platforms": {
