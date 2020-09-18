@@ -430,6 +430,11 @@ static NSString *const kPresentationSize         = @"presentationSize";
     return _view;
 }
 
+- (AVPlayerLayer *)avPlayerLayer {
+    ZFPlayerPresentView *view = (ZFPlayerPresentView *)self.view.playerView;
+    return [view avLayer];
+}
+
 - (float)rate {
     return _rate == 0 ?1:_rate;
 }

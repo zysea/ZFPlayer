@@ -36,7 +36,7 @@ static NSString *kIdentifier = @"kIdentifier";
 }
 
 - (NSArray <ZFTableItem *>*)createItemsByPlayerType {
-    return @[[ZFTableItem itemWithTitle:@"普通样式" subTitle:@"Normal style" viewControllerName:@"ZFNormalViewController"],
+    return @[[ZFTableItem itemWithTitle:@"普通样式,画中画" subTitle:@"Normal style" viewControllerName:@"ZFNormalViewController"],
              [ZFTableItem itemWithTitle:@"UITableView样式" subTitle:@"UITableView style" viewControllerName:@"ZFAutoPlayerViewController"],
              [ZFTableItem itemWithTitle:@"UICollectionView样式" subTitle:@"UICollectionView style" viewControllerName:@"ZFCollectionViewController"],
              [ZFTableItem itemWithTitle:@"UIScrollView样式" subTitle:@"UIScrollView style" viewControllerName:@"ZFScrollViewViewController"]];

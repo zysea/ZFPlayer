@@ -15,6 +15,7 @@
 #import <ZFPlayer/UIImageView+ZFCache.h>
 #import <ZFPlayer/ZFPlayerConst.h>
 #import "ZFUtilities.h"
+@import AVKit;
 
 static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/635942-14593722fe3f0695.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240";
 
@@ -25,8 +26,9 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
 @property (nonatomic, strong) UIButton *playBtn;
 @property (nonatomic, strong) UIButton *changeBtn;
 @property (nonatomic, strong) UIButton *nextBtn;
+@property (nonatomic, strong) UIButton *pipBtn;
 @property (nonatomic, strong) NSArray <NSURL *>*assetURLs;
-
+@property (nonatomic, strong) AVPictureInPictureController *vc;
 @end
 
 @implementation ZFNormalViewController
@@ -41,6 +43,7 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     [self.containerView addSubview:self.playBtn];
     [self.view addSubview:self.changeBtn];
     [self.view addSubview:self.nextBtn];
+    [self.view addSubview:self.pipBtn];
     [self setupPlayer];
 }
 
@@ -79,6 +82,13 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     x = (CGRectGetWidth(self.view.frame)-w)/2;
     y = CGRectGetMaxY(self.changeBtn.frame)+50;
     self.nextBtn.frame = CGRectMake(x, y, w, h);
+    
+    
+    w = 100;
+    h = 30;
+    x = (CGRectGetWidth(self.view.frame)-w)/2;
+    y = CGRectGetMaxY(self.nextBtn.frame)+50;
+    self.pipBtn.frame = CGRectMake(x, y, w, h);
 }
 
 - (void)setupPlayer {
@@ -114,6 +124,22 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     self.player.assetURLs = self.assetURLs;
     [self.player playTheIndex:0];
     [self.controlView showTitle:@"iPhone X" coverURLString:kVideoCover fullScreenMode:ZFFullScreenModeAutomatic];
+    
+    
+    
+    
+    
+}
+
+- (void)picBtnClick {
+    /// 配置画中画
+    ZFAVPlayerManager *manager = (ZFAVPlayerManager *)self.player.currentPlayerManager;
+    AVPictureInPictureController *vc = [[AVPictureInPictureController alloc] initWithPlayerLayer:manager.avPlayerLayer];
+    self.vc = vc;
+    ///要有延迟 否则可能开启不成功
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2.0*NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        [self.vc startPictureInPicture];
+    });
 }
 
 - (void)changeVideo:(UIButton *)sender {
@@ -207,6 +233,15 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
         [_nextBtn addTarget:self action:@selector(nextClick:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _nextBtn;
+}
+
+- (UIButton *)pipBtn {
+    if (!_pipBtn) {
+        _pipBtn = [UIButton buttonWithType:UIButtonTypeSystem];
+        [_pipBtn setTitle:@"开启画中画" forState:UIControlStateNormal];
+        [_pipBtn addTarget:self action:@selector(picBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _pipBtn;
 }
 
 - (NSArray<NSURL *> *)assetURLs {
