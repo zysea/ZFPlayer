@@ -202,7 +202,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
 - (void)seekToTime:(NSTimeInterval)time completionHandler:(void (^ __nullable)(BOOL finished))completionHandler {
     if (self.totalTime > 0) {
         [_player.currentItem cancelPendingSeeks];
-        int32_t timeScale = _player.currentItem.asset.duration. timescale;
+        int32_t timeScale = _player.currentItem.asset.duration.timescale;
         CMTime seekTime = CMTimeMakeWithSeconds(time, timeScale);
         [_player seekToTime:seekTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:completionHandler];
     } else {
@@ -281,6 +281,8 @@ static NSString *const kPresentationSize         = @"presentationSize";
     }
     if (@available(iOS 10.0, *)) {
         _playerItem.preferredForwardBufferDuration = 5;
+        /// 关闭AVPlayer默认的缓冲延迟播放策略，提高首屏播放速度
+        _player.automaticallyWaitsToMinimizeStalling = NO;
     }
     [self itemObserving];
 }
@@ -305,7 +307,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
     self.isBuffering = YES;
     
     // 需要先暂停一小会之后再播放，否则网络状况不好的时候时间在走，声音播放不出来
-    [self.player pause];
+    [self pause];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         // 如果此时用户已经暂停了，则不再需要开启播放了
         if (!self.isPlaying && self.loadState == ZFPlayerLoadStateStalled) {
@@ -373,7 +375,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
                     if (self.playerReadyToPlay) self.playerReadyToPlay(self, self.assetURL);
                 }
                 if (self.seekTime) {
-                    if (self.shouldAutoPlay) [self.player pause];
+                    if (self.shouldAutoPlay) [self pause];
                     @zf_weakify(self)
                     [self seekToTime:self.seekTime completionHandler:^(BOOL finished) {
                         @zf_strongify(self)
