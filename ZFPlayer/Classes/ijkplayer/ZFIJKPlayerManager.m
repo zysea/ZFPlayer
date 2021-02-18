@@ -160,6 +160,14 @@
 #pragma mark - private method
 
 - (void)initializePlayer {
+    // IJKFFMoviePlayerController 初始化后，必须手动进行释放，否则会依然存在内存中对资源进行播放。
+    if (self.player) {
+        [self removeMovieNotificationObservers];
+        [self.player shutdown];
+        [self.player.view removeFromSuperview];
+        self.player = nil;
+    }
+
     self.player = [[IJKFFMoviePlayerController alloc] initWithContentURL:self.assetURL withOptions:self.options];
     self.player.shouldAutoplay = self.shouldAutoPlay;
     [self.player prepareToPlay];
