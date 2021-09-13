@@ -150,8 +150,12 @@ static NSString *const kPresentationSize         = @"presentationSize";
     if (!_isPreparedToPlay) {
         [self prepareToPlay];
     } else {
-        [self.player play];
-        self.player.rate = self.rate;
+        if (@available(iOS 10.0, *)) {
+            [self.player playImmediatelyAtRate:self.rate];
+        } else {
+            [self.player play];
+            self.player.rate = self.rate;
+        }
         self->_isPlaying = YES;
         self.playState = ZFPlayerPlayStatePlaying;
     }
@@ -217,7 +221,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
     self.imageGenerator.requestedTimeToleranceBefore = kCMTimeZero;
     self.imageGenerator.requestedTimeToleranceAfter = kCMTimeZero;
     cgImage = [self.imageGenerator copyCGImageAtTime:expectedTime actualTime:NULL error:NULL];
-
+    
     if (!cgImage) {
         self.imageGenerator.requestedTimeToleranceBefore = kCMTimePositiveInfinity;
         self.imageGenerator.requestedTimeToleranceAfter = kCMTimePositiveInfinity;
@@ -268,13 +272,13 @@ static NSString *const kPresentationSize         = @"presentationSize";
     _playerItem = [AVPlayerItem playerItemWithAsset:_asset];
     _player = [AVPlayer playerWithPlayerItem:_playerItem];
     _imageGenerator = [AVAssetImageGenerator assetImageGeneratorWithAsset:_asset];
-
+    
     [self enableAudioTracks:YES inPlayerItem:_playerItem];
     
     ZFPlayerPresentView *presentView = [[ZFPlayerPresentView alloc] init];
     presentView.player = _player;
     self.view.playerView = presentView;
-
+    
     self.scalingMode = _scalingMode;
     if (@available(iOS 9.0, *)) {
         _playerItem.canUseNetworkResourcesForLiveStreamingWhilePaused = NO;
@@ -408,7 +412,15 @@ static NSString *const kPresentationSize         = @"presentationSize";
             // When the buffer is good
             if (self.playerItem.playbackLikelyToKeepUp) {
                 self.loadState = ZFPlayerLoadStatePlayable;
-                if (self.isPlaying) [self.player play];
+                if (self.isPlaying) {
+                    if (@available(iOS 10.0, *)) {
+                        [self.player playImmediatelyAtRate:self.rate];
+                    } else {
+                        [self.player play];
+                        self.player.rate = self.rate;
+                        // Fallback on earlier versions
+                    }
+                }
             }
         } else if ([keyPath isEqualToString:kLoadedTimeRanges]) {
             NSTimeInterval bufferTime = [self availableDuration];
